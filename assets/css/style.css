@@ -49,4 +49,19 @@ body {
     background-color: #8DAA9D !important;
 }
 
+.descriptif {
+    text-align: center;
+    margin-top: 45px;
+}
 
+@media (max-width: 768px) { /*police mobile h1*/
+  .descriptif h1 { 
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) { /*police mobile h2*/
+  .descriptif h2 ,.descriptif h3{ 
+    font-size: 14px;
+  }
+}
