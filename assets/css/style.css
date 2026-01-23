@@ -65,21 +65,23 @@ body {
     font-size: 14px;
   }
 }
+
+
 .card {
-    background-color: #699897; /* Couleur de fond des cartes */
-    color: #ffffff; /* Couleur du texte des cartes */
+    background-color: #699897;
+    color: #ffffff;
     border-radius: 20px;
 }
-.card-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+.card-body img {
+    max-width: 120px;
+    width: 100%;
+    height: auto;
 }
-.card {
-    height: 100%;
+
+@media (max-width: 768px) {
+    .card {
+        width: 80%;
+        margin: 0 auto;
+    }
 }
-section.commentaire{  /*j’aligne mes card et j'espace entre elles*/
-  display: flex;
-  justify-content: space-evenly;
-}
-/*probleme en mobile les card sont trop grandes */
