@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*déclaration de la police pour le H1*/
+@font-face {
+    font-family: "RobotoBold";
+    src: url("../police/Roboto-Bold.ttf") format("truetype");
+    font-weight: 700;
+}
+
+/* application de la police au H1 */
+h1 {
+    font-family: "RobotoBold", sans-serif;
+    font-weight: 700;
+}
+
+header {
+    background-color: #8DAA9D;
+}
+
+body {
+    background-image: url(../images/traiteur.jpg);
+    background-size: cover;
+    background-attachment: fixed;   /* Pour que l'image de fond reste fixe lors du défilement */
+    color: white;
+}
+
+header {
+    display: flex;
+}
+.menu-haut {
+    display: flex;          /* ← aligne les li horizontalement */
+    flex-direction: row;    /* ← optionnel car row est la valeur par défaut */
+    margin: auto;
+    gap: 30px;              /* ← espace entre les liens */
+    
+}
+
+.menu-haut li{
+    list-style: none;      /* Supprime les puces des éléments de la liste */
+}
+.menu-haut li a {
+    text-decoration: none;
+    /* Supprime le soulignement des liens */
+    font-size: 32px;
+}
