@@ -28,22 +28,19 @@ body {
     color: white;
 }
 
-header {
-    display: flex;
-}
-.menu-haut {
-    display: flex;          /* ← aligne les li horizontalement */
-    flex-direction: row;    /* ← optionnel car row est la valeur par défaut */
-    margin: auto;
-    gap: 30px;              /* ← espace entre les liens */
-    
+
+.navbar {
+  background-color: #8DAA9D;
 }
 
-.menu-haut li{
-    list-style: none;      /* Supprime les puces des éléments de la liste */
+.nav-link {
+  font-size: 1.3rem;
+  color: #0E0F0F
 }
-.menu-haut li a {
-    text-decoration: none;
-    /* Supprime le soulignement des liens */
-    font-size: 32px;
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+.navbar {
+    background-color: #8DAA9D !important;
 }
