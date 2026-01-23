@@ -25,17 +25,21 @@ body {
     background-image: url(../images/traiteur.jpg);
     background-size: cover;
     background-attachment: fixed;   /* Pour que l'image de fond reste fixe lors du défilement */
-    color: white;
+    color: white;  /*texte en blanc pour être lisible sur l'image de fond */
 }
-
 
 .navbar {
   background-color: #8DAA9D;
 }
 
-.nav-link {
-  font-size: 1.3rem;
+.nav-link { /*police desktop*/
+  font-size: 32px;
   color: #0E0F0F
+}
+@media (max-width: 768px) { /*police mobile*/
+  .nav-link { 
+    font-size: 18px;
+  }
 }
 
 .nav-link:hover {
@@ -44,3 +48,5 @@ body {
 .navbar {
     background-color: #8DAA9D !important;
 }
+
+
