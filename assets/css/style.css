@@ -4,19 +4,24 @@
     box-sizing: border-box;
 }
 
-/*déclaration de la police pour le H1*/
+/*police pour le H1*/
 @font-face {
     font-family: "RobotoBold";
     src: url("../police/Roboto-Bold.ttf") format("truetype");
     font-weight: 700;
 }
 
-/* application de la police au H1 */
+/* réglage taille des police*/
 h1 {
     font-family: "RobotoBold", sans-serif;
-    font-weight: 700;
-}
+    font-size: 28px;}
+h2 ,h3{
+    font-size: 18px;}
 
+    .nav-link { /*police desktop*/
+  font-size: 24px;
+  color: #0E0F0F
+}
 header {
     background-color: #8DAA9D;
 }
@@ -32,10 +37,7 @@ body {
   background-color: #8DAA9D;
 }
 
-.nav-link { /*police desktop*/
-  font-size: 32px;
-  color: #0E0F0F
-}
+
 @media (max-width: 768px) { /*police mobile*/
   .nav-link { 
     font-size: 18px;
