@@ -186,7 +186,8 @@ header {
 
 .menu-img img {
     width: 370px;
-    height: 277px;
+    height: 280px;
+    margin-top: 140px;
     border-radius: 12px;
 }
 
@@ -218,7 +219,7 @@ header {
 
 /* Conteneur des flèches */
 .arrow-container {
-    margin-top: 10px;
+    margin-top: -120px;
     display: flex;
     gap: 20px;
 }
@@ -232,8 +233,8 @@ header {
 }
 
 .arrow img {
-    width: 40px;
-    height: 40px;
+    width: 70px;
+    height: 70px;
 }
 
 
