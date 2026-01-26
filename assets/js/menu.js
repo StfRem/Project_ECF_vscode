@@ -148,10 +148,11 @@ function afficherMenus(liste) {
                     <p><strong>Personnes min :</strong> ${menu.personnesMin}</p>
                     <p><strong>Stock :</strong> ${menu.stock}</p>
 
-                    <button class="btn-detail" onclick="location.href='./menu-detail.html?id=${menu.id}'">
-                        + de détail
+                    <button class="btn-commande" data-id="${menu.id}">
+                    Commander
                     </button>
                 </div>
+                
 
 <div class="menu-img">
     <img class="main-img" src="${menu.images[0]}" alt="${menu.titre}" id="img-${menu.id}" data-index="0">
@@ -195,3 +196,29 @@ document.addEventListener("click", (e) => {
     imgElement.src = menu.images[newIndex];
     imgElement.dataset.index = newIndex;
 });
+
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("btn-commande")) {
+
+        const menuId = e.target.dataset.id;
+        const menu = menus.find(m => m.id == menuId);
+
+        // Vérifier si l'utilisateur est connecté
+        if (window.userIsLogged) {
+            // Redirection vers la page commande
+            location.href = `./commande.html?id=${menuId}`;
+        } else {
+            // Utilisateur NON connecté → afficher une alerte
+            alert(
+                "Vous devez être inscrit pour commander ce menu.\n\n" +
+                "Conditions du menu :\n" +
+                menu.conditions +
+                "\n\nVeuillez créer un compte pour continuer."
+            );
+
+            // Redirection vers la page d'inscription
+            location.href = "./register.html";
+        }
+    }
+});
+

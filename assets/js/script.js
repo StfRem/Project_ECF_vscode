@@ -35,3 +35,5 @@ export function loadFooter() {
         </div>
     `;
 }
+// Simulation : à remplacer plus tard par ton vrai système de connexion
+let userIsLogged = false; 
