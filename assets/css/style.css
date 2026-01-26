@@ -1,89 +1,115 @@
+/*RESET des marges*/
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/*police pour le H1*/
-@font-face {
+
+/*----------------MES RÉGLAGES ------------------*/
+
+@font-face {   /*Charge police local*/
     font-family: "RobotoBold";
     src: url("../police/Roboto-Bold.ttf") format("truetype");
-    font-weight: 700;
+    font-weight: 800;
 }
+
+h1,
+.menu_header a {
+    font-family: "RobotoBold", sans-serif;
+    font-weight: 800;
+}
+
+
 
 /* réglage taille des police*/
 h1 {
-    font-family: "RobotoBold", sans-serif;
-    font-size: 28px;}
-h2 ,h3{
-    font-size: 18px;}
-
-    .nav-link { /*police desktop*/
-  font-size: 24px;
-  color: #0E0F0F
+    font-size: 28px;
 }
+
+h2,h3 {
+    font-size: 18px;
+}
+
+li a {
+    color: #0E0F0F;
+}
+h1,h2,h3 {
+    color: white;
+}
+
+/*-------------------  IMAGE ET NAVBAR les lien centré -----------------------------*/
+body {
+    background-image: url(../images/traiteur.jpg);
+    background-size: cover;
+}
+
 header {
     background-color: #8DAA9D;
 }
 
-body {
-    background-image: url(../images/traiteur.jpg);
-    background-size: cover;
-    background-attachment: fixed;   /* Pour que l'image de fond reste fixe lors du défilement */
-    color: white;  /*texte en blanc pour être lisible sur l'image de fond */
+.nav-header {
+    position: relative;
+    display: flex; /* met cote a cote logo et menu */
+    align-items: center;
 }
 
-.navbar {
-  background-color: #8DAA9D;
+/*-----------------SUPPRIME LES PUCES ET SOULIGNEMENT------------*/
+.menu-header,ul {
+    position: absolute;
+    display: flex; /* aligne mes liens */
+    list-style: none;
+    gap: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    
 }
 
-
-@media (max-width: 768px) { /*police mobile*/
-  .nav-link { 
-    font-size: 18px;
-  }
+.menu-header,li a {
+    text-decoration: none;
+    font-size: 32px;
 }
 
-.nav-link:hover {
-  text-decoration: underline;
-}
-.navbar {
-    background-color: #8DAA9D !important;
-}
+/*-----------------------  DESCRIPTIF   ------------------------------------------*/
 
 .descriptif {
     text-align: center;
-    margin-top: 45px;
+    margin-top: 20px;
 }
 
-@media (max-width: 768px) { /*police mobile h1*/
-  .descriptif h1 { 
-    font-size: 20px;
-  }
-}
+/*-----------------------  CARD   ------------------------------------------*/
 
-@media (max-width: 768px) { /*police mobile h2*/
-  .descriptif h2 ,.descriptif h3{ 
-    font-size: 14px;
-  }
+.cards {
+    display: flex;
+    gap: 135px;
+    justify-content: center;
+    flex-wrap: nowrap; /* reste en ligne */
+    margin: 45px;
 }
-
 
 .card {
+    width: 300px;
+    height: 200px;
     background-color: #699897;
-    color: #ffffff;
-    border-radius: 20px;
+    border-radius: 12px;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+ .card img {
+    height: 26px;
+ }
+
+
+.card h2 {
+    font-size: 32px;
+    margin-bottom: 0px;
+    margin-top: -20px;
 }
 
-.card-body img {
-    max-width: 120px;
-    width: 100%;
-    height: auto;
-}
 
-@media (max-width: 768px) {
-    .card {
-        width: 80%;
-        margin: 0 auto;
-    }
-}
+
