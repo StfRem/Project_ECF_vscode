@@ -10,18 +10,11 @@
 
 <body>
 
-    <header>
-        <nav class="nav-header">
-            <img src="./assets/images/logo.png" alt="logo">
-
-            <ul class="menu_header">
-                <li><a href="menus.html">Accueil</a></li>
-                <li><a href="menu-detail.html">Menu</a></li>
-                <li><a href="login.html">Connexion</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <header id="header"></header>
+<script type="module">
+    import { loadNavbar } from "./assets/js/script.js";
+    loadNavbar();
+</script>
 
     <div class="descriptif">
         <h1>Vite & Gourmand - Traiteur depuis 25 ans à Bordeaux</h1>

@@ -12,42 +12,59 @@
     font-weight: 800;
 }
 
+/* PALETTE (charte graphique) */
+:root {
+    --txt-light: #FFFFFF;
+    --txt-dark: #0E0F0F;
+
+    --header: #8DAA9D;
+    --card: #699897;
+    --fond: #4A6A69;
+    --btn: #FFA7A1;
+}
+
+/* FOND GLOBAL (tu ne veux plus d'image) */
+body {
+background-image: url(../images/traiteur.jpg);
+background-size: cover;
+}
+
+/* TITRES + NAVBAR */
 h1,
 .menu_header a {
     font-family: "RobotoBold", sans-serif;
     font-weight: 800;
 }
 
-/* TAILLES POLICE*/
+/* TAILLES POLICE */
 h1 {
-    font-size: 22px;
+    font-size: 32px;
 }
 
-h2, h3 {
-    font-size: 16px;
+h2, h3 ,p{
+    font-size: 26px;
+}
+li {
+    font-size: 24px;
+    list-style: none;
 }
 
+/* COULEURS TEXTE */
 li a {
-    color: #0E0F0F;
+    color: var(--txt-dark);
 }
 
-h1, h2, h3, li {
-    color: white;
+h1, h2, h3, li ,p{
+    color: var(--txt-light);
 }
 
 .mention a {
-color: white;
-}
-
-/* --------------  IMAGE  ------------------------------ */
-body {
-    background-image: url(../images/traiteur.jpg);
-    background-size: cover;
+    color: var(--txt-light);
 }
 
 /* HEADER */
 header {
-    background-color: #8DAA9D;
+    background-color: var(--header);
 }
 
 .nav-header {
@@ -57,7 +74,7 @@ header {
     padding: 5px 20px;
 }
 
-/*----------------- MENU --------------------*/
+/* MENU NAVBAR */
 .menu_header {
     position: absolute;
     display: flex;
@@ -72,13 +89,13 @@ header {
     font-size: 28px;
 }
 
-/* ----------------DESCRIPTIF------------------------ */
+/* DESCRIPTIF */
 .descriptif {
     text-align: center;
     margin-top: 20px;
 }
 
-/*------------------ CARDS ---------------------*/
+/* CARDS AVIS */
 .cards {
     display: flex;
     gap: 135px;
@@ -87,9 +104,9 @@ header {
 }
 
 .card {
-    width: 310px;
-    height: 130px;
-    background-color: #699897;
+    width: 300px;
+    height: 210px;
+    background-color: var(--card);
     border-radius: 12px;
     padding: 20px 20px;
     display: flex;
@@ -109,7 +126,6 @@ header {
 
 /* FOOTER */
 .footer {
-    
     padding: 10px;
 }
 
@@ -122,8 +138,110 @@ header {
     list-style: none;
     text-align: center;
     margin-bottom: 30px;
+    font-size: 28px;
 }
 
 .mention {
     text-align: left;
+}
+/*------------------menu global---------------------------*//* PAGE MENUS GLOBAUX */
+.menus-page {
+    padding: 40px;
+}
+
+/* FILTRES */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.filters button {
+    background-color: var(--btn);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--txt-dark);
+    font-weight: bold;
+}
+
+/* CARDS MENUS menu global*/
+.menu-card {
+    background-color: var(--card);
+    border-radius: 12px;
+    height: auto;
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start
+}
+
+.menu-info {
+    width: 55%;
+}
+
+.menu-img img {
+    width: 370px;
+    height: 277px;
+    border-radius: 12px;
+}
+
+.btn-detail {
+    margin-top: 15px;
+    background-color: var(--btn);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--txt-dark);
+    font-weight: bold;
+}
+
+/* SLIDER IMAGES */
+.menu-img {
+    display: flex;
+    flex-direction: column; /* image en haut, flèches en bas */
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-img .main-img {
+    width: 370px;
+    height: 277px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+/* Conteneur des flèches */
+.arrow-container {
+    margin-top: 10px;
+    display: flex;
+    gap: 20px;
+}
+
+/* Boutons flèches */
+.arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.arrow img {
+    width: 40px;
+    height: 40px;
+}
+
+
+/* Position des flèches */
+.arrow.left {
+    left: -50px;
+}
+
+.arrow.right {
+    right: -50px;
 }
