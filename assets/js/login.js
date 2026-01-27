@@ -21,9 +21,19 @@ form.addEventListener("submit", (e) => {
     }
 
     // Sauvegarde de l'utilisateur connecté
-    localStorage.setItem("userConnecte", JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("userIsLogged", "true");
 
     alert("Connexion réussie !");
-    location.href = "./index.html"; // ou espace utilisateur
+
+    // Redirection selon le rôle
+    if (user.role === "admin") {
+        location.href = "./espace-admin.html";
+    } 
+    else if (user.role === "employe") {
+        location.href = "./espace-employe.html";
+    } 
+    else {
+        location.href = "./espace-utilisateur.html";
+    }
 });

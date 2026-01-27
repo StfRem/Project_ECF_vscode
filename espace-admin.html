@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace administrateur</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR DYNAMIQUE -->
+    <header id="header"></header>
+
+    <script type="module">
+        import { loadNavbar, loadFooter } from "./assets/js/script.js";
+        loadNavbar();
+        loadFooter();
+    </script>
+
+<main class="user-container">
+
+    <!-- EMPLOYÉS -->
+    <section class="admin-section">
+        <div class="admin-header">
+            <h1>Gestion des employés</h1>
+            <button id="btn-ajout-employe" class="btn-primary">Créer un employé</button>
+        </div>
+        <ul id="liste-employes" class="admin-list"></ul>
+    </section>
+
+    <!-- MENUS -->
+    <section class="admin-section">
+        <div class="admin-header">
+            <h1>Gestion des menus</h1>
+            <button id="btn-ajout-menu" class="btn-primary">Créer un menu</button>
+        </div>
+        <ul id="liste-menus" class="admin-list"></ul>
+    </section>
+
+    <!-- PLATS -->
+    <section class="admin-section">
+        <div class="admin-header">
+            <h1>Gestion des plats</h1>
+            <button id="btn-ajout-plat" class="btn-primary">Créer un plat</button>
+        </div>
+        <ul id="liste-plats" class="admin-list"></ul>
+    </section>
+
+    <!-- HORAIRES -->
+    <section class="admin-section">
+        <div class="admin-header">
+            <h1>Gestion des horaires</h1>
+            <button id="btn-ajout-horaire" class="btn-primary">Créer un horaire</button>
+        </div>
+        <ul id="liste-horaires" class="admin-list"></ul>
+    </section>
+
+</main>
+
+
+    <script src="./assets/js/espace-admin.js"></script>
+
+</body>
+
+</html>

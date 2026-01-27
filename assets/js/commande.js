@@ -9,23 +9,27 @@ const menus = [
         titre: "Noël Traditionnel",
         prix: 70,
         personnesMin: 4,
-        stock: 20
+        stock: 20,
+        materiel: true   // ← matériel inclus
     },
     {
         id: 2,
         titre: "Menu Vegan Fraîcheur",
         prix: 55,
         personnesMin: 2,
-        stock: 15
+        stock: 15,
+        materiel: false  // ← pas de matériel
     },
     {
         id: 3,
         titre: "Menu Événements",
         prix: 90,
         personnesMin: 6,
-        stock: 10
+        stock: 10,
+        materiel: true
     }
 ];
+
 
 // Récupération de l'ID dans l'URL
 const params = new URLSearchParams(location.search);
@@ -94,16 +98,21 @@ function updatePrix() {
     const ville = document.getElementById("ville").value.trim().toLowerCase();
     const distance = Number(document.getElementById("distance").value);
 
-    let fraisLivraison = 0;
+    // Toujours 5 € fixes
+    let fraisLivraison = 5;
 
+    // Majoration uniquement si hors Bordeaux
     if (ville !== "" && ville !== "bordeaux") {
-        fraisLivraison = 5 + (distance * 0.59);
+        fraisLivraison += distance * 0.59;
     }
 
-    const totalFinal = total + fraisLivraison;
+    // Total final
+    window.totalFinal = total + fraisLivraison;
 
-    prixTotal.textContent = `Prix total : ${totalFinal.toFixed(2)} €`;
+    prixTotal.textContent = `Prix total avec livraison : ${window.totalFinal.toFixed(2)} €`;
 }
+
+
 
 
 
@@ -132,8 +141,7 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
     }
 
     // Récupération utilisateur connecté
-    const user = JSON.parse(localStorage.getItem("userConnecte"));
-
+    const user = JSON.parse(localStorage.getItem("user"));
     // Récupération commandes existantes
     const commandes = JSON.parse(localStorage.getItem("commandes")) || [];
 
@@ -145,7 +153,7 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         menuTitre: menu.titre,
 
         nbPersonnes: nb,
-        prixTotal: totalFinal,
+        prixTotal: window.totalFinal,
         reduction: nb >= menu.personnesMin + 5,
 
         adresse: document.getElementById("address").value,
@@ -174,10 +182,10 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         }
     };
 
-    // Sauvegarde
-    commandes.push(nouvelleCommande);
-    localStorage.setItem("commandes", JSON.stringify(commandes));
+// Sauvegarde
+commandes.push(nouvelleCommande);
+localStorage.setItem("commandes", JSON.stringify(commandes));
 
-    alert("Votre commande a bien été enregistrée !");
-    location.href = "./espace-utilisateur.html"; // conforme au cahier des charges
+// Notification conforme au cahier des charges
+alert("Votre commande a bien été enregistrée !");
 });
