@@ -1,17 +1,14 @@
-// Sélection du formulaire
 const form = document.getElementById("register-form");
 
 form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // Récupération des champs
     const fullname = document.getElementById("fullname").value.trim();
     const gsm = document.getElementById("gsm").value.trim();
     const email = document.getElementById("email").value.trim();
     const address = document.getElementById("address").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    // Vérification du mot de passe
     const regexPassword =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
 
@@ -20,23 +17,38 @@ form.addEventListener("submit", function (e) {
         return;
     }
 
-    // Création de l'objet utilisateur
-    const user = {
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (users.some(u => u.email === email)) {
+        alert("Un compte existe déjà avec cet email.");
+        return;
+    }
+
+    const newUser = {
+        id: "USR-" + Date.now(),
         fullname,
         gsm,
         email,
         address,
         password,
-        role: "utilisateur" // rôle imposé par le cahier des charges
+        role: "utilisateur"
     };
 
-    // Sauvegarde dans localStorage
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("userIsLogged", "true");
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
 
     alert("Compte créé avec succès ! Rôle attribué : utilisateur");
 
-    // Vérifier si un menu était en attente
+    console.log(`
+        EMAIL ENVOYÉ À : ${email}
+        Objet : Bienvenue !
+        Message :
+        Bonjour ${fullname},
+        Bienvenue sur notre plateforme !
+    `);
+
+    alert("Un email de bienvenue vous a été envoyé !");
+
     const pendingMenu = localStorage.getItem("pendingMenu");
 
     if (pendingMenu) {

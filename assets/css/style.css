@@ -23,7 +23,7 @@
     --btn: #FFA7A1;
 }
 
-/* FOND GLOBAL (tu ne veux plus d'image) */
+/* FOND GLOBAL  */
 body {
 background-image: url(../images/traiteur.jpg);
 background-size: cover;
@@ -460,16 +460,10 @@ header {
 /*--------------------   ESPACE ADMIN  ----------------------*/
 
 /* ====== GLOBAL ====== */
-body {
-    background: var(--fond);
-    color: var(--txt-light);
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+
 
 /* ====== TITRES ====== */
-h1 {
+.admin-section h1 {
     margin-top: 20px;
     margin-bottom: 10px;
     font-size: 26px;
@@ -492,9 +486,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
 }
-.admin-header h1 {
 
-}
 
 /* ====== LISTES ====== */
 .admin-list {
