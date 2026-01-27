@@ -474,6 +474,8 @@ h1 {
     margin-bottom: 10px;
     font-size: 26px;
     color: var(--txt-light);
+    text-align: center;
+    color: #0E0F0F;
 }
 
 /* ====== SECTIONS ADMIN ====== */
