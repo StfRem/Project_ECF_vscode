@@ -518,6 +518,9 @@ header {
     opacity: 0.85;
 }
 
+
+/*-------------------espace-utilisateur------------------------*/
+
 .btn-action {
     background: var(--header);
     color: var(--txt-dark);
@@ -533,9 +536,19 @@ header {
     color: white;
 }
 
+.btn-action,
+.btn-danger {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
 .btn-action:hover,
 .btn-danger:hover {
     opacity: 0.85;
+    
 }
 .user-container {
     max-width: 900px;
@@ -554,3 +567,43 @@ header {
 }
 
 
+/*----------------- CONTACT  ---------------------------*/
+.contact-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+#contact-form label {
+    display: block;
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: white;
+}
+
+#contact-form input,
+#contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+#contact-form button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+}
+
+#message-confirmation {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: #4CAF50;
+}
+.hidden {
+    display: none;
+}

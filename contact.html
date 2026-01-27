@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titre de la page</title>
+    <title>Contact – Vite & Gourmand</title>
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
@@ -12,16 +12,34 @@
     <header id="header"></header>
 
     <script type="module">
-        import { loadNavbar, loadFooter } from "./assets/js/script.js";
-        loadNavbar();
-        loadFooter();
+        import { loadNavbar } from "./assets/js/script.js";
+        loadNavbar(); // PAS DE FOOTER ICI
     </script>
 
-    <main>
-        <!-- TON CONTENU ICI -->
-    </main>
+    <main class="contact-container">
 
-    <footer id="footer"></footer>
+        <h1>Contactez-nous</h1>
+
+        <form id="contact-form">
+
+            <label for="titre">Titre de votre demande</label>
+            <input type="text" id="titre" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" rows="6" required></textarea>
+
+            <label for="email">Votre email</label>
+            <input type="email" id="email" required>
+
+            <button type="submit" class="btn-action">Envoyer</button>
+
+        </form>
+
+        <p id="message-confirmation" class="hidden">
+            Votre message a bien été envoyé. Nous vous répondrons rapidement.
+        </p>
+
+    </main>
 
 </body>
 </html>
