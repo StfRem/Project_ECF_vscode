@@ -22,13 +22,30 @@
     <main class="menus-page">
 
         <!-- FILTRES -->
-        <section class="filters">
-            <button data-filter="prix">Prix maximum</button>
-            <button data-filter="prix-range">Fourchette de prix</button>
-            <button data-filter="theme">Thème</button>
-            <button data-filter="regime">Régime</button>
-            <button data-filter="personnes">Nombre de personne minimum</button>
-        </section>
+<section class="filters">
+
+    <div class="filter-item">
+        <button data-filter="prix">Prix maximum</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="prix-range">Fourchette de prix</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="theme">Thème</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="regime">Régime</button>
+    </div>
+
+    <div class="filter-item">
+        <button data-filter="personnes">Nombre de personne minimum</button>
+    </div>
+
+</section>
+
 
         <!-- CONTENEUR DES MENUS (rempli en JS) -->
         <section id="menus-container"></section>

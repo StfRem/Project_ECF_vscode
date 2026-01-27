@@ -156,6 +156,21 @@ header {
     gap: 20px;
     margin-bottom: 40px;
 }
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.filter-input {
+    width: 160px;          /* largeur plus grande */
+    padding: 8px 10px;     /* plus d’espace intérieur */
+    font-size: 16px;       /* texte plus lisible */
+    margin-top: 8px;       /* espace entre bouton et input */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
 
 .filters button {
     background-color: var(--btn);
@@ -191,16 +206,43 @@ header {
     border-radius: 12px;
 }
 
-.btn-detail {
-    margin-top: 15px;
-    background-color: var(--btn);
+.btn-details {
+    background-color: var(--btn);  
+    color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
+    font-size: 15px;
     cursor: pointer;
-    color: var(--txt-dark);
-    font-weight: bold;
+    transition: 0.25s ease;
+    font-weight: 500;
 }
+
+.btn-details:hover {
+    background-color: #ff2f6a;      /* rose plus foncé au hover */
+}
+
+.btn-details:active {
+    transform: translateY(0);       /* clic naturel */
+}
+
+.btn-commande {
+    background-color: var(--btn);
+    color: var(--txt-dark);
+    border: none;
+    padding: 10px 24px; /* un peu plus large pour le texte */
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    font-weight: bold;
+    display: inline-block; /* évite les comportements bizarres */
+}
+
+.btn-commande:hover {
+    background-color: #ff8f87;
+}
+
 
 /* SLIDER IMAGES */
 .menu-img {
@@ -246,3 +288,170 @@ header {
 .arrow.right {
     right: -50px;
 }
+
+
+/*--------FORMULAIRE----------------/*
+/* PAGE REGISTER */
+.register-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.register-card {
+    background-color: var(--card);
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.register-card h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+#register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#register-form input {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+}
+
+.password-info {
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 10px 0 20px 0;
+    line-height: 1.5;
+}
+
+/*--------------- MENTION LEGAL  -----------------------*/
+.legal-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.legal-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.legal-container section {
+    margin-bottom: 25px;
+}
+
+.legal-container h2 {
+    margin-bottom: 10px;
+}
+
+/*--------------- CGV  -----------------------*/
+.legal-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.legal-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.legal-container section {
+    margin-bottom: 25px;
+}
+
+.legal-container h2 {
+    margin-bottom: 10px;
+}
+
+
+/* PAGE COMMANDE — STYLE MODERNE ET COHÉRENT */
+
+.commande-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.commande-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(6px);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.commande-card h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 26px;
+    color: var(--txt-dark);
+}
+
+.commande-card h2 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: var(--txt-dark);
+}
+
+#commande-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+#commande-form input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+}
+
+#commande-form input:focus {
+    outline: none;
+    border-color: var(--btn);
+    box-shadow: 0 0 4px rgba(255, 150, 140, 0.4);
+}
+
+.prix-info {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: var(--txt-dark);
+}
+
+/* Bouton identique à + de détails */
+.btn-detail {
+    background-color: var(--btn);
+    color: var(--txt-dark);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: 0.25s ease;
+}
+
+.btn-detail:hover {
+    background-color: #ff8f87;
+}
+
+
+
