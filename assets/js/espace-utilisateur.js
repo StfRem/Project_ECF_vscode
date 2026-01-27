@@ -17,12 +17,7 @@ let commandesUtilisateur = commandes.filter(cmd => cmd.userId === user.id);
 // Sélection des zones d'affichage
 // ---------------------------------------------------------
 const liste = document.getElementById("liste-commandes");
-
-// Zone où s'affichent les détails
-let zoneDetail = document.createElement("div");
-zoneDetail.id = "zone-detail";
-zoneDetail.style.marginTop = "20px";
-document.querySelector(".user-container").appendChild(zoneDetail);
+const zoneDetail = document.getElementById("zone-detail");
 
 // ---------------------------------------------------------
 // Affichage de la liste des commandes
@@ -52,24 +47,24 @@ function afficherListe() {
 }
 
 afficherListe();
+if (commandesUtilisateur.length > 0) {
+    afficherDetail(commandesUtilisateur[0]);
+}
 
 // ---------------------------------------------------------
 // Affichage des détails d'une commande
 // ---------------------------------------------------------
 function afficherDetail(cmd) {
-
     let boutonModifier = "";
     let boutonAnnuler = "";
     let boutonAvis = "";
     let suivi = "";
 
-    // Modification + annulation si statut = en attente
     if (cmd.statut === "en attente") {
         boutonModifier = `<button id="btn-modifier" class="btn-action">Modifier</button>`;
         boutonAnnuler = `<button id="btn-annuler" class="btn-danger">Annuler</button>`;
     }
 
-    // Suivi si accepté ou plus
     if (cmd.statut !== "en attente" && cmd.statut !== "annulée") {
         suivi = `
             <h3>Suivi de la commande</h3>
@@ -79,10 +74,11 @@ function afficherDetail(cmd) {
         `;
     }
 
-    // Avis si terminée
-    if (cmd.statut === "terminée" && cmd.avis.note === null) {
+    if (cmd.statut === "terminée" && cmd.avis && cmd.avis.note === null) {
         boutonAvis = `<button id="btn-avis" class="btn-action">Donner un avis</button>`;
     }
+
+    zoneDetail.dataset.id = cmd.id; // ID proprement stocké ici
 
     zoneDetail.innerHTML = `
         <h2>Détail de la commande</h2>
@@ -106,25 +102,33 @@ function afficherDetail(cmd) {
 }
 
 // ---------------------------------------------------------
-// Clic sur une commande → afficher les détails
+// Récupération de la commande actuellement affichée
+// ---------------------------------------------------------
+function getCommandeCourante() {
+    const id = zoneDetail.dataset.id;
+    if (!id) return null;
+    return commandesUtilisateur.find(c => String(c.id) === String(id)) || null;
+}
+
+// ---------------------------------------------------------
+// Gestion centralisée des clics
 // ---------------------------------------------------------
 document.addEventListener("click", (e) => {
-    const item = e.target.closest(".commande-item");
+    const target = e.target;
+
+    // Clic sur une commande → afficher les détails
+    const item = target.closest(".commande-item");
     if (item) {
         const id = item.dataset.id;
-        const cmd = commandesUtilisateur.find(c => c.id === id);
-        afficherDetail(cmd);
+        const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
+        if (cmd) afficherDetail(cmd);
+        return;
     }
-});
 
-// ---------------------------------------------------------
-// ANNULATION
-// ---------------------------------------------------------
-document.addEventListener("click", (e) => {
-    if (e.target.id === "btn-annuler") {
-
-        const id = zoneDetail.querySelector("p:nth-child(2)").innerText.split(" : ")[1];
-        const cmd = commandesUtilisateur.find(c => c.id === id);
+    // ANNULATION
+    if (target.id === "btn-annuler") {
+        const cmd = getCommandeCourante();
+        if (!cmd) return;
 
         if (!confirm("Voulez-vous vraiment annuler cette commande ?")) return;
 
@@ -137,19 +141,16 @@ document.addEventListener("click", (e) => {
         localStorage.setItem("commandes", JSON.stringify(commandes));
         afficherListe();
         afficherDetail(cmd);
+        return;
     }
-});
 
-// ---------------------------------------------------------
-// MODIFICATION
-// ---------------------------------------------------------
-document.addEventListener("click", (e) => {
-    if (e.target.id === "btn-modifier") {
-
-        const id = zoneDetail.querySelector("p:nth-child(2)").innerText.split(" : ")[1];
-        const cmd = commandesUtilisateur.find(c => c.id === id);
+    // MODIFICATION → affichage du formulaire
+    if (target.id === "btn-modifier") {
+        const cmd = getCommandeCourante();
+        if (!cmd) return;
 
         const zone = document.getElementById("zone-modification");
+        if (!zone) return;
 
         zone.innerHTML = `
             <h3>Modifier la commande</h3>
@@ -177,17 +178,13 @@ document.addEventListener("click", (e) => {
 
             <button id="btn-valider-modif" class="btn-action">Valider</button>
         `;
+        return;
     }
-});
 
-// ---------------------------------------------------------
-// VALIDATION MODIFICATION
-// ---------------------------------------------------------
-document.addEventListener("click", (e) => {
-    if (e.target.id === "btn-valider-modif") {
-
-        const id = zoneDetail.querySelector("p:nth-child(2)").innerText.split(" : ")[1];
-        const cmd = commandesUtilisateur.find(c => c.id === id);
+    // VALIDATION MODIFICATION
+    if (target.id === "btn-valider-modif") {
+        const cmd = getCommandeCourante();
+        if (!cmd) return;
 
         cmd.nbPersonnes = Number(document.getElementById("mod-nb").value);
         cmd.datePrestation = document.getElementById("mod-date").value;
@@ -207,17 +204,13 @@ document.addEventListener("click", (e) => {
         alert("Commande mise à jour !");
         afficherListe();
         afficherDetail(cmd);
+        return;
     }
-});
 
-// ---------------------------------------------------------
-// AVIS
-// ---------------------------------------------------------
-document.addEventListener("click", (e) => {
-    if (e.target.id === "btn-avis") {
-
-        const id = zoneDetail.querySelector("p:nth-child(2)").innerText.split(" : ")[1];
-        const cmd = commandesUtilisateur.find(c => c.id === id);
+    // AVIS
+    if (target.id === "btn-avis") {
+        const cmd = getCommandeCourante();
+        if (!cmd) return;
 
         const note = prompt("Note (1 à 5) :");
         const commentaire = prompt("Votre commentaire :");
@@ -225,6 +218,10 @@ document.addEventListener("click", (e) => {
         if (!note || !commentaire) {
             alert("Tous les champs sont obligatoires.");
             return;
+        }
+
+        if (!cmd.avis) {
+            cmd.avis = { note: null, commentaire: "", date: null };
         }
 
         cmd.avis.note = Number(note);
@@ -240,5 +237,6 @@ document.addEventListener("click", (e) => {
 
         alert("Merci pour votre avis !");
         afficherDetail(cmd);
+        return;
     }
 });

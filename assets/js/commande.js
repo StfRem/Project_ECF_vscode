@@ -45,13 +45,17 @@ if (!menu) {
 // Pré-remplissage des infos client
 // ---------------------------------------------------------
 const user = JSON.parse(localStorage.getItem("user"));
-
-if (user) {
+if (!user) {
+    // utilisateur non connecté → on rend les champs éditables
+    document.getElementById("fullname").removeAttribute("readonly");
+    document.getElementById("email").removeAttribute("readonly");
+    document.getElementById("gsm").removeAttribute("readonly");
+} else {
+    // utilisateur connecté → préremplissage + readonly
     document.getElementById("fullname").value = user.fullname;
     document.getElementById("email").value = user.email;
     document.getElementById("gsm").value = user.gsm;
 }
-
 
 
 // ---------------------------------------------------------

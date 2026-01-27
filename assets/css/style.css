@@ -65,6 +65,7 @@ h1, h2, h3, li ,p{
 /* HEADER */
 header {
     background-color: var(--header);
+    
 }
 
 .nav-header {
@@ -538,11 +539,18 @@ header {
 }
 .user-container {
     max-width: 900px;
-    margin: 50px auto 0 auto; /* 50px en haut */
+    margin: 50px auto 0 auto;
     padding: 20px;
+
+    background-color: #4A6A69; /* couleur de fond de ta charte */
+    border-radius: 10px;
+    position: relative;
+    z-index: 2;
 }
+
 
 .admin-section h1 {
     color: var(--txt-dark);
 }
+
 
