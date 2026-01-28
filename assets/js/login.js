@@ -37,3 +37,24 @@ form.addEventListener("submit", (e) => {
         location.href = "./espace-utilisateur.html";
     }
 });
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+    const email = prompt("Entrez votre adresse email :");
+    
+    if (!email) return;
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(u => u.email === email);
+
+    if (!user) {
+        alert("Aucun compte trouvé avec cet email.");
+        return;
+    }
+
+    console.log(`
+        EMAIL ENVOYÉ À : ${email}
+        Lien de réinitialisation : [simulation]
+    `);
+
+    alert("Un lien de réinitialisation a été envoyé à votre adresse email.");
+});

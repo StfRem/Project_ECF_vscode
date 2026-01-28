@@ -9,13 +9,20 @@
 </head>
 
 <body>
-
+    <script>
+        // Vérif de la connexion
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {
+            alert("Veuillez vous connecter pour accéder à cette page.");
+            window.location.href = "./login.html";
+        }
+    </script>
+    <!-- NAVBAR DYNAMIQUE -->
 <header id="header"></header>
 
 <script type="module">
-    import { loadNavbar, loadFooter } from "./assets/js/script.js";
+    import { loadNavbar} from "./assets/js/script.js";
     loadNavbar();
-    loadFooter();
 </script>
 
 <main class="user-container">
@@ -45,29 +52,32 @@
         <ul id="liste-commandes" class="admin-list"></ul>
     </section>
 
-    <!-- MENUS -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des menus</h1>
-        </div>
-        <ul id="liste-menus" class="admin-list"></ul>
-    </section>
+        <!-- MENUS -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des menus</h1>
+                <button id="btn-ajout-menu" class="btn-primary">Créer un menu</button>
+            </div>
+            <ul id="liste-menus" class="admin-list"></ul>
+        </section>
 
-    <!-- PLATS -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des plats</h1>
-        </div>
-        <ul id="liste-plats" class="admin-list"></ul>
-    </section>
+        <!-- PLATS -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des plats</h1>
+                <button id="btn-ajout-plat" class="btn-primary">Créer un plat</button>
+            </div>
+            <ul id="liste-plats" class="admin-list"></ul>
+        </section>
 
-    <!-- HORAIRES -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des horaires</h1>
-        </div>
-        <ul id="liste-horaires" class="admin-list"></ul>
-    </section>
+        <!-- HORAIRES -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des horaires</h1>
+                <button id="btn-ajout-horaire" class="btn-primary">Créer un horaire</button>
+            </div>
+            <ul id="liste-horaires" class="admin-list"></ul>
+        </section>
 
     <!-- AVIS -->
     <section class="admin-section">

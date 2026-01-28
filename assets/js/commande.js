@@ -155,11 +155,10 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         userId: user.id,
         menuId: menu.id,
         menuTitre: menu.titre,
-
         nbPersonnes: nb,
         prixTotal: window.totalFinal,
         reduction: nb >= menu.personnesMin + 5,
-
+        materiel: menu.materiel,
         adresse: document.getElementById("address").value,
         ville: document.getElementById("ville").value,
         cp: document.getElementById("cp").value,

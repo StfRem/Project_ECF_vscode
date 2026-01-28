@@ -203,7 +203,7 @@ afficherCommandes();
 
 
 // ---------------------------------------------------------
-// Mise à jour du statut (VERSION PRO)
+// Mise à jour du statut
 // ---------------------------------------------------------
 document.addEventListener("change", (e) => {
     if (!e.target.classList.contains("select-statut")) return;
@@ -365,6 +365,74 @@ document.addEventListener("click", (e) => {
         afficherHoraires();
     }
 
+// ---------------------------------------------------------
+// Chargement des avis
+// ---------------------------------------------------------
+let avis = JSON.parse(localStorage.getItem("avis")) || [];
+const listeAvis = document.getElementById("liste-avis");
+
+function afficherAvis() {
+    listeAvis.innerHTML = "";
+
+    const avisEnAttente = avis.filter(a => a.statut === "en attente");
+
+    if (avisEnAttente.length === 0) {
+        listeAvis.innerHTML = "<p>Aucun avis en attente de validation.</p>";
+        return;
+    }
+
+    avisEnAttente.forEach(a => {
+        const li = document.createElement("li");
+        li.classList.add("admin-item");
+
+        li.innerHTML = `
+            <div class="admin-item-info">
+                <strong>Client : ${a.nomClient}</strong>
+                <span>Commande : ${a.commandeId}</span>
+                <span>Note : ${a.note}/5</span>
+                <span>Commentaire : ${a.commentaire}</span>
+                <span>Date : ${new Date(a.date).toLocaleDateString()}</span>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn-action btn-valider-avis" data-id="${a.id}">Valider</button>
+                <button class="btn-danger btn-refuser-avis" data-id="${a.id}">Refuser</button>
+            </div>
+        `;
+
+        listeAvis.appendChild(li);
+    });
+}
+
+afficherAvis();
+
+// Gestion des clics validation/refus
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("btn-valider-avis")) {
+        const id = e.target.dataset.id;
+        
+        avis = avis.map(a => {
+            if (a.id === id) {
+                a.statut = "validé";
+            }
+            return a;
+        });
+
+        localStorage.setItem("avis", JSON.stringify(avis));
+        afficherAvis();
+    }
+
+    if (e.target.classList.contains("btn-refuser-avis")) {
+        const id = e.target.dataset.id;
+        
+        if (confirm("Refuser cet avis ?")) {
+            avis = avis.filter(a => a.id !== id);
+            localStorage.setItem("avis", JSON.stringify(avis));
+            afficherAvis();
+        }
+    }
+});
+
 });
 
 
@@ -373,3 +441,106 @@ document.addEventListener("click", (e) => {
 // ---------------------------------------------------------
 filtreStatut.addEventListener("change", afficherCommandes);
 filtreClient.addEventListener("input", afficherCommandes);
+
+// Fonction à appeler lors du passage au statut "livré"
+function verifierMateriel(commande) {
+    if (!commande.materiel) return;
+
+    // Passer automatiquement au statut "en attente du retour de matériel"
+    commande.statut = "en attente du retour de matériel";
+    commande.dateRetourAttendu = new Date();
+    commande.dateRetourAttendu.setDate(commande.dateRetourAttendu.getDate() + 10);
+
+    commande.historique.push({
+        date: new Date().toISOString(),
+        action: "En attente du retour de matériel (10 jours ouvrés)"
+    });
+
+    // Simulation email
+    console.log(`
+        EMAIL ENVOYÉ AU CLIENT
+        Sujet : Retour de matériel
+        Message : 
+        Bonjour,
+        
+        Votre commande a été livrée avec du matériel en prêt.
+        
+        ⚠️ Vous devez restituer ce matériel sous 10 jours ouvrés.
+        
+        Date limite : ${commande.dateRetourAttendu.toLocaleDateString()}
+        
+        En cas de non-restitution, des frais de 600€ seront appliqués 
+        conformément aux CGV.
+        
+        Cordialement,
+        L'équipe Vite & Gourmand
+    `);
+
+    localStorage.setItem("commandes", JSON.stringify(commandes));
+}
+
+// Modifier la section changement de statut
+document.addEventListener("change", (e) => {
+    if (!e.target.classList.contains("select-statut")) return;
+
+    const id = e.target.dataset.id;
+    const nouveauStatut = e.target.value;
+
+    commandes = commandes.map(cmd => {
+        if (cmd.id === id) {
+            cmd.statut = nouveauStatut;
+            cmd.historique.push({
+                date: new Date().toISOString(),
+                action: "Statut modifié : " + nouveauStatut
+            });
+
+            // AJOUTER : vérifier si livré + matériel
+            if (nouveauStatut === "livré") {
+                verifierMateriel(cmd);
+            }
+        }
+        return cmd;
+    });
+
+    localStorage.setItem("commandes", JSON.stringify(commandes));
+    afficherCommandes();
+});
+
+// =============================================
+// AJOUT FONCTIONS POUR L'EMPLOYÉ (comme admin)
+// =============================================
+
+// Création de menu/plat/horaire
+const btnAjoutMenu = document.getElementById("btn-ajout-menu");
+btnAjoutMenu.addEventListener("click", () => {
+    const nom = prompt("Nom du menu:");
+    const description = prompt("Description:");
+    if (nom && description) {
+        menus.push({id: "MENU-" + Date.now(), nom, description});
+        localStorage.setItem("menus", JSON.stringify(menus));
+        afficherMenus();
+    }
+});
+
+const btnAjoutPlat = document.getElementById("btn-ajout-plat");
+btnAjoutPlat.addEventListener("click", () => {
+    const nom = prompt("Nom du plat:");
+    const description = prompt("Description:");
+    if (nom && description) {
+        plats.push({id: "PLAT-" + Date.now(), nom, description});
+        localStorage.setItem("plats", JSON.stringify(plats));
+        afficherPlats();
+    }
+});
+
+const btnAjoutHoraire = document.getElementById("btn-ajout-horaire");
+btnAjoutHoraire.addEventListener("click", () => {
+    const jour = prompt("Jour (ex: Lundi):");
+    const ouverture = prompt("Heure d'ouverture (ex: 09:00):");
+    const fermeture = prompt("Heure de fermeture (ex: 18:00):");
+    if (jour && ouverture && fermeture) {
+        horaires.push({id: "HOR-" + Date.now(), jour, ouverture, fermeture});
+        localStorage.setItem("horaires", JSON.stringify(horaires));
+        afficherHoraires();
+    }
+});

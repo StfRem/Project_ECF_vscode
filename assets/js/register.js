@@ -8,15 +8,38 @@ form.addEventListener("submit", function (e) {
     const email = document.getElementById("email").value.trim();
     const address = document.getElementById("address").value.trim();
     const password = document.getElementById("password").value.trim();
+    const cp = document.getElementById("cp").value.trim();
+
+    // -----------------------------
+    // VALIDATIONS
+    // -----------------------------
 
     const regexPassword =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
+
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // GSM FR : 06xxxxxxxx / 07xxxxxxxx / +336xxxxxxxx / 00336xxxxxxxx
+    const regexGSM = /^(0[67]\d{8}|(\+33|0033)[67]\d{8})$/;
+
+    if (!regexEmail.test(email)) {
+        alert("Format d'email invalide.");
+        return;
+    }
+
+    if (!regexGSM.test(gsm)) {
+        alert("Numéro GSM invalide. Format attendu : 06xxxxxxxx ou 07xxxxxxxx");
+        return;
+    }
 
     if (!regexPassword.test(password)) {
         alert("Le mot de passe ne respecte pas les critères de sécurité.");
         return;
     }
 
+    // -----------------------------
+    // VÉRIFICATION DOUBLON EMAIL
+    // -----------------------------
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
     if (users.some(u => u.email === email)) {
@@ -24,12 +47,16 @@ form.addEventListener("submit", function (e) {
         return;
     }
 
+    // -----------------------------
+    // CRÉATION DU COMPTE
+    // -----------------------------
     const newUser = {
         id: "USR-" + Date.now(),
         fullname,
         gsm,
         email,
         address,
+        cp,
         password,
         role: "utilisateur"
     };
@@ -49,6 +76,9 @@ form.addEventListener("submit", function (e) {
 
     alert("Un email de bienvenue vous a été envoyé !");
 
+    // -----------------------------
+    // REDIRECTION SI COMMANDE EN ATTENTE
+    // -----------------------------
     const pendingMenu = localStorage.getItem("pendingMenu");
 
     if (pendingMenu) {

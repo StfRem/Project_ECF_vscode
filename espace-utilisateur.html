@@ -9,7 +9,14 @@
 </head>
 
 <body>
-
+    <script>
+        // Vérif de la connexion
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {
+            alert("Veuillez vous connecter pour accéder à cette page.");
+            window.location.href = "./login.html";
+        }
+    </script>
     <!-- NAVBAR DYNAMIQUE -->
     <header id="header"></header>
 

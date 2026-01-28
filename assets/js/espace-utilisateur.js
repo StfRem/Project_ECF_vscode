@@ -186,13 +186,37 @@ document.addEventListener("click", (e) => {
         const cmd = getCommandeCourante();
         if (!cmd) return;
 
-        cmd.nbPersonnes = Number(document.getElementById("mod-nb").value);
+        const nouveauNb = Number(document.getElementById("mod-nb").value);
+        const menu = getMenuById(cmd.menuId); // Vous devrez récupérer les infos du menu
+
+        // RECALCUL DU PRIX
+        let total = nouveauNb * (menu.prix / menu.personnesMin);
+
+        // Réduction 10% si +5 personnes
+        if (nouveauNb >= menu.personnesMin + 5) {
+            total = total * 0.9;
+        }
+
+        // Frais de livraison
+        const ville = document.getElementById("mod-ville").value.toLowerCase();
+        const distance = Number(document.getElementById("mod-distance").value);
+
+        let fraisLivraison = 5;
+        if (ville !== "bordeaux") {
+            fraisLivraison += distance * 0.59;
+        }
+
+        total += fraisLivraison;
+
+        // Mise à jour
+        cmd.nbPersonnes = nouveauNb;
+        cmd.prixTotal = total;
         cmd.datePrestation = document.getElementById("mod-date").value;
         cmd.heurePrestation = document.getElementById("mod-heure").value;
         cmd.adresse = document.getElementById("mod-adresse").value;
         cmd.cp = document.getElementById("mod-cp").value;
         cmd.ville = document.getElementById("mod-ville").value;
-        cmd.distance = Number(document.getElementById("mod-distance").value);
+        cmd.distance = distance;
 
         cmd.historique.push({
             date: new Date().toISOString(),
@@ -204,7 +228,6 @@ document.addEventListener("click", (e) => {
         alert("Commande mise à jour !");
         afficherListe();
         afficherDetail(cmd);
-        return;
     }
 
     // AVIS
@@ -224,9 +247,31 @@ document.addEventListener("click", (e) => {
             cmd.avis = { note: null, commentaire: "", date: null };
         }
 
+        // AVANT
         cmd.avis.note = Number(note);
         cmd.avis.commentaire = commentaire;
         cmd.avis.date = new Date().toISOString();
+
+        // APRÈS
+        cmd.avis.note = Number(note);
+        cmd.avis.commentaire = commentaire;
+        cmd.avis.date = new Date().toISOString();
+
+        // AJOUTER : Créer un objet avis dans la liste globale
+        let avis = JSON.parse(localStorage.getItem("avis")) || [];
+
+        avis.push({
+            id: "AVIS-" + Date.now(),
+            commandeId: cmd.id,
+            userId: user.id,
+            nomClient: user.fullname,
+            note: Number(note),
+            commentaire: commentaire,
+            date: new Date().toISOString(),
+            statut: "en attente"  // En attente de validation employé
+        });
+
+        localStorage.setItem("avis", JSON.stringify(avis));
 
         cmd.historique.push({
             date: new Date().toISOString(),

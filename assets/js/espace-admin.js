@@ -1,16 +1,25 @@
-// ---------------------------------------------------------
 // Vérification du rôle administrateur
-// ---------------------------------------------------------
-const user = JSON.parse(localStorage.getItem("user"));
 
 if (!user || user.role !== "admin") {
     alert("Accès réservé à l'administrateur.");
     location.href = "./login.html";
 }
 
-// ---------------------------------------------------------
-// Chargement des données
-// ---------------------------------------------------------
+
+// COMMANDES (même code que espace-employe.js)
+let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
+// Sélecteurs des filtres commandes
+const filtreStatut = document.getElementById("filtre-statut");
+const filtreClient = document.getElementById("filtre-client");
+const listeCommandes = document.getElementById("liste-commandes");
+
+// Sélecteur des avis
+const listeAvis = document.getElementById("liste-avis");
+
+
+// AVIS (même code que espace-employe.js)
+let avis = JSON.parse(localStorage.getItem("avis")) || [];
+
 // Utilisateurs (employés)
 let users = JSON.parse(localStorage.getItem("users")) || [];
 const listeEmployes = document.getElementById("liste-employes");
@@ -31,9 +40,7 @@ let horaires = JSON.parse(localStorage.getItem("horaires")) || [];
 const listeHoraires = document.getElementById("liste-horaires");
 const btnAjoutHoraire = document.getElementById("btn-ajout-horaire");
 
-// ---------------------------------------------------------
 // AFFICHAGE EMPLOYÉS
-// ---------------------------------------------------------
 function afficherEmployes() {
     listeEmployes.innerHTML = "";
 
@@ -64,11 +71,9 @@ function afficherEmployes() {
 
 afficherEmployes();
 
-// ---------------------------------------------------------
 // CRÉATION EMPLOYÉ
-// ---------------------------------------------------------
 btnAjoutEmploye.addEventListener("click", () => {
-    const fullname = prompt("Nom complet de l'employé :");
+    const fullname = prompt("Nom et Prénom de l'employé :");
     const email = prompt("Email de l'employé :");
     const gsm = prompt("Numéro de téléphone :");
     const password = prompt("Mot de passe temporaire :");
@@ -102,9 +107,7 @@ btnAjoutEmploye.addEventListener("click", () => {
     afficherEmployes();
 });
 
-// ---------------------------------------------------------
 // AFFICHAGE MENUS
-// ---------------------------------------------------------
 function afficherMenus() {
     listeMenus.innerHTML = "";
 
@@ -130,9 +133,7 @@ function afficherMenus() {
 
 afficherMenus();
 
-// ---------------------------------------------------------
 // CRÉATION MENU
-// ---------------------------------------------------------
 btnAjoutMenu.addEventListener("click", () => {
     const nom = prompt("Nom du menu :");
     const description = prompt("Description :");
@@ -154,9 +155,7 @@ btnAjoutMenu.addEventListener("click", () => {
     afficherMenus();
 });
 
-// ---------------------------------------------------------
 // AFFICHAGE PLATS
-// ---------------------------------------------------------
 function afficherPlats() {
     listePlats.innerHTML = "";
 
@@ -171,7 +170,6 @@ function afficherPlats() {
         li.innerHTML = `
             <strong>${plat.nom}</strong><br>
             ${plat.description}<br>
-            Prix : ${plat.prix} €<br>
             <button class="btn-modifier-plat" data-id="${plat.id}">Modifier</button>
             <button class="btn-supprimer-plat" data-id="${plat.id}">Supprimer</button>
         `;
@@ -182,33 +180,48 @@ function afficherPlats() {
 
 afficherPlats();
 
-// ---------------------------------------------------------
 // CRÉATION PLAT
-// ---------------------------------------------------------
 btnAjoutPlat.addEventListener("click", () => {
-    const nom = prompt("Nom du plat :");
-    const description = prompt("Description :");
-    const prix = prompt("Prix :");
-
-    if (!nom || !description || !prix) {
-        alert("Tous les champs sont obligatoires.");
-        return;
+    // 1. Entrée
+    const nomEntree = prompt("Nom de l'entrée (laisser vide si aucun) :");
+    if (nomEntree) {
+        const descEntree = prompt("Description:");
+        plats.push({
+            id: "PLAT-" + Date.now(),
+            nom: nomEntree,
+            description: descEntree
+        });
     }
 
-    plats.push({
-        id: "PLAT-" + Date.now(),
-        nom,
-        description,
-        prix: parseFloat(prix)
-    });
+    // 2. Plat principal
+    const nomPlat = prompt("Nom du plat principal (laisser vide si aucun) :");
+    if (nomPlat) {
+        const descPlat = prompt("Description du plat principal :");
+        plats.push({
+            id: "PLAT-" + (Date.now() + 1),
+            nom: nomPlat,
+            description: descPlat
+        });
+    }
+
+    // 3. Dessert
+    const nomDessert = prompt("Nom du dessert (laisser vide si aucun) :");
+    if (nomDessert) {
+        const descDessert = prompt("Description du dessert :");
+        plats.push({
+            id: "PLAT-" + (Date.now() + 2),
+            nom: nomDessert,
+            description: descDessert
+        });
+    }
 
     localStorage.setItem("plats", JSON.stringify(plats));
     afficherPlats();
+    alert("Plat(s) ajouté(s) avec succès !");
 });
 
-// ---------------------------------------------------------
+
 // AFFICHAGE HORAIRES
-// ---------------------------------------------------------
 function afficherHoraires() {
     listeHoraires.innerHTML = "";
 
@@ -232,9 +245,7 @@ function afficherHoraires() {
 
 afficherHoraires();
 
-// ---------------------------------------------------------
 // CRÉATION HORAIRE
-// ---------------------------------------------------------
 btnAjoutHoraire.addEventListener("click", () => {
     const jour = prompt("Jour (ex : Lundi) :");
     const ouverture = prompt("Heure d'ouverture (ex : 09:00) :");
@@ -256,9 +267,7 @@ btnAjoutHoraire.addEventListener("click", () => {
     afficherHoraires();
 });
 
-// ---------------------------------------------------------
 // CLIC GLOBAL : EMPLOYÉS / MENUS / PLATS / HORAIRES
-// ---------------------------------------------------------
 document.addEventListener("click", (e) => {
     const id = e.target.dataset.id;
 
@@ -377,3 +386,122 @@ document.addEventListener("click", (e) => {
         afficherHoraires();
     }
 });
+// =============================================
+// NOUVELLES FONCTIONS POUR L'ADMIN
+// =============================================
+
+// Gestion des commandes (filtres + statuts + matériel)
+function afficherCommandes() {
+    listeCommandes.innerHTML = "";
+    if (commandes.length === 0) {
+        listeCommandes.innerHTML = "<p>Aucune commande.</p>";
+        return;
+    }
+    commandes.forEach(cmd => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <strong>${cmd.nomClient}</strong><br>
+            Statut: ${cmd.statut}<br>
+            ${cmd.details}<br>
+            ${cmd.materiel ? `<span style="color:red;">⚠️ Matériel en prêt</span><br>` : ''}
+            <select class="select-statut" data-id="${cmd.id}">
+                <option value="">Changer statut</option>
+                <option value="accepté">Accepté</option>
+                <option value="en préparation">En préparation</option>
+                <option value="livré">Livré</option>
+                <option value="terminée">Terminée</option>
+                ${cmd.materiel ? `<option value="en attente du retour de matériel">Retour matériel</option>` : ''}
+            </select>
+        `;
+        listeCommandes.appendChild(li);
+    });
+}
+
+// Gestion du changement de statut (avec email pour le matériel)
+document.addEventListener("change", (e) => {
+    if (e.target.classList.contains("select-statut")) {
+        const id = e.target.dataset.id;
+        const commande = commandes.find(cmd => cmd.id === id);
+        commande.statut = e.target.value;
+        if (e.target.value === "en attente du retour de matériel") {
+            alert(`Email envoyé à ${commande.nomClient} :
+---
+Objet: Retour de matériel
+Bonjour,
+Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués (CGV).
+Cordialement, L'équipe Vite & Gourmand
+---
+            `);
+        }
+        localStorage.setItem("commandes", JSON.stringify(commandes));
+        afficherCommandes();
+    }
+});
+
+// Filtres pour les commandes
+filtreStatut.addEventListener("change", () => {
+    const statut = filtreStatut.value;
+    const commandesFiltrees = statut ? commandes.filter(cmd => cmd.statut === statut) : commandes;
+    afficherCommandesFiltrees(commandesFiltrees);
+});
+
+filtreClient.addEventListener("input", () => {
+    const recherche = filtreClient.value.toLowerCase();
+    const commandesFiltrees = commandes.filter(cmd =>
+        cmd.nomClient.toLowerCase().includes(recherche)
+    );
+    afficherCommandesFiltrees(commandesFiltrees);
+});
+
+function afficherCommandesFiltrees(list) {
+    listeCommandes.innerHTML = "";
+    list.forEach(cmd => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <strong>${cmd.nomClient}</strong><br>
+            Statut: ${cmd.statut}<br>
+            ${cmd.details}
+        `;
+        listeCommandes.appendChild(li);
+    });
+}
+
+// Gestion des avis (validation/refus)
+function afficherAvis() {
+    listeAvis.innerHTML = "";
+    const avisEnAttente = avis.filter(a => a.statut === "en attente");
+    if (avisEnAttente.length === 0) {
+        listeAvis.innerHTML = "<p>Aucun avis en attente.</p>";
+        return;
+    }
+    avisEnAttente.forEach(a => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <strong>${a.nomClient}</strong><br>
+            Note: ${a.note}/5<br>
+            "${a.commentaire}"<br>
+            <button class="btn-valider-avis" data-id="${a.id}">Valider</button>
+            <button class="btn-refuser-avis" data-id="${a.id}">Refuser</button>
+        `;
+        listeAvis.appendChild(li);
+    });
+}
+
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("btn-valider-avis")) {
+        const id = e.target.dataset.id;
+        avis = avis.map(a => a.id === id ? {...a, statut: "validé"} : a);
+        localStorage.setItem("avis", JSON.stringify(avis));
+        afficherAvis();
+    }
+    if (e.target.classList.contains("btn-refuser-avis")) {
+        const id = e.target.dataset.id;
+        avis = avis.filter(a => a.id !== id);
+        localStorage.setItem("avis", JSON.stringify(avis));
+        afficherAvis();
+    }
+});
+
+// Appel initial
+afficherCommandes();
+afficherAvis();

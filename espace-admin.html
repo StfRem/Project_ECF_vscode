@@ -10,56 +10,98 @@
 
 <body>
 
-    <!-- NAVBAR DYNAMIQUE -->
-    <header id="header"></header>
-
-    <script type="module">
-        import { loadNavbar, loadFooter } from "./assets/js/script.js";
-        loadNavbar();
-        loadFooter();
+    <!-- Vérification ADMIN -->
+    <script>
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || user.role !== "admin") {
+            alert("Accès réservé à l'administrateur.");
+            window.location.href = "./login.html";
+        }
     </script>
 
-<main class="user-container">
+    <!-- NAVBAR -->
+    <header id="header"></header>
+    <script type="module">
+        import { loadNavbar } from "./assets/js/script.js";
+        loadNavbar();
+    </script>
 
-    <!-- EMPLOYÉS -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des employés</h1>
-            <button id="btn-ajout-employe" class="btn-primary">Créer un employé</button>
-        </div>
-        <ul id="liste-employes" class="admin-list"></ul>
-    </section>
+    <main class="user-container">
 
-    <!-- MENUS -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des menus</h1>
-            <button id="btn-ajout-menu" class="btn-primary">Créer un menu</button>
-        </div>
-        <ul id="liste-menus" class="admin-list"></ul>
-    </section>
+        <!-- 1. EMPLOYÉS  ok ordre js--> 
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des employés</h1>
+                <button id="btn-ajout-employe" class="btn-primary">Créer un employé</button>
+            </div>
+            <ul id="liste-employes" class="admin-list"></ul>
+        </section>
 
-    <!-- PLATS -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des plats</h1>
-            <button id="btn-ajout-plat" class="btn-primary">Créer un plat</button>
-        </div>
-        <ul id="liste-plats" class="admin-list"></ul>
-    </section>
+        <!-- 2. MENUS ok js-->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des menus</h1>
+                <button id="btn-ajout-menu" class="btn-primary">Créer un menu</button>
+            </div>
+            <ul id="liste-menus" class="admin-list"></ul>
+        </section>
 
-    <!-- HORAIRES -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des horaires</h1>
-            <button id="btn-ajout-horaire" class="btn-primary">Créer un horaire</button>
-        </div>
-        <ul id="liste-horaires" class="admin-list"></ul>
-    </section>
+        <!-- 3. PLATS ok js-->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des plats</h1>
+                <button id="btn-ajout-plat" class="btn-primary">Créer un plat</button>
+            </div>
+            <ul id="liste-plats" class="admin-list"></ul>
+        </section>
 
-</main>
+        <!-- 4. COMMANDES -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des commandes</h1>
+            </div>
 
+            <!-- Filtres -->
+            <div class="filters">
+                <select id="filtre-statut">
+                    <option value="">Tous les statuts</option>
+                    <option value="en attente">En attente</option>
+                    <option value="accepté">Accepté</option>
+                    <option value="en préparation">En préparation</option>
+                    <option value="en cours de livraison">En cours de livraison</option>
+                    <option value="livré">Livré</option>
+                    <option value="terminée">Terminée</option>
+                    <option value="en attente du retour de matériel">En attente du retour de matériel</option>
+                </select>
 
+                <input type="text" id="filtre-client" placeholder="Rechercher un client">
+            </div>
+
+            <ul id="liste-commandes" class="admin-list"></ul>
+        </section>
+
+        <!-- 5. AVIS -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des avis</h1>
+            </div>
+            <ul id="liste-avis" class="admin-list"></ul>
+        </section>
+
+        <!-- 6. HORAIRES -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des horaires</h1>
+                <button id="btn-ajout-horaire" class="btn-primary">Créer un horaire</button>
+            </div>
+            <ul id="liste-horaires" class="admin-list"></ul>
+        </section>
+
+    </main>
+
+    <footer id="footer"></footer>
+
+    <!-- SCRIPT ADMIN -->
     <script src="./assets/js/espace-admin.js"></script>
 
 </body>

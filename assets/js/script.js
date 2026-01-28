@@ -1,5 +1,13 @@
-// NAVBAR DYNAMIQUE
+// NAVBAR DYNAMIQUE ( ajout connexion/déconnexion)
 export function loadNavbar() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const isLogged = !!user;
+
+    let loginLogoutLink = '<li><a href="./login.html">Connexion</a></li>';
+    if (isLogged) {
+        loginLogoutLink = '<li><a href="#" id="btn-deconnexion">Déconnexion</a></li>';
+    }
+
     document.getElementById("header").innerHTML = `
         <nav class="nav-header">
             <img src="./assets/images/logo.png" alt="logo" class="logo">
@@ -7,11 +15,23 @@ export function loadNavbar() {
                 <li><a href="./index.html">Accueil</a></li>
                 <li><a href="./menus.html">Menus</a></li>
                 <li><a href="./contact.html">Contact</a></li>
-                <li><a href="./login.html">Connexion</a></li>
+                ${loginLogoutLink}
             </ul>
         </nav>
     `;
+
+    // Gestion du clic sur Déconnexion
+    const btnDeconnexion = document.getElementById("btn-deconnexion");
+    if (btnDeconnexion) {
+        btnDeconnexion.addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("user");
+            alert("Vous êtes déconnecté.");
+            window.location.href = "./index.html";
+        });
+    }
 }
+
 
 // FOOTER DYNAMIQUE
 export function loadFooter() {
@@ -35,5 +55,33 @@ export function loadFooter() {
         </div>
     `;
 }
+
+// ---------------------------------------------------------
+// Création automatique du compte administrateur
+// ---------------------------------------------------------
+(function initAdmin() {
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const adminEmail = "admin@site.com";
+
+    // Si l'admin n'existe pas encore, on le crée
+    if (!users.some(u => u.email === adminEmail)) {
+
+        const adminUser = {
+            id: "USR-ADMIN",
+            fullname: "Administrateur",
+            gsm: "0000000000",
+            email: "admin@site.com",
+            address: "Siège",
+            cp: "00000",
+            password: "Admin1234!", // mot de passe codé en dur
+            role: "admin"
+        };
+
+        users.push(adminUser);
+        localStorage.setItem("users", JSON.stringify(users));
+    }
+})();
+
 // Simulation : à remplacer plus tard par ton vrai système de connexion
 let userIsLogged = false; 
