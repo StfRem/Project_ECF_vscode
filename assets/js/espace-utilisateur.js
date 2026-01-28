@@ -1,7 +1,7 @@
-// ---------------------------------------------------------
-// Sécurité : utilisateur connecté
-// ---------------------------------------------------------
+// Récupération de l'utilisateur connecté
 const user = JSON.parse(localStorage.getItem("user"));
+// Sécurité : si pas connecté
+
 if (!user) {
     alert("Vous devez être connecté pour accéder à votre espace utilisateur.");
     location.href = "./login.html";

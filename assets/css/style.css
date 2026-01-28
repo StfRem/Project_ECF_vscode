@@ -181,6 +181,7 @@ header {
     cursor: pointer;
     color: var(--txt-dark);
     font-weight: bold;
+    font-size: 16px;
 }
 
 /* CARDS MENUS menu global*/
@@ -217,10 +218,10 @@ header {
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
-    font-size: 15px;
+    font-size: 16px;
     cursor: pointer;
     transition: 0.25s ease;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 .btn-details:hover {
@@ -507,7 +508,16 @@ header {
 
 
 /* ====== BOUTONS ====== */
-.btn-primary {
+.btn-primary, 
+.btn-suspend, 
+.btn-supprimer, 
+.btn-modifier-menu,
+.btn-supprimer-menu ,
+.btn-modifier-plat,
+.btn-supprimer-plat,
+.btn-modifier-horaire,
+.btn-supprimer-horaire
+{
     background: var(--btn);
     color: var(--txt-dark);
     border: none;
