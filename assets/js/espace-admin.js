@@ -155,7 +155,9 @@ btnAjoutMenu.addEventListener("click", () => {
     afficherMenus();
 });
 
-// AFFICHAGE PLATS
+// ---------------------------------------------------------
+// Affichage des plats
+// ---------------------------------------------------------
 function afficherPlats() {
     listePlats.innerHTML = "";
 
@@ -166,12 +168,18 @@ function afficherPlats() {
 
     plats.forEach(plat => {
         const li = document.createElement("li");
+        li.classList.add("admin-item");
 
         li.innerHTML = `
-            <strong>${plat.nom}</strong><br>
-            ${plat.description}<br>
-            <button class="btn-modifier-plat" data-id="${plat.id}">Modifier</button>
-            <button class="btn-supprimer-plat" data-id="${plat.id}">Supprimer</button>
+            <div class="admin-item-info">
+                <strong>${plat.nom}</strong>
+                <span>${plat.description}</span>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn-action btn-modifier-plat" data-id="${plat.id}">Modifier</button>
+                <button class="btn-danger btn-supprimer-plat" data-id="${plat.id}">Supprimer</button>
+            </div>
         `;
 
         listePlats.appendChild(li);
