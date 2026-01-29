@@ -1,21 +1,11 @@
-// ---------------------------------------------------------
 // Vérification du rôle employé
-// ---------------------------------------------------------
 const user = JSON.parse(localStorage.getItem("user"));
-
 if (!user || user.role !== "employe") {
-    alert("Accès réservé au personnel.");
-    location.href = "./login.html";
+    alert("Accès réservé au employé.");
+    window.location.href = "./login.html";
 }
 
-// ---------------------------------------------------------
-// Chargement des commandes
-// ---------------------------------------------------------
-let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
 
-const liste = document.getElementById("liste-commandes");
-const filtreStatut = document.getElementById("filtre-statut");
-const filtreClient = document.getElementById("filtre-client");
 
 // ---------------------------------------------------------
 // Chargement des menus
@@ -28,6 +18,13 @@ const listeMenus = document.getElementById("liste-menus");
 // ---------------------------------------------------------
 let plats = JSON.parse(localStorage.getItem("plats")) || [];
 const listePlats = document.getElementById("liste-plats");
+
+// Chargement des commandes
+let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
+// Sélecteurs des filtres commandes
+const liste = document.getElementById("liste-commandes");
+const filtreStatut = document.getElementById("filtre-statut");
+const filtreClient = document.getElementById("filtre-client");
 
 // ---------------------------------------------------------
 // Chargement des horaires

@@ -1,4 +1,5 @@
 // Vérification du rôle administrateur
+const user = JSON.parse(localStorage.getItem("user"));
 if (!user || user.role !== "admin") {
     alert("Accès réservé à l'administrateur.");
     location.href = "./login.html";
@@ -179,7 +180,7 @@ function afficherPlats() {
 
 afficherPlats();
 
-// CRÉATION PLAT
+// ----------------  CRÉATION PLAT  ------------------------------------------------------------
 btnAjoutPlat.addEventListener("click", () => {
     // 1. Entrée
     const nomEntree = prompt("Nom de l'entrée (laisser vide si aucun) :");
@@ -191,6 +192,7 @@ btnAjoutPlat.addEventListener("click", () => {
             description: descEntree
         });
     }
+
 
     // 2. Plat principal
     const nomPlat = prompt("Nom du plat principal (laisser vide si aucun) :");
@@ -386,16 +388,20 @@ document.addEventListener("click", (e) => {
     }
 });
 
-
-// Gestion des commandes (filtres + statuts + matériel)
-function afficherCommandes() {
+// --------------------------  SECTION FILTRE  ------------------------------
+function afficherCommandes(list = commandes) {
     listeCommandes.innerHTML = "";
-    if (commandes.length === 0) {
+
+    if (list.length === 0) {
         listeCommandes.innerHTML = "<p>Aucune commande.</p>";
         return;
     }
 
-    commandes.forEach(cmd => {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    list.forEach(cmd => {
+        const client = users.find(u => u.id === cmd.userId);
+
         const li = document.createElement("li");
 
         const details = `
@@ -409,126 +415,85 @@ function afficherCommandes() {
 
         li.innerHTML = `
             <strong>Commande #${cmd.id}</strong><br>
+            Client : ${client ? client.fullname : "Inconnu"}<br>
             Statut : ${cmd.statut}<br>
             ${details}<br>
-            ${cmd.materiel ? `<span style="color:red;">⚠️ Matériel en prêt</span><br>` : ''}
+            ${cmd.materiel ? `<span style="color:red;">⚠️ Matériel en prêt</span><br>` : ""}
             <select class="select-statut" data-id="${cmd.id}">
                 <option value="">Changer statut</option>
                 <option value="accepté">Accepté</option>
                 <option value="en préparation">En préparation</option>
                 <option value="livré">Livré</option>
                 <option value="terminée">Terminée</option>
-                ${cmd.materiel ? `<option value="en attente du retour de matériel">Retour matériel</option>` : ''}
+                ${cmd.materiel ? `<option value="en attente du retour de matériel">Retour matériel</option>` : ""}
             </select>
         `;
+
         listeCommandes.appendChild(li);
     });
 }
+//  STATUT
+filtreStatut.addEventListener("change", () => {
+    const statut = filtreStatut.value.toLowerCase();
 
-// Gestion du changement de statut (avec email pour le matériel)
+    const filtered = statut
+        ? commandes.filter(cmd => cmd.statut.toLowerCase() === statut)
+        : commandes;
+
+    afficherCommandes(filtered);
+});
+//  FILTRE CLIENT
+filtreClient.addEventListener("input", () => {
+    const recherche = filtreClient.value.toLowerCase();
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const filtered = commandes.filter(cmd => {
+        const client = users.find(u => u.id === cmd.userId);
+        if (!client) return false;
+
+        return client.fullname.toLowerCase().includes(recherche);
+    });
+
+    afficherCommandes(filtered);
+});
+// CHANGEMENT STATUT COMMANDE
 document.addEventListener("change", (e) => {
     if (e.target.classList.contains("select-statut")) {
         const id = e.target.dataset.id;
         const commande = commandes.find(cmd => cmd.id === id);
+
         commande.statut = e.target.value;
+
         if (e.target.value === "en attente du retour de matériel") {
-            alert(`Email envoyé à ${commande.nomClient} :
+            alert(`Email envoyé :
 ---
-Objet: Retour de matériel
+Objet : Retour de matériel
 Bonjour,
-Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués (CGV).
+Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués.
 Cordialement, L'équipe Vite & Gourmand
----
-            `);
+---`);
         }
+
         localStorage.setItem("commandes", JSON.stringify(commandes));
         afficherCommandes();
     }
 });
 
-// Filtres pour les commandes
-filtreStatut.addEventListener("change", () => {
-    const statut = filtreStatut.value;
-    const commandesFiltrees = statut ? commandes.filter(cmd => cmd.statut === statut) : commandes;
-    afficherCommandesFiltrees(commandesFiltrees);
-});
-
-filtreClient.addEventListener("input", () => {
-    const recherche = filtreClient.value.toLowerCase();
-    const commandesFiltrees = commandes.filter(cmd =>
-        cmd.nomClient.toLowerCase().includes(recherche)
-    );
-    afficherCommandesFiltrees(commandesFiltrees);
-});
-
-
-function afficherCommandesFiltrees(list) {
-    listeCommandes.innerHTML = "";
-    list.forEach(cmd => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-            <strong>${cmd.nomClient}</strong><br>
-            Statut: ${cmd.statut}<br>
-            ${cmd.details}
-        `;
-        listeCommandes.appendChild(li);
-    });
-}
-
-
-// test ajout filtres------------------------------------------
-function afficherCommandesFiltrees(list) {
-    listeCommandes.innerHTML = "";
-
-    if (list.length === 0) {
-        listeCommandes.innerHTML = "<p>Aucune commande correspondant aux critères.</p>";
-        return;
-    }
-
-    list.forEach(cmd => {
-        const li = document.createElement("li");
-
-        const details = `
-            Menu : ${cmd.menuTitre}<br>
-            Nombre de personnes : ${cmd.nbPersonnes}<br>
-            Prix total : ${cmd.prixTotal} €<br>
-            Date / Heure : ${cmd.datePrestation} à ${cmd.heurePrestation}<br>
-            Adresse : ${cmd.adresse}, ${cmd.cp}, ${cmd.ville}<br>
-            Téléphone : ${cmd.telephone}
-        `;
-
-        li.innerHTML = `
-            <strong>Commande #${cmd.id}</strong><br>
-            Statut : ${cmd.statut}<br>
-            ${details}<br>
-            ${cmd.materiel ? `<span style="color:red;">⚠️ Matériel en prêt</span><br>` : '' }
-            <select class="select-statut" data-id="${cmd.id}">
-                <option value="">Changer statut</option>
-                <option value="accepté">Accepté</option>
-                <option value="en préparation">En préparation</option>
-                <option value="livré">Livré</option>
-                <option value="terminée">Terminée</option>
-                ${cmd.materiel ? `<option value="en attente du retour de matériel">Retour matériel</option>` : '' }
-            </select>
-        `;
-
-        listeCommandes.appendChild(li);
-    });
-}
-
-// Gestion des avis (validation/refus)
+// GESTION DES AVIS
 function afficherAvis() {
     listeAvis.innerHTML = "";
     const avisEnAttente = avis.filter(a => a.statut === "en attente");
+
     if (avisEnAttente.length === 0) {
         listeAvis.innerHTML = "<p>Aucun avis en attente.</p>";
         return;
     }
+
     avisEnAttente.forEach(a => {
         const li = document.createElement("li");
         li.innerHTML = `
             <strong>${a.nomClient}</strong><br>
-            Note: ${a.note}/5<br>
+            Note : ${a.note}/5<br>
             "${a.commentaire}"<br>
             <button class="btn-valider-avis" data-id="${a.id}">Valider</button>
             <button class="btn-refuser-avis" data-id="${a.id}">Refuser</button>
@@ -544,6 +509,7 @@ document.addEventListener("click", (e) => {
         localStorage.setItem("avis", JSON.stringify(avis));
         afficherAvis();
     }
+
     if (e.target.classList.contains("btn-refuser-avis")) {
         const id = e.target.dataset.id;
         avis = avis.filter(a => a.id !== id);
@@ -552,6 +518,6 @@ document.addEventListener("click", (e) => {
     }
 });
 
-// Appel initial
+// AFFICHAGE INITIAL
 afficherCommandes();
 afficherAvis();

@@ -10,14 +10,7 @@
 
 <body>
 
-    <!-- Vérification ADMIN -->
-    <script>
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user || user.role !== "admin") {
-            alert("Accès réservé à l'administrateur.");
-            window.location.href = "./login.html";
-        }
-    </script>
+
 
     <!-- NAVBAR -->
     <header id="header"></header>
