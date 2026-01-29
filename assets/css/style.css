@@ -516,7 +516,9 @@ header {
 .btn-modifier-plat,
 .btn-supprimer-plat,
 .btn-modifier-horaire,
-.btn-supprimer-horaire
+.btn-supprimer-horaire,
+.btn-action,
+.btn-danger
 {
     background: var(--btn);
     color: var(--txt-dark);
@@ -529,33 +531,6 @@ header {
 
 .btn-primary:hover {
     opacity: 0.85;
-}
-
-
-/*-------------------espace-utilisateur------------------------*/
-
-.btn-action {
-    background: var(--header);
-    color: var(--txt-dark);
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-right: 8px;
-}
-
-.btn-danger {
-    background: #ff2f6a;
-    color: white;
-}
-
-.btn-action,
-.btn-danger {
-    padding: 12px 20px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    margin-top: 10px;
-    display: inline-block;
 }
 
 .btn-action:hover,
