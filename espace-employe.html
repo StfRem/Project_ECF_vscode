@@ -11,41 +11,16 @@
 <body>
 
     <!-- NAVBAR DYNAMIQUE -->
-<header id="header"></header>
+    <header id="header"></header>
 
-<script type="module">
-    import { loadNavbar} from "./assets/js/script.js";
-    loadNavbar();
-</script>
+    <script type="module">
+        import { loadNavbar } from "./assets/js/script.js";
+        loadNavbar();
+    </script>
 
-<main class="user-container">
+    <main class="user-container">
 
-    <!-- COMMANDES -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des commandes</h1>
-        </div>
-
-        <!-- Filtres -->
-        <div class="filters">
-            <select id="filtre-statut">
-                <option value="">Tous les statuts</option>
-                <option value="en attente">En attente</option>
-                <option value="accepté">Accepté</option>
-                <option value="en préparation">En préparation</option>
-                <option value="en cours de livraison">En cours de livraison</option>
-                <option value="livré">Livré</option>
-                <option value="terminée">Terminée</option>
-                <option value="en attente du retour de matériel">En attente du retour de matériel</option>
-            </select>
-
-            <input type="text" id="filtre-client" placeholder="Rechercher un client">
-        </div>
-
-        <ul id="liste-commandes" class="admin-list"></ul>
-    </section>
-
-        <!-- MENUS -->
+        <!-- GESTION DES MENUS -->
         <section class="admin-section">
             <div class="admin-header">
                 <h1>Gestion des menus</h1>
@@ -54,7 +29,7 @@
             <ul id="liste-menus" class="admin-list"></ul>
         </section>
 
-        <!-- PLATS -->
+        <!-- GESTION DES PLATS -->
         <section class="admin-section">
             <div class="admin-header">
                 <h1>Gestion des plats</h1>
@@ -63,7 +38,40 @@
             <ul id="liste-plats" class="admin-list"></ul>
         </section>
 
-        <!-- HORAIRES -->
+        <!-- GESTION DES COMMANDES -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des commandes</h1>
+            </div>
+
+            <!-- Filtres -->
+            <div class="filters">
+                <select id="filtre-statut">
+                    <option value="">Tous les statuts</option>
+                    <option value="en attente">En attente</option>
+                    <option value="accepté">Accepté</option>
+                    <option value="en préparation">En préparation</option>
+                    <option value="en cours de livraison">En cours de livraison</option>
+                    <option value="livré">Livré</option>
+                    <option value="terminée">Terminée</option>
+                    <option value="en attente du retour de matériel">En attente du retour de matériel</option>
+                </select>
+
+                <input type="text" id="filtre-client" placeholder="Rechercher un client">
+            </div>
+
+            <ul id="liste-commandes" class="admin-list"></ul>
+        </section>
+
+        <!-- GESTION DES AVIS -->
+        <section class="admin-section">
+            <div class="admin-header">
+                <h1>Gestion des avis</h1>
+            </div>
+            <ul id="liste-avis" class="admin-list"></ul>
+        </section>
+
+        <!-- GESTION DES HORAIRES -->
         <section class="admin-section">
             <div class="admin-header">
                 <h1>Gestion des horaires</h1>
@@ -72,21 +80,10 @@
             <ul id="liste-horaires" class="admin-list"></ul>
         </section>
 
-    <!-- AVIS -->
-    <section class="admin-section">
-        <div class="admin-header">
-            <h1>Gestion des avis</h1>
-        </div>
-        <ul id="liste-avis" class="admin-list"></ul>
-    </section>
+    </main>
 
-</main>
-
-
-
-
-
-<script src="./assets/js/espace-employe.js"></script>
+    <script src="./assets/js/espace-employe.js"></script>
 
 </body>
+
 </html>

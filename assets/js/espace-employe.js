@@ -103,40 +103,6 @@ function afficherPlats() {
 
 afficherPlats();
 
-
-// ---------------------------------------------------------
-// Affichage des horaires
-// ---------------------------------------------------------
-function afficherHoraires() {
-    listeHoraires.innerHTML = "";
-
-    if (horaires.length === 0) {
-        listeHoraires.innerHTML = "<p>Aucun horaire enregistré.</p>";
-        return;
-    }
-
-    horaires.forEach(h => {
-        const li = document.createElement("li");
-        li.classList.add("admin-item");
-
-        li.innerHTML = `
-            <div class="admin-item-info">
-                <strong>${h.jour}</strong>
-                <span>${h.ouverture} - ${h.fermeture}</span>
-            </div>
-
-            <div class="admin-actions">
-                <button class="btn-action btn-modifier-horaire" data-id="${h.id}">Modifier</button>
-                <button class="btn-danger btn-supprimer-horaire" data-id="${h.id}">Supprimer</button>
-            </div>
-        `;
-
-        listeHoraires.appendChild(li);
-    });
-}
-
-afficherHoraires();
-
 // ---------------------------------------------------------
 // Affichage des commandes (VERSION PRO)
 // ---------------------------------------------------------
@@ -197,6 +163,42 @@ function afficherCommandes() {
 }
 
 afficherCommandes();
+
+
+// ---------------------------------------------------------
+// Affichage des horaires
+// ---------------------------------------------------------
+function afficherHoraires() {
+    listeHoraires.innerHTML = "";
+
+    if (horaires.length === 0) {
+        listeHoraires.innerHTML = "<p>Aucun horaire enregistré.</p>";
+        return;
+    }
+
+    horaires.forEach(h => {
+        const li = document.createElement("li");
+        li.classList.add("admin-item");
+
+        li.innerHTML = `
+            <div class="admin-item-info">
+                <strong>${h.jour}</strong>
+                <span>${h.ouverture} - ${h.fermeture}</span>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn-action btn-modifier-horaire" data-id="${h.id}">Modifier</button>
+                <button class="btn-danger btn-supprimer-horaire" data-id="${h.id}">Supprimer</button>
+            </div>
+        `;
+
+        listeHoraires.appendChild(li);
+    });
+}
+
+afficherHoraires();
+
+
 
 
 // ---------------------------------------------------------
