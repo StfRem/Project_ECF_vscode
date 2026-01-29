@@ -1,5 +1,4 @@
 // Vérification du rôle administrateur
-
 if (!user || user.role !== "admin") {
     alert("Accès réservé à l'administrateur.");
     location.href = "./login.html";
