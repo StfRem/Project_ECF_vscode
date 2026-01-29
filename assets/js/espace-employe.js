@@ -88,7 +88,6 @@ function afficherPlats() {
             <div class="admin-item-info">
                 <strong>${plat.nom}</strong>
                 <span>${plat.description}</span>
-                <span>Prix : ${plat.prix} €</span>
             </div>
 
             <div class="admin-actions">
