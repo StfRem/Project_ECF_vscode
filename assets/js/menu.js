@@ -18,16 +18,16 @@ const menus = [
             "./assets/images/repasnoel1.jpg"
         ],
         entrees: [
-            { nom: "Velouté de potimarron", allergenes: ["Lactose"] },
-            { nom: "Saumon fumé sur blinis", allergenes: ["Gluten", "Poisson", "Œufs"] }
+            { nom: "Velouté de potimarron", allergenes: ["(Lactose)"] },
+            { nom: "Saumon fumé sur blinis", allergenes: ["(Gluten", "Poisson", "Œufs)"] }
         ],
         plats: [
-            { nom: "Dinde farcie aux marrons", allergenes: ["Lactose"] },
-            { nom: "Filet de cabillaud sauce citron", allergenes: ["Poisson"] }
+            { nom: "Dinde farcie aux marrons", allergenes: ["(Lactose)"] },
+            { nom: "Filet de cabillaud sauce citron", allergenes: ["(Poisson)"] }
         ],
         desserts: [
-            { nom: "Bûche chocolat praliné", allergenes: ["Lactose", "Gluten", "Œufs"] },
-            { nom: "Tarte aux pommes caramélisées", allergenes: ["Gluten", "Œufs"] }
+            { nom: "Bûche chocolat praliné", allergenes: ["(Lactose)", "(Gluten)", "(Œufs)"] },
+            { nom: "Tarte aux pommes caramélisées", allergenes: ["(Gluten)", "(Œufs)"] }
         ],
         personnesMin: 4,
         prix: 70,
@@ -48,15 +48,15 @@ const menus = [
         ],
         entrees: [
             { nom: "Salade fraîcheur", allergenes: [] },
-            { nom: "Houmous et crudités", allergenes: ["Sésame"] }
+            { nom: "Houmous et crudités", allergenes: ["(Sésame)"] }
         ],
         plats: [
             { nom: "Curry de légumes", allergenes: [] },
-            { nom: "Pâtes complètes", allergenes: ["Gluten"] }
+            { nom: "Pâtes complètes", allergenes: ["(Gluten)"] }
         ],
         desserts: [
             { nom: "Mousse chocolat vegan", allergenes: [] },
-            { nom: "Tartelette fruits rouges", allergenes: ["Gluten"] }
+            { nom: "Tartelette fruits rouges", allergenes: ["(Gluten)"] }
         ],
         personnesMin: 2,
         prix: 55,
@@ -76,15 +76,15 @@ const menus = [
             "./assets/images/event3.jpg"
         ],
         entrees: [
-            { nom: "Mini wraps variés", allergenes: ["Gluten"] },
-            { nom: "Verrines saumon avocat", allergenes: ["Poisson"] }
+            { nom: "Mini wraps variés", allergenes: ["(Gluten)"] },
+            { nom: "Verrines saumon avocat", allergenes: ["(Poisson)"] }
         ],
         plats: [
-            { nom: "Buffet froid varié", allergenes: ["Gluten", "Lactose"] },
+            { nom: "Buffet froid varié", allergenes: ["(Gluten)", "(Lactose)"] },
             { nom: "Plateau charcuterie", allergenes: [] }
         ],
         desserts: [
-            { nom: "Assortiment de mini desserts", allergenes: ["Gluten", "Œufs", "Lactose"] }
+            { nom: "Assortiment de mini desserts", allergenes: ["(Gluten)", "(Œufs)", "(Lactose)"] }
         ],
         personnesMin: 6,
         prix: 90,
