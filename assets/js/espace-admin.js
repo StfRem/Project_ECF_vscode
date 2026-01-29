@@ -385,9 +385,7 @@ document.addEventListener("click", (e) => {
         afficherHoraires();
     }
 });
-// =============================================
-// NOUVELLES FONCTIONS POUR L'ADMIN
-// =============================================
+
 
 // Gestion des commandes (filtres + statuts + matériel)
 function afficherCommandes() {
@@ -396,12 +394,23 @@ function afficherCommandes() {
         listeCommandes.innerHTML = "<p>Aucune commande.</p>";
         return;
     }
+
     commandes.forEach(cmd => {
         const li = document.createElement("li");
+
+        const details = `
+            Menu : ${cmd.menuTitre}<br>
+            Nombre de personnes : ${cmd.nbPersonnes}<br>
+            Prix total : ${cmd.prixTotal} €<br>
+            Date / Heure : ${cmd.datePrestation} à ${cmd.heurePrestation}<br>
+            Adresse : ${cmd.adresse}, ${cmd.cp}, ${cmd.ville}<br>
+            Téléphone : ${cmd.telephone}
+        `;
+
         li.innerHTML = `
-            <strong>${cmd.nomClient}</strong><br>
-            Statut: ${cmd.statut}<br>
-            ${cmd.details}<br>
+            <strong>Commande #${cmd.id}</strong><br>
+            Statut : ${cmd.statut}<br>
+            ${details}<br>
             ${cmd.materiel ? `<span style="color:red;">⚠️ Matériel en prêt</span><br>` : ''}
             <select class="select-statut" data-id="${cmd.id}">
                 <option value="">Changer statut</option>
@@ -452,6 +461,7 @@ filtreClient.addEventListener("input", () => {
     afficherCommandesFiltrees(commandesFiltrees);
 });
 
+
 function afficherCommandesFiltrees(list) {
     listeCommandes.innerHTML = "";
     list.forEach(cmd => {
@@ -461,6 +471,47 @@ function afficherCommandesFiltrees(list) {
             Statut: ${cmd.statut}<br>
             ${cmd.details}
         `;
+        listeCommandes.appendChild(li);
+    });
+}
+
+
+// test ajout filtres------------------------------------------
+function afficherCommandesFiltrees(list) {
+    listeCommandes.innerHTML = "";
+
+    if (list.length === 0) {
+        listeCommandes.innerHTML = "<p>Aucune commande correspondant aux critères.</p>";
+        return;
+    }
+
+    list.forEach(cmd => {
+        const li = document.createElement("li");
+
+        const details = `
+            Menu : ${cmd.menuTitre}<br>
+            Nombre de personnes : ${cmd.nbPersonnes}<br>
+            Prix total : ${cmd.prixTotal} €<br>
+            Date / Heure : ${cmd.datePrestation} à ${cmd.heurePrestation}<br>
+            Adresse : ${cmd.adresse}, ${cmd.cp}, ${cmd.ville}<br>
+            Téléphone : ${cmd.telephone}
+        `;
+
+        li.innerHTML = `
+            <strong>Commande #${cmd.id}</strong><br>
+            Statut : ${cmd.statut}<br>
+            ${details}<br>
+            ${cmd.materiel ? `<span style="color:red;">⚠️ Matériel en prêt</span><br>` : '' }
+            <select class="select-statut" data-id="${cmd.id}">
+                <option value="">Changer statut</option>
+                <option value="accepté">Accepté</option>
+                <option value="en préparation">En préparation</option>
+                <option value="livré">Livré</option>
+                <option value="terminée">Terminée</option>
+                ${cmd.materiel ? `<option value="en attente du retour de matériel">Retour matériel</option>` : '' }
+            </select>
+        `;
+
         listeCommandes.appendChild(li);
     });
 }
@@ -489,7 +540,7 @@ function afficherAvis() {
 document.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn-valider-avis")) {
         const id = e.target.dataset.id;
-        avis = avis.map(a => a.id === id ? {...a, statut: "validé"} : a);
+        avis = avis.map(a => a.id === id ? { ...a, statut: "validé" } : a);
         localStorage.setItem("avis", JSON.stringify(avis));
         afficherAvis();
     }

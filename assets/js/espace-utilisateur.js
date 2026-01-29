@@ -12,7 +12,10 @@ if (!user) {
 // ---------------------------------------------------------
 let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
 let commandesUtilisateur = commandes.filter(cmd => cmd.userId === user.id);
-
+function getMenuById(menuId) {
+    const menus = JSON.parse(localStorage.getItem("menus")) || [];
+    return menus.find(m => m.id === menuId);
+}
 // ---------------------------------------------------------
 // Sélection des zones d'affichage
 // ---------------------------------------------------------
@@ -230,7 +233,7 @@ document.addEventListener("click", (e) => {
         afficherDetail(cmd);
     }
 
-    // AVIS
+    // ---------  AVIS  -----------------------------------------
     if (target.id === "btn-avis") {
         const cmd = getCommandeCourante();
         if (!cmd) return;
@@ -247,12 +250,6 @@ document.addEventListener("click", (e) => {
             cmd.avis = { note: null, commentaire: "", date: null };
         }
 
-        // AVANT
-        cmd.avis.note = Number(note);
-        cmd.avis.commentaire = commentaire;
-        cmd.avis.date = new Date().toISOString();
-
-        // APRÈS
         cmd.avis.note = Number(note);
         cmd.avis.commentaire = commentaire;
         cmd.avis.date = new Date().toISOString();
