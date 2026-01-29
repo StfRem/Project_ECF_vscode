@@ -203,31 +203,6 @@ afficherCommandes();
 
 
 // ---------------------------------------------------------
-// Mise à jour du statut
-// ---------------------------------------------------------
-document.addEventListener("change", (e) => {
-    if (!e.target.classList.contains("select-statut")) return;
-
-    const id = e.target.dataset.id;
-    const nouveauStatut = e.target.value;
-
-    commandes = commandes.map(cmd => {
-        if (cmd.id === id) {
-            cmd.statut = nouveauStatut;
-            cmd.historique.push({
-                date: new Date().toISOString(),
-                action: "Statut modifié : " + nouveauStatut
-            });
-        }
-        return cmd;
-    });
-
-    localStorage.setItem("commandes", JSON.stringify(commandes));
-    afficherCommandes();
-});
-
-
-// ---------------------------------------------------------
 // Gestion des clics (menus + plats + horaires + annulation)
 // ---------------------------------------------------------
 document.addEventListener("click", (e) => {
@@ -364,6 +339,7 @@ document.addEventListener("click", (e) => {
         localStorage.setItem("horaires", JSON.stringify(horaires));
         afficherHoraires();
     }
+});
 
 // ---------------------------------------------------------
 // Chargement des avis
@@ -432,6 +408,8 @@ document.addEventListener("click", (e) => {
         }
     }
 });
+
+
 
 
 // ---------------------------------------------------------
