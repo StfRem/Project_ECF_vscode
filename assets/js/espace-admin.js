@@ -396,94 +396,87 @@ document.addEventListener("click", (e) => {
     }
 });
 
-// --------------------------  SECTION FILTRE  ------------------------------
-function afficherCommandes(list = commandes) {
+// --------------------------  SECTION FILTRE  commande ------------------------------
+function afficherCommandes() {
     listeCommandes.innerHTML = "";
 
-    if (list.length === 0) {
-        listeCommandes.innerHTML = "<p>Aucune commande.</p>";
+    const recherche = filtreClient.value.toLowerCase(); // recherche par nom
+    const statutFiltre = filtreStatut.value;
+
+    const commandesFiltrees = commandes.filter(cmd => {
+        const client = users.find(u => u.id === cmd.userId);
+
+        const matchStatut =
+            statutFiltre === "" || cmd.statut === statutFiltre;
+
+        const matchNom = client ? client.fullname.toLowerCase().includes(recherche) : false;
+
+        return matchStatut && matchNom;
+    });
+
+    if (commandesFiltrees.length === 0) {
+        listeCommandes.innerHTML = "<p>Aucune commande trouvée.</p>";
         return;
     }
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    list.forEach(cmd => {
-        const client = users.find(u => u.id === cmd.userId);
-
+    commandesFiltrees.forEach(cmd => {
         const li = document.createElement("li");
-
-        const details = `
-            Menu : ${cmd.menuTitre}<br>
-            Nombre de personnes : ${cmd.nbPersonnes}<br>
-            Prix total : ${cmd.prixTotal} €<br>
-            Date / Heure : ${cmd.datePrestation} à ${cmd.heurePrestation}<br>
-            Adresse : ${cmd.adresse}, ${cmd.cp}, ${cmd.ville}<br>
-            Téléphone : ${cmd.telephone}
-        `;
+        li.classList.add("admin-item");
 
         li.innerHTML = `
-            <strong>Commande #${cmd.id}</strong><br>
-            Client : ${client ? client.fullname : "Inconnu"}<br>
-            Statut : ${cmd.statut}<br>
-            ${details}<br>
-            ${cmd.materiel ? `<span style="color:red;">⚠️ Matériel en prêt</span><br>` : ""}
-            <select class="select-statut" data-id="${cmd.id}">
-                <option value="">Changer statut</option>
-                <option value="accepté">Accepté</option>
-                <option value="en préparation">En préparation</option>
-                <option value="livré">Livré</option>
-                <option value="terminée">Terminée</option>
-                ${cmd.materiel ? `<option value="en attente du retour de matériel">Retour matériel</option>` : ""}
-            </select>
+            <div class="admin-item-info">
+                <strong>${cmd.menuTitre}</strong>
+                <span>Prestation : ${cmd.datePrestation} à ${cmd.heurePrestation}</span>
+                <span>Statut actuel : <strong>${cmd.statut}</strong></span>
+            </div>
+
+            <div class="admin-actions">
+                <select class="select-statut" data-id="${cmd.id}">
+                    <option value="">Changer statut</option>
+                    <option value="accepté">Accepté</option>
+                    <option value="en préparation">En préparation</option>
+                    <option value="en cours de livraison">En cours de livraison</option>
+                    <option value="livré">Livré</option>
+                    <option value="terminée">Terminée</option>
+                </select>
+
+                <button class="btn-danger btn-annuler" data-id="${cmd.id}">
+                    Annuler
+                </button>
+            </div>
         `;
 
         listeCommandes.appendChild(li);
     });
 }
-//  STATUT
-filtreStatut.addEventListener("change", () => {
-    const statut = filtreStatut.value.toLowerCase();
-
-    const filtered = statut
-        ? commandes.filter(cmd => cmd.statut.toLowerCase() === statut)
-        : commandes;
-
-    afficherCommandes(filtered);
-});
-//  FILTRE CLIENT
-filtreClient.addEventListener("input", () => {
-    const recherche = filtreClient.value.toLowerCase();
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    const filtered = commandes.filter(cmd => {
-        const client = users.find(u => u.id === cmd.userId);
-        if (!client) return false;
-
-        return client.fullname.toLowerCase().includes(recherche);
-    });
-
-    afficherCommandes(filtered);
-});
-// CHANGEMENT STATUT COMMANDE
-document.addEventListener("change", (e) => {
-    if (e.target.classList.contains("select-statut")) {
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("btn-annuler")) {
         const id = e.target.dataset.id;
         const commande = commandes.find(cmd => cmd.id === id);
+        if (!commande) return;
 
-        commande.statut = e.target.value;
+        // 1. Demander au client le contact et le motif
+        const contact = prompt("Mode de contact utilisé pour prévenir le client (appel, mail...) :");
+        if (!contact) return alert("Annulation annulée : vous devez spécifier le mode de contact.");
 
-        if (e.target.value === "en attente du retour de matériel") {
-            alert(`Email envoyé :
----
-Objet : Retour de matériel
-Bonjour,
-Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués.
-Cordialement, L'équipe Vite & Gourmand
----`);
-        }
+        const motif = prompt("Motif de l'annulation :");
+        if (!motif) return alert("Annulation annulée : vous devez spécifier un motif.");
 
+        // 2. Mettre à jour l'historique
+        commande.historique = commande.historique || [];
+        commande.historique.push({
+            date: new Date().toISOString(),
+            action: `Commande annulée (${contact}) : ${motif}`
+        });
+
+        // 3. Mettre à jour le statut
+        commande.statut = "annulée";
+
+        // 4. Sauvegarder et rafraîchir l'affichage
         localStorage.setItem("commandes", JSON.stringify(commandes));
         afficherCommandes();
+
+        alert("Commande annulée avec succès !");
     }
 });
 

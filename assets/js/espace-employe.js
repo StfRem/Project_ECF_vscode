@@ -102,23 +102,23 @@ function afficherPlats() {
 
 afficherPlats();
 
-// ---------------------------------------------------------
-// Affichage des commandes (VERSION PRO)
-// ---------------------------------------------------------
+
+
+// Affichage des commandes
 function afficherCommandes() {
     liste.innerHTML = "";
 
-    const recherche = filtreClient.value.toLowerCase();
+    const recherche = filtreClient.value.toLowerCase(); // recherche par nom
     const statutFiltre = filtreStatut.value;
 
     const commandesFiltrees = commandes.filter(cmd => {
-        const matchStatut = statutFiltre === "" || cmd.statut === statutFiltre;
-        const matchClient =
-            cmd.telephone.toLowerCase().includes(recherche) ||
-            cmd.ville.toLowerCase().includes(recherche) ||
-            cmd.menuTitre.toLowerCase().includes(recherche);
+        const matchStatut =
+            statutFiltre === "" ||
+            ["accepté", "en préparation", "en cours de livraison", "livré", "terminée"].includes(cmd.statut);
 
-        return matchStatut && matchClient;
+        const matchNom = cmd.menuTitre.toLowerCase().includes(recherche);
+
+        return matchStatut && matchNom;
     });
 
     if (commandesFiltrees.length === 0) {
@@ -133,10 +133,7 @@ function afficherCommandes() {
         li.innerHTML = `
             <div class="admin-item-info">
                 <strong>${cmd.menuTitre}</strong>
-                <span>Commande : ${cmd.id}</span>
-                <span>Client : ${cmd.telephone}</span>
                 <span>Prestation : ${cmd.datePrestation} à ${cmd.heurePrestation}</span>
-                <span>Matériel : ${cmd.materiel ? "Oui" : "Non"}</span>
                 <span>Statut actuel : <strong>${cmd.statut}</strong></span>
             </div>
 
@@ -148,7 +145,6 @@ function afficherCommandes() {
                     <option value="en cours de livraison">En cours de livraison</option>
                     <option value="livré">Livré</option>
                     <option value="terminée">Terminée</option>
-                    ${cmd.materiel ? `<option value="en attente du retour de matériel">En attente du retour de matériel</option>` : ""}
                 </select>
 
                 <button class="btn-danger btn-annuler" data-id="${cmd.id}">
@@ -160,6 +156,7 @@ function afficherCommandes() {
         liste.appendChild(li);
     });
 }
+
 
 afficherCommandes();
 
@@ -221,20 +218,24 @@ document.addEventListener("click", (e) => {
             return;
         }
 
-        commandes = commandes.map(cmd => {
-            if (cmd.id === id) {
-                cmd.statut = "annulée";
-                cmd.historique.push({
-                    date: new Date().toISOString(),
-                    action: `Commande annulée (${contact}) : ${motif}`
-                });
-            }
-            return cmd;
-        });
+// Securisation si rien dans historique evite crash
+commandes = commandes.map(cmd => {
+    if (cmd.id === id) {
+        cmd.historique = cmd.historique || [];
 
+        cmd.statut = "annulée";
+        cmd.historique.push({
+            date: new Date().toISOString(),
+            action: `Commande annulée (${contact}) : ${motif}`
+        });
+    }
+    return cmd;
+});
         localStorage.setItem("commandes", JSON.stringify(commandes));
         afficherCommandes();
     }
+
+
 
 
     // --- SUPPRESSION MENU ---
