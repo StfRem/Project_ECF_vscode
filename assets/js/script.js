@@ -8,17 +8,21 @@ export function loadNavbar() {
         loginLogoutLink = '<li><a href="#" id="btn-deconnexion">Déconnexion</a></li>';
     }
 
-    document.getElementById("header").innerHTML = `
-        <nav class="nav-header">
-            <img src="./assets/images/logo.png" alt="logo" class="logo">
-            <ul class="menu_header">
-                <li><a href="./index.html">Accueil</a></li>
-                <li><a href="./menus.html">Menus</a></li>
-                <li><a href="./contact.html">Contact</a></li>
-                ${loginLogoutLink}
-            </ul>
-        </nav>
-    `;
+document.getElementById("header").innerHTML = `
+    <nav class="nav-header">
+        <img src="./assets/images/logo.png" alt="logo" class="logo">
+        <span class="burger">&#9776;</span>
+        <ul class="menu_header">
+            <li><a href="./index.html">Accueil</a></li>
+            <li><a href="./menus.html">Menus</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            ${loginLogoutLink}
+        </ul>
+    </nav>
+`;
+document.querySelector(".burger").addEventListener("click", () => {
+    document.querySelector(".menu_header").classList.toggle("open");
+});
 
     // Gestion du clic sur Déconnexion
     const btnDeconnexion = document.getElementById("btn-deconnexion");

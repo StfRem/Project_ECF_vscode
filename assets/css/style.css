@@ -16,116 +16,143 @@
 :root {
     --txt-light: #FFFFFF;
     --txt-dark: #0E0F0F;
-
     --header: #8DAA9D;
     --card: #699897;
     --fond: #4A6A69;
     --btn: #FFA7A1;
 }
 
-/* FOND GLOBAL  */
-body {
-background-image: url(../images/traiteur.jpg);
-background-size: cover;
-}
+/* ---------- TAILLES DE POLICE (DESKTOP) ---------- */
+h1 { font-size: 32px; }
+h2 { font-size: 24px; }
+h3 { font-size: 18px; }
+p, li { font-size: 16px; }
 
-/* TITRES + NAVBAR */
-h1,
-.menu_header a {
-    font-family: "RobotoBold", sans-serif;
-    font-weight: 800;
-    text-decoration: none;
-    font-size: 1.5rem; /* 18px */
-}
-
-/* MENU NAVBAR */
-.menu_header {
-    position: absolute;
-    display: flex;
-    list-style: none;
-    gap: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-img.logo {
-    height: 45px;
-}
-
-/* TAILLES POLICE - Hiérarchie universelle */
-html {
-    font-size: 1rem; /* 16px */ /* Base pour rem */
-}
-
-h1 {
-    font-size: 2rem; /* 32px - Titre principal */
-}
-
-h2 {
-    font-size: 1.5rem; /* 24px - Sous-titre */
-}
-
-h3 {
-    font-size: 1.25rem; /* 20px - Titre de section */
-}
-
-h4 {
-    font-size: 1.125rem; /* 18px */
-}
-
-p {
-    font-size: 1rem; /* 16px - Texte de base */
-}
-
-li {
-    font-size: 1rem; /* 16px - Texte de base */
-    list-style: none;
-}
-
-.ul_horaire li {
-    font-size: 22px; /* 18px - Texte horaire */
-}
-
-small {
-    font-size: 0.875rem; /* 14px - Petit texte */
-}
-
-/* COULEURS TEXTE */
-li a {
+/* Footer */
+.mention a {
+    font-size: 14px;
     color: var(--txt-dark);
 }
 
-h1, h2, h3, li ,p{
-    color: var(--txt-light);
+/* MES REGLAGES PERSONNELLES */
+li {
+    list-style: none;
 }
 
-.mention a {
-    color: var(--txt-light);
-}
-
-/* HEADER */
-header {
+/* FOOTER */
+.footer {
+    margin-top: 40px;
+    padding: 10px;
     background-color: var(--header);
-    
+    font-family: "RobotoBold", sans-serif;
+    color: var(--txt-dark);
+    text-align: center;
 }
 
+/* UL horaires centrées */
+.ul_horaire {
+    padding-left: 0;
+    margin-left: 0;
+    text-align: center;
+}
+
+/* Horaires centrées */
+.ul_horaire li {
+    text-align: center;
+}
+
+/* Mentions légales alignées à gauche */
+.mention {
+    text-align: left;
+    margin-top: 20px;
+}
+
+/* --- NAVBAR --- */
 .nav-header {
-    position: relative;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 5px 20px;
+    background-color: var(--header);
+    font-family: "RobotoBold", sans-serif;
 }
 
+.logo {
+    max-width: 120px;
+    height: auto;
+}
 
+.burger {
+    display: none;
+    color: var(--txt-dark);
+}
 
+/* UL horizontal + sans puces */
+.menu_header {
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
 
+.menu_header a {
+    text-decoration: none;
+    color: var(--txt-dark);
+    font-size: 22px;
+    font-weight: 500;
+}
 
-/* DESCRIPTIF */
+/* --------------------- ACCUEIL ----------------------- */
 .descriptif {
     text-align: center;
     margin-top: 20px;
 }
 
-/* CARDS AVIS */
+.descriptif ul {
+    margin-top: -32px;
+}
+
+/* ---------- VERSION MOBILE ---------- */
+@media (max-width: 768px) {
+
+    /* TAILLES DE POLICE */
+    h1 { font-size: 24px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 16px; }
+    p, li { font-size: 14px; }
+    .mention a { font-size: 12px; }
+
+    /* NAVBAR MOBILE */
+    .menu_header.open {
+        display: flex;
+    }
+
+    .menu_header {
+        display: none;
+        flex-direction: column;
+        background: #fff;
+        position: absolute;
+        top: 80px;
+        right: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+    }
+
+    .menu_header a {
+        font-size: 18px; /* plus lisible en mobile */
+    }
+
+    .burger {
+        display: block;
+        cursor: pointer;
+        font-size: 30px;
+    }
+}
+
+
+/*  CARD ACCUEIL AVIS  */
 .cards {
     display: flex;
     gap: 135px;
@@ -135,7 +162,7 @@ header {
 
 .card {
     width: 300px;
-    height: 294px;
+    height: 260px;
     background-color: var(--card);
     border-radius: 12px;
     padding: 26px 20px;
@@ -150,608 +177,28 @@ header {
 }
 
 .card h2 {
-    font-size: 2rem; /* 32px - Garde la taille pour l'impact visuel */
     margin-top: -20px;
 }
 
-/* FOOTER */
-.footer {
-    padding: 10px;
-}
 
-.footer h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.ul_horaire {
-    list-style: none;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.125rem; /* 18px */
-}
-
-.mention {
-    text-align: left;
-}
-/*------------------menu global---------------------------*//* PAGE MENUS GLOBAUX */
-.menus-page {
-    padding: 40px;
-}
-
-/* FILTRES */
-.filters {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 40px;
-}
-.filter-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.filter-input {
-    width: 160px;          /* largeur plus grande */
-    padding: 8px 10px;     /* plus d’espace intérieur */
-    font-size: 1rem; /* 16px */       /* texte plus lisible */
-    margin-top: 8px;       /* espace entre bouton et input */
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-
-.filters button {
-    background-color: var(--btn);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    color: var(--txt-dark);
-    font-weight: bold;
-    font-size: 1rem; /* 16px */
-}
-
-/* CARDS MENUS menu global------------------------------------------------------------*/
-.menu-card {
-    background-color: var(--card);
-    border-radius: 12px;
-    height: auto;
-    padding: 20px;
-    margin: 60px auto;
-    max-width: 900px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start
-}
-
-.menu-info {
-    width: 55%;
-}
-.menu-info h1, .menu-info h2, .menu-info p, .menu-info h3, .menu-info li {  /* RECENTRAGE  dans la card  */
-    text-align: center;
-}
-
-
-.menu-img img {
-    width: 370px;
-    height: 280px;
-    margin-top: 140px;
-    border-radius: 12px;
-}
-
-.btn-details {
-    background-color: var(--btn);  
-    color: var(--txt-dark);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 1rem; /* 16px */
-    cursor: pointer;
-    transition: 0.25s ease;
-    font-weight: bold;
-}
-
-.btn-details:hover {
-    background-color: #ff2f6a;      /* rose plus foncé au hover */
-}
-
-.btn-details:active {
-    transform: translateY(0);       /* clic naturel */
-}
-
-.btn-commande {
-    background-color: var(--btn);
-    color: var(--txt-dark);
-    border: none;
-    padding: 10px 24px; /* un peu plus large pour le texte */
-    border-radius: 6px;
-    font-size: 0.9375rem; /* 15px */
-    cursor: pointer;
-    transition: 0.25s ease;
-    font-weight: bold;
-    display: inline-block; /* évite les comportements bizarres */
-}
-
-.btn-commande:hover {
-    background-color: #ff2f6a;
-}
-
-
-/* SLIDER IMAGES */
-.menu-img {
-    display: flex;
-    flex-direction: column; /* image en haut, flèches en bas */
-    align-items: center;
-    justify-content: center;
-}
-
-.menu-img .main-img {
-    width: 370px;
-    height: 277px;
-    border-radius: 12px;
-    object-fit: cover;
-    margin: auto;
-}
-
-/* Conteneur des flèches */
-.arrow-container {
-    margin-top: -120px;
-    display: flex;
-    gap: 34px;
-}
-
-/* Boutons flèches */
-.arrow {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
-.arrow img {
-    width: 60px;
-    height: 60px;
-}
-
-
-/* Position des flèches */
-.arrow.left {
-    left: -50px;
-}
-
-.arrow.right {
-    right: -50px;
-}
-
-
-/*--------FORMULAIRE----------------/*
-/* PAGE REGISTER */
-.register-container {
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
-}
-
-.register-card {
-    background-color: var(--card);
-    padding: 30px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 450px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-}
-
-.register-card h1 {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-#register-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-#register-form input {
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-}
-
-.password-info {
-    text-align: center;
-    font-size: 0.875rem; /* 14px */
-    opacity: 0.9;
-    margin: 10px 0 20px 0;
-    line-height: 1.5;
-}
-
-/*--------------- MENTION LEGAL  -----------------------*/
-.legal-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.legal-container h1 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.legal-container section {
-    margin-bottom: 25px;
-}
-
-.legal-container h2 {
-    margin-bottom: 10px;
-}
-
-/*--------------- CGV  -----------------------*/
-.legal-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.legal-container h1 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.legal-container section {
-    margin-bottom: 25px;
-}
-
-.legal-container h2 {
-    margin-bottom: 10px;
-}
-
-
-/* PAGE COMMANDE — STYLE MODERNE ET COHÉRENT */
-
-.commande-container {
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
-}
-
-.commande-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(6px);
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.commande-card h1 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 1.5rem; /* 24px - h2 standard mais dans un contexte de card */
-    color: var(--txt-dark);
-}
-
-.commande-card h2 {
-    margin-top: 25px;
-    margin-bottom: 10px;
-    font-size: 1.25rem; /* 20px - h3 standard */
-    color: var(--txt-dark);
-}
-
-#commande-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-#commande-form input {
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 0.9375rem; /* 15px */
-}
-
-#commande-form input:focus {
-    outline: none;
-    border-color: var(--btn);
-    box-shadow: 0 0 4px rgba(255, 150, 140, 0.4);
-}
-
-.prix-info {
-    font-size: 1.125rem; /* 18px */
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    color: var(--txt-dark);
-}
-
-/* Bouton identique à + de détails */
-.btn-detail {
-    background-color: var(--btn);
-    color: var(--txt-dark);
-    border: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    font-size: 1rem; /* 16px */
-    cursor: pointer;
-    font-weight: bold;
-    width: 100%;
-    transition: 0.25s ease;
-}
-
-.btn-detail:hover {
-    background-color: #ff2f6a;
-}
-
-/*--------------------   ESPACE ADMIN  ----------------------*/
-
-/* ====== GLOBAL ====== */
-
-
-/* ====== TITRES ====== */
-.admin-section h1 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 1.5rem; /* 24px - h2 standard */
-    color: var(--txt-dark);
-    text-align: center;
-}
-
-/* ====== SECTIONS ADMIN ====== */
-.admin-section {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 40px;
-}
-
-/* Header de section (titre + bouton) */
-.admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-
-/* ====== LISTES ====== */
-.admin-list {
-    margin-top: 20px;
-    padding: 0;
-}
-
-.admin-list li {
-    list-style: none;
-    background: rgba(255,255,255,0.1);
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-}
-
-/* Structure admin-item */
-.admin-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
-
-.admin-item-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.admin-item-info strong {
-    font-size: 1.125rem; /* 18px */
-    color: var(--txt-light);
-    margin-bottom: 5px;
-}
-
-.admin-item-info span {
-    font-size: 1.1rem; /* 15px */
-    color: var(--txt-light);
-    opacity: 0.9;
-}
-
-.admin-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.select-statut {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    background: white;
-    color: var(--txt-dark);
-    font-size: 0.875rem; /* 14px */
-    cursor: pointer;
-    width: 200px;
-    
-}
-
-.menu-description {
-    white-space: pre-line;
-}
-
-
-/* ====== BOUTONS ====== */
-.btn-primary, 
-.btn-suspend, 
-.btn-supprimer, 
-.btn-modifier-menu,
-.btn-supprimer-menu ,
-.btn-modifier-plat,
-.btn-supprimer-plat,
-.btn-modifier-horaire,
-.btn-supprimer-horaire,
-.btn-valider-avis,
-.btn-refuser-avis
-{
-    background: var(--btn);
-    color: var(--txt-dark);
-    border: none;
-    padding: 10px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.9375rem; /* 15px */
-}
-
-.btn-primary:hover {
-    opacity: 0.85;
-}
-
-
-/*-------------------espace-utilisateur------------------------*/
-
-.btn-action {
-    background: var(--header);
-    color: var(--txt-dark);
-    border: none;
-    padding: 10px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-right: 8px;
-    font-size: 0.9375rem; /* 15px */
-}
-
-.btn-action,
-.btn-danger {
-    padding: 10px 18px;
-    border-radius: 6px;
-}
-.btn-danger.btn-annuler {
-    background: var(--btn);
-    color: var(--txt-dark);
-    font-weight: bold;}
-
-.btn-action:hover,
-.btn-danger:hover {
-    opacity: 0.85;
-}
-.user-container {
-    max-width: 900px;
-    margin: 50px auto 0 auto;
-    padding: 20px;
-
-    background-color: #4A6A69; /* couleur de fond de ta charte */
-    border-radius: 10px;
-    position: relative;
-    z-index: 2;
-}
-
-
-
-/*----------------- CONTACT  ---------------------------*/
-.contact-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-}
-
-#contact-form label {
-    display: block;
-    margin-top: 15px;
-    font-size: 1.1rem;
-    color: white;
-}
-
-#contact-form input,
-#contact-form textarea {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    margin-top: 5px;
-    box-sizing: border-box;
-}
-
-#contact-form button {
-    margin-top: 20px;
-    padding: 12px 20px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-}
-
-#message-confirmation {
-    margin-top: 20px;
-    font-size: 1.1rem;
-    color: #4CAF50;
-}
-.hidden {
-    display: none;
-}
-
-
-/* LISTES COMMANDES UTILISATEUR */
-.commandes-liste {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-}
-
-.commande-item {
-    background: rgba(255,255,255,0.15);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.commande-item:hover {
-    background: #ff2f6a;
-}
-
-.commande-item.active {
-    background: rgba(255,255,255,0.35);
-    border-left: 4px solid var(--btn);
-}
-
-/* ZONE DÉTAIL COMMANDE */
-#zone-detail {
-    background: rgba(255,255,255,0.1);
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-#zone-detail h2 {
-    margin-bottom: 15px;
-}
-
-#zone-detail p {
-    margin: 8px 0;
-}
-
-/* FORMULAIRE MODIFICATION */
-#zone-modification {
-    background: rgba(255,255,255,0.05);
-    padding: 15px;
-    border-radius: 6px;
-    margin-top: 15px;
-}
-
-#zone-modification label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-#zone-modification input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
+/* CARD ACCUEIL AVIS MOBILE */
+@media (max-width: 768px) {
+
+    .cards {
+        flex-direction: column;   /* une card par ligne */
+        align-items: center;      /* centrage horizontal */
+        gap: 25px;                /* espace propre entre les cards */
+        margin: 20px;             /* marge réduite */
+    }
+
+    .card {
+        width: 90%;               /* s’adapte à l’écran */
+        max-width: 350px;         /* limite propre */
+        height: auto;             /* laisse respirer le contenu */
+        padding: 20px;
+    }
+
+    .card img {
+        height: 30px;             /* un peu plus lisible en mobile */
+    }
 }
