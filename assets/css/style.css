@@ -23,10 +23,22 @@
 }
 
 /* ---------- TAILLES DE POLICE (DESKTOP) ---------- */
-h1 { font-size: 32px; }
-h2 { font-size: 24px; }
-h3 { font-size: 18px; }
-p, li { font-size: 16px; }
+h1 {
+    font-size: 32px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+p,
+li {
+    font-size: 16px;
+}
 
 /* Footer */
 .mention a {
@@ -41,7 +53,7 @@ li {
 
 /* FOOTER */
 .footer {
-    margin-top: 40px;
+    margin-top: -26px;
     padding: 10px;
     background-color: var(--header);
     font-family: "RobotoBold", sans-serif;
@@ -116,11 +128,26 @@ li {
 @media (max-width: 768px) {
 
     /* TAILLES DE POLICE */
-    h1 { font-size: 24px; }
-    h2 { font-size: 20px; }
-    h3 { font-size: 16px; }
-    p, li { font-size: 14px; }
-    .mention a { font-size: 12px; }
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 1px;
+    }
+
+    p,
+    li {
+        font-size: 12px;
+    }
+
+    .mention a {
+        font-size: 12px;
+    }
 
     /* NAVBAR MOBILE */
     .menu_header.open {
@@ -141,7 +168,8 @@ li {
     }
 
     .menu_header a {
-        font-size: 18px; /* plus lisible en mobile */
+        font-size: 16px;
+        /* plus lisible en mobile */
     }
 
     .burger {
@@ -185,20 +213,209 @@ li {
 @media (max-width: 768px) {
 
     .cards {
-        flex-direction: column;   /* une card par ligne */
-        align-items: center;      /* centrage horizontal */
-        gap: 25px;                /* espace propre entre les cards */
-        margin: 20px;             /* marge réduite */
+        flex-direction: column;
+        /* une card par ligne */
+        align-items: center;
+        /* centrage horizontal */
+        gap: 25px;
+        /* espace propre entre les cards */
+        margin: 20px;
+        /* marge réduite */
     }
 
     .card {
-        width: 90%;               /* s’adapte à l’écran */
-        max-width: 350px;         /* limite propre */
-        height: auto;             /* laisse respirer le contenu */
+        width: 90%;
+        /* s’adapte à l’écran */
+        max-width: 350px;
+        /* limite propre */
+        height: auto;
+        /* laisse respirer le contenu */
         padding: 20px;
     }
 
     .card img {
-        height: 30px;             /* un peu plus lisible en mobile */
+        height: 30px;
+        /* un peu plus lisible en mobile */
+    }
+}
+
+/*----------------------- FIN CARD ACCUEIL AVIS  -------------------------*/
+
+
+
+
+
+/*----------------------------  MENUS HTML  ------------------------------------*/
+/* MARGE NAVBAR ET FILTRES */
+.menus-page {
+    padding: 20px;
+}
+
+/* FILTRES */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.filter-input {
+    width: 160px;
+    /* largeur plus grande */
+    padding: 8px 10px;
+    /* plus d’espace intérieur */
+    font-size: 1rem;
+    /* 16px */
+    /* texte plus lisible */
+    margin-top: 8px;
+    /* espace entre bouton et input */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+
+.filters button {
+    background-color: var(--btn);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--txt-dark);
+    font-weight: bold;
+    font-size: 1rem;
+    /* 16px */
+}
+
+
+/*FILTRES MOBILE */
+@media (max-width: 768px) {
+
+    .filters {
+        flex-direction: column;
+        /* filtres les uns sous les autres */
+        align-items: center;
+        /* centrage horizontal */
+        gap: 9px;
+        /* espace réduit */
+        margin-bottom: -38px;
+    }
+
+    .filter-item {
+        width: 100%;
+        align-items: center;
+        /* centre bouton + input */
+    }
+
+    .filters button {
+        font-size: 0.6rem;
+        /* plus petit */
+        padding: 8px 16px;
+        /* plus compact */
+    }
+
+    .filter-input {
+        width: 140px;
+        /* plus étroit */
+        font-size: 0.9rem;
+        /* texte plus petit */
+        padding: 6px 8px;
+    }
+}
+
+
+
+/* CARDS MENUS menu global------------------------------------------------------------*/
+
+
+.menu-info {
+    text-align: center;
+}
+
+.menu-card {
+    background-color: var(--card);
+    border-radius: 12px;
+    height: auto;
+    padding: 20px;
+    margin: 60px auto;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start
+}
+
+/* IMAGE DANS LES CARDS MENUS */
+.menu-img img {
+    width: 370px;
+    height: 280px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    /* image en haut, flèches en bas */
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------------Conteneur des flèches----------------- */
+.arrow-container {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 34px;
+}
+
+
+/* REDIMENSIONNER IMAGE FLECHE */
+.arrow img {
+    width: 60px;
+    height: 60px;
+}
+
+
+
+/* ENLEVE BORDURE DES FLECHES  place une main au survol*/
+.arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/*CARD MENU GLOBAL RESPONSIVE*/
+@media (max-width: 768px) {
+
+    .menu-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .menu-img {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .menu-img img {
+        width: 80%;
+        height: auto;
+        margin-top: 5px;
+    }
+
+    .arrow-container {
+        margin-top: 8px;
+        gap: 20px;
+    }
+
+    .arrow img {
+        width: 40px;
+        height: 40px;
     }
 }
