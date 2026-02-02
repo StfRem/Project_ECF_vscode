@@ -105,48 +105,6 @@ header {
     width: 55%;
 }
 
-
-
-
-
-.btn-details {
-    background-color: var(--btn);  
-    color: var(--txt-dark);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 1rem; /* 16px */
-    cursor: pointer;
-    transition: 0.25s ease;
-    font-weight: bold;
-}
-
-.btn-details:hover {
-    background-color: #ff2f6a;      /* rose plus foncé au hover */
-}
-
-.btn-details:active {
-    transform: translateY(0);       /* clic naturel */
-}
-
-.btn-commande {
-    background-color: var(--btn);
-    color: var(--txt-dark);
-    border: none;
-    padding: 10px 24px; /* un peu plus large pour le texte */
-    border-radius: 6px;
-    font-size: 0.9375rem; /* 15px */
-    cursor: pointer;
-    transition: 0.25s ease;
-    font-weight: bold;
-    display: inline-block; /* évite les comportements bizarres */
-}
-
-.btn-commande:hover {
-    background-color: #ff2f6a;
-}
-
-
 /* SLIDER IMAGES */
 
 
@@ -245,84 +203,6 @@ header {
 }
 
 
-/* PAGE COMMANDE — STYLE MODERNE ET COHÉRENT */
-
-.commande-container {
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
-}
-
-.commande-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(6px);
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.commande-card h1 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 1.5rem; /* 24px - h2 standard mais dans un contexte de card */
-    color: var(--txt-dark);
-}
-
-.commande-card h2 {
-    margin-top: 25px;
-    margin-bottom: 10px;
-    font-size: 1.25rem; /* 20px - h3 standard */
-    color: var(--txt-dark);
-}
-
-#commande-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-#commande-form input {
-    width: 100%;
-    padding: 10px 12px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 0.9375rem; /* 15px */
-}
-
-#commande-form input:focus {
-    outline: none;
-    border-color: var(--btn);
-    box-shadow: 0 0 4px rgba(255, 150, 140, 0.4);
-}
-
-.prix-info {
-    font-size: 1.125rem; /* 18px */
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    color: var(--txt-dark);
-}
-
-/* Bouton identique à + de détails */
-.btn-detail {
-    background-color: var(--btn);
-    color: var(--txt-dark);
-    border: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    font-size: 1rem; /* 16px */
-    cursor: pointer;
-    font-weight: bold;
-    width: 100%;
-    transition: 0.25s ease;
-}
-
-.btn-detail:hover {
-    background-color: #ff2f6a;
-}
 
 /*--------------------   ESPACE ADMIN  ----------------------*/
 

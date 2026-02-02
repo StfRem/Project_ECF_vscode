@@ -4,22 +4,15 @@
     padding: 0;
     box-sizing: border-box;
 }
+/*--------------MON SETTING PERSONNEL------------------*/
+
+/* ajouté image de fond responsive recadré en mobile
 
 /* POLICE */
 @font-face {
     font-family: "RobotoBold";
     src: url("../police/Roboto-Bold.ttf") format("truetype");
     font-weight: 800;
-}
-
-/* PALETTE (charte graphique) */
-:root {
-    --txt-light: #FFFFFF;
-    --txt-dark: #0E0F0F;
-    --header: #8DAA9D;
-    --card: #699897;
-    --fond: #4A6A69;
-    --btn: #FFA7A1;
 }
 
 /* ---------- TAILLES DE POLICE (DESKTOP) ---------- */
@@ -40,21 +33,26 @@ li {
     font-size: 16px;
 }
 
-/* Footer */
-.mention a {
-    font-size: 14px;
-    color: var(--txt-dark);
+/* PALETTE (charte graphique) */
+:root {
+    --txt-light: #FFFFFF;
+    --txt-dark: #0E0F0F;
+    --header: #8DAA9D;
+    --card: #699897;
+    --fond: #4A6A69;
+    --btn: #FFA7A1;
 }
 
-/* MES REGLAGES PERSONNELLES */
+/* UL sans puces */
 li {
     list-style: none;
 }
 
-/* FOOTER */
+/*---------  FOOTER  ------------------*/
+
 .footer {
-    margin-top: -26px;
-    padding: 10px;
+    margin-top: 0px;
+    padding: 5px;
     background-color: var(--header);
     font-family: "RobotoBold", sans-serif;
     color: var(--txt-dark);
@@ -78,8 +76,15 @@ li {
     text-align: left;
     margin-top: 20px;
 }
+.mention a {
+    font-size: 14px;
+    color: var(--txt-dark);
+}
 
-/* --- NAVBAR --- */
+/*-----------------------------------------------------------------------------------------*/
+
+
+/*------------------------------- NAVBAR ------------------------------------------- */
 .nav-header {
     display: flex;
     justify-content: space-between;
@@ -99,7 +104,6 @@ li {
     color: var(--txt-dark);
 }
 
-/* UL horizontal + sans puces */
 .menu_header {
     display: flex;
     gap: 20px;
@@ -114,7 +118,7 @@ li {
     font-weight: 500;
 }
 
-/* --------------------- ACCUEIL ----------------------- */
+/* --------------------- ACCUEIL HTML----------------------- */
 .descriptif {
     text-align: center;
     margin-top: 20px;
@@ -124,7 +128,7 @@ li {
     margin-top: -32px;
 }
 
-/* ---------- VERSION MOBILE ---------- */
+/* ---------- ACCUEIL HTML VERSION MOBILE ---------- */
 @media (max-width: 768px) {
 
     /* TAILLES DE POLICE */
@@ -137,7 +141,7 @@ li {
     }
 
     h3 {
-        font-size: 1px;
+        font-size: 10px;
     }
 
     p,
@@ -190,22 +194,26 @@ li {
 
 .card {
     width: 300px;
-    height: 260px;
+    /* height: 260px; <-- Supprime cette ligne */
+    height: auto;
+    /* Laisse le contenu définir la hauteur */
     background-color: var(--card);
     border-radius: 12px;
-    padding: 26px 20px;
+    padding: 20px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
 }
 
+
 .card img {
     height: 26px;
 }
 
 .card h2 {
-    margin-top: -20px;
+    margin-top: -10px;
 }
 
 
@@ -231,6 +239,7 @@ li {
         height: auto;
         /* laisse respirer le contenu */
         padding: 20px;
+        margin: 10px auto;
     }
 
     .card img {
@@ -239,7 +248,7 @@ li {
     }
 }
 
-/*----------------------- FIN CARD ACCUEIL AVIS  -------------------------*/
+/*-------------------------------- FIN CARD ACCUEIL AVIS  -------------------------------------*/
 
 
 
@@ -295,16 +304,16 @@ li {
 
 /* BOUTON DETAILS DANS LES CARDS MENUS */
 .btn-details {
-    background-color: var(--btn);  
+    background-color: var(--btn);
     color: var(--txt-dark);
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
-    font-size: 1rem; /* 16px */
+    font-size: 1rem;
+    /* 16px */
     cursor: pointer;
     margin-top: 8px;
 }
-
 
 
 /*FILTRES MOBILE */
@@ -342,11 +351,7 @@ li {
     }
 }
 
-
-
-
-
-/* CARDS MENUS menu global------------------------------------------------------------*/
+/*--------------  CARDS MENUS GLOBAL MENU.HTML -----------------------*/
 
 
 .menu-info {
@@ -365,9 +370,6 @@ li {
     align-items: flex-start
 }
 
-
-
-
 /* IMAGE DANS LES CARDS MENUS */
 .menu-img img {
     width: 370px;
@@ -375,19 +377,9 @@ li {
     border-radius: 12px;
     display: flex;
     flex-direction: column;
-    /* image en haut, flèches en bas */
     align-items: center;
     justify-content: center;
 }
-
-/* ---------------Conteneur des flèches----------------- */
-.arrow-container {
-    margin-top: 14px;
-    display: flex;
-    justify-content: center;
-    gap: 34px;
-}
-
 
 /* REDIMENSIONNER IMAGE FLECHE */
 .arrow img {
@@ -395,9 +387,15 @@ li {
     height: 60px;
 }
 
+/* Conteneur des flèches  */
+.arrow-container {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 34px;
+}
 
-
-/* ENLEVE BORDURE DES FLECHES  place une main au survol*/
+/* ENLÈVE BORDURE DES FLECHES*/
 .arrow {
     background: none;
     border: none;
@@ -405,7 +403,7 @@ li {
     padding: 0;
 }
 
-/*CARD MENU GLOBAL RESPONSIVE*/
+/*---- CARDS MENUS GLOBAL MENU.HTML RESPONSIVE  ----*/
 @media (max-width: 768px) {
 
     .menu-card {
@@ -414,6 +412,7 @@ li {
         text-align: center;
         gap: 20px;
         padding: 20px;
+        max-width: 500px;
     }
 
     .menu-img {
@@ -438,11 +437,74 @@ li {
         height: 40px;
     }
 }
+
+@media (max-width: 475px) {
+
+    .menu-card {
+        max-width: 300px;
+    }
+}
+
 /*----------------------------------------------------------------*-
 
 
 /*--------------  MENU DETAILS-HTML  -------------------*/
-/* RESPONSIVE MENU DETAILS */
-@media (max-width: 768px) {
 
+.btn-commande {
+    background-color: var(--btn);
+    color: var(--txt-dark);
+    border: none;
+    padding: 8px 18px;
+    /* un peu plus large pour le texte */
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    /* évite les comportements bizarres */
+    margin-top: 10px;
 }
+
+
+/*-------------------------------------  PAGE COMMANDE  --------------------------------- */
+/* Centrage du container*/
+.commande-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.commande-card {
+    background-color: var(--fond);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+}
+
+#commande-form input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 0.9375rem; /* 15px */
+}
+
+.prix-info {
+    font-size: 1.125rem; /* 18px */
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: var(--txt-dark);
+}
+.btn-detail {
+    background-color: var(--btn);
+    color: var(--txt-dark);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+}
+
+/*  TERMINER CETTE PAGE ET VERIF RESPONSIVE      /*
