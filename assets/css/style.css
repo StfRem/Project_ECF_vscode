@@ -283,7 +283,7 @@ li {
 .filters button {
     background-color: var(--btn);
     border: none;
-    padding: 10px 20px;
+    padding: 8px 18px;
     border-radius: 6px;
     cursor: pointer;
     color: var(--txt-dark);
@@ -291,6 +291,20 @@ li {
     font-size: 1rem;
     /* 16px */
 }
+
+
+/* BOUTON DETAILS DANS LES CARDS MENUS */
+.btn-details {
+    background-color: var(--btn);  
+    color: var(--txt-dark);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 1rem; /* 16px */
+    cursor: pointer;
+    margin-top: 8px;
+}
+
 
 
 /*FILTRES MOBILE */
@@ -330,6 +344,8 @@ li {
 
 
 
+
+
 /* CARDS MENUS menu global------------------------------------------------------------*/
 
 
@@ -348,6 +364,9 @@ li {
     justify-content: space-around;
     align-items: flex-start
 }
+
+
+
 
 /* IMAGE DANS LES CARDS MENUS */
 .menu-img img {
@@ -418,4 +437,12 @@ li {
         width: 40px;
         height: 40px;
     }
+}
+/*----------------------------------------------------------------*-
+
+
+/*--------------  MENU DETAILS-HTML  -------------------*/
+/* RESPONSIVE MENU DETAILS */
+@media (max-width: 768px) {
+
 }
