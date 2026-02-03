@@ -524,7 +524,8 @@ li {
     width: auto;
 }
 
-/* PAGE REGISTER */
+
+/* -----------------PAGE REGISTER  ------------------------------- */
 .register-container {
     display: flex;
     justify-content: center;
@@ -567,7 +568,7 @@ li {
 }
 
 
-/* Formulaire */
+/*------------CONTACT HTML  ----------------------*/
 
 .contact-container h1{
     text-align: center;
@@ -590,19 +591,14 @@ li {
 
 #contact-form input,
 #contact-form textarea {
-    width: 50%;
     padding: 0.8rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
     transition: border 0.3s;
+
 }
 
-#contact-form input:focus,
-#contact-form textarea:focus {
-    border-color: var(--primary);
-    outline: none;
-}
 
 #contact-form textarea {
     resize: vertical;
@@ -639,7 +635,7 @@ li {
     font-size: 1.1rem;
 }
 
-/*--------------- MENTION LEGAL  -----------------------*/
+/*--------------- MENTION LEGAL HTML -----------------------*/
 .legal-container {
     max-width: 900px; /* Valeur la plus large conservée */
     margin: 40px auto; /* Marge supérieure/inférieure plus importante */
@@ -657,4 +653,217 @@ li {
 
 .legal-container h2 {
     margin-bottom: 10px;
+}
+
+
+/*---------------  ESPACE ADMINISTRATEUR  -----------------------------*/
+.admin-section {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.admin-section h1 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: var(--txt-dark);
+    text-align: center;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+/* ====== LISTES ====== */
+.admin-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-section li {
+    background: var(--header);
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+}
+
+.admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-item-info {
+    flex: 1;
+}
+
+.admin-item-info strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.admin-item-info span {
+    display: block;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* ------- BOUTONS ESPACE ADMINISTRATEUR  --------*/
+.btn-primary, 
+.btn-suspend, 
+.btn-supprimer, 
+.btn-modifier-menu,
+.btn-supprimer-menu,
+.btn-modifier-plat,
+.btn-supprimer-plat,
+.btn-modifier-horaire,
+.btn-supprimer-horaire,
+.btn-valider-avis,
+.btn-refuser-avis,
+.btn-action,
+.btn-danger,
+.btn-annuler {
+    background: #FFA7A1;
+    color: #0E0F0F;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9375rem;
+    min-width: 120px;
+    margin-top: 10px;
+}
+
+/* ====== FILTRES ====== */
+.filtres {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filtres input,
+.filtres select,
+.select-statut {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    flex: 1;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .admin-header,
+    .admin-item,
+    .admin-actions,
+    .filtres {
+        flex-direction: column;
+    }
+
+    .admin-header button,
+    .admin-actions button,
+    .admin-actions select,
+    .filtres input,
+    .filtres select {
+        width: 100%;
+    }
+}
+
+
+/*-------------------  ESPACE UTILISATEUR  ------------------------*/
+
+.btn-action {
+    background: var(--header);
+    color: var(--txt-dark);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 0.9375rem; /* 15px */
+}
+
+.btn-action,
+.btn-danger {
+    padding: 10px 18px;
+    border-radius: 6px;
+}
+.btn-danger.btn-annuler {
+    background: var(--btn);
+    color: var(--txt-dark);
+    font-weight: bold;}
+
+.btn-action:hover,
+.btn-danger:hover {
+    opacity: 0.85;
+}
+.user-container {
+    max-width: 900px;
+    margin: 50px auto 0 auto;
+    padding: 20px;
+
+    background-color: #4A6A69; /* couleur de fond de ta charte */
+    border-radius: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.commandes-liste{
+    color: #FFFFFF;
+}
+
+
+/*--------------------------  LOGIN HTML  ----------------------------------------------------*/
+
+.login-container{
+    background-color: #4A6A69;
+    width: auto;
+    height: 264px;
+}
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* centre horizontalement */
+    gap: 12px;
+}
+
+.login-container, h1{
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.login-container label,
+.login-container input,
+.login-container button {
+    width: 30%;
+}
+
+#btn-reset {
+    width: 30%;
+    margin: 15px auto 0 auto; /* centre + espace */
+    display: block;
+}
+
+
+.login-form ,label{
+    font-weight: bold;
+    color: #0E0F0F;
+    font-size: 18px;
+}
+
+#login-form button,
+#btn-reset {
+    background-color: var(--btn);
 }

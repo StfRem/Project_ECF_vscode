@@ -57,7 +57,6 @@ function afficherEmployes() {
         li.innerHTML = `
             <strong>${emp.fullname}</strong><br>
             Email : ${emp.email}<br>
-            Téléphone : ${emp.gsm}<br>
             Statut : <strong>${emp.suspendu ? "EN SUSPENS" : "Actif"}</strong><br>
             <button class="btn-suspend" data-id="${emp.id}">
                 ${emp.suspendu ? "Réactiver" : "Suspendre"}
@@ -75,10 +74,9 @@ afficherEmployes();
 btnAjoutEmploye.addEventListener("click", () => {
     const fullname = prompt("Nom et Prénom de l'employé :");
     const email = prompt("Email de l'employé :");
-    const gsm = prompt("Numéro de téléphone :");
     const password = prompt("Mot de passe temporaire :");
 
-    if (!fullname || !email || !gsm || !password) {
+    if (!fullname || !email || !password) {
         alert("Tous les champs sont obligatoires.");
         return;
     }
@@ -87,7 +85,6 @@ btnAjoutEmploye.addEventListener("click", () => {
         id: "EMP-" + Date.now(),
         fullname,
         email,
-        gsm,
         password,
         role: "employe",
         suspendu: false
@@ -101,7 +98,7 @@ btnAjoutEmploye.addEventListener("click", () => {
         "Un email a été envoyé à " + email + ".\n" +
         "Bonjour " + fullname + ", votre compte employé a été créé. " +
         "Vous devez contacter Julie ou José pour obtenir votre mot de passe définitif. " +
-        "L’équipe Vite & Gourmand vous souhaite la bienvenue au sein de son équipe. Bonne journée."
+        "L'équipe Vite & Gourmand vous souhaite la bienvenue au sein de son équipe. Bonne journée."
     );
 
     afficherEmployes();
@@ -418,7 +415,6 @@ function afficherCommandes() {
         listeCommandes.innerHTML = "<p>Aucune commande trouvée.</p>";
         return;
     }
-
     commandesFiltrees.forEach(cmd => {
         const li = document.createElement("li");
         li.classList.add("admin-item");
