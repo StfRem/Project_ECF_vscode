@@ -565,3 +565,96 @@ li {
     margin: 10px 0 20px 0;
     line-height: 1.5;
 }
+
+
+/* Formulaire */
+
+.contact-container h1{
+    text-align: center;
+    margin-top: 20px;
+}
+
+#contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    margin-top: 30px;
+}
+
+#contact-form label {
+    color: var(--txt-dark);
+    font-size: 20px;
+}
+
+
+#contact-form input,
+#contact-form textarea {
+    width: 50%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+#contact-form input:focus,
+#contact-form textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+#contact-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Bouton */
+.btn-action {
+    background-color: var(--primary);
+    color: var(--txt-light);
+    border: none;
+    padding: 0.9rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+}
+
+.btn-action:hover {
+    background-color: var(--header);
+}
+
+/* Message de confirmation */
+.hidden {
+    display: none;
+}
+
+#message-confirmation {
+    text-align: center;
+    color: var(--primary);
+    font-weight: 500;
+    margin-top: 2rem;
+    font-size: 1.1rem;
+}
+
+/*--------------- MENTION LEGAL  -----------------------*/
+.legal-container {
+    max-width: 900px; /* Valeur la plus large conservée */
+    margin: 40px auto; /* Marge supérieure/inférieure plus importante */
+    padding: 20px;
+}
+
+.legal-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.legal-container section {
+    margin-bottom: 25px;
+}
+
+.legal-container h2 {
+    margin-bottom: 10px;
+}

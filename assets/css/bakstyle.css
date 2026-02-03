@@ -161,25 +161,7 @@ header {
     line-height: 1.5;
 }
 
-/*--------------- MENTION LEGAL  -----------------------*/
-.legal-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-}
 
-.legal-container h1 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.legal-container section {
-    margin-bottom: 25px;
-}
-
-.legal-container h2 {
-    margin-bottom: 10px;
-}
 
 /*--------------- CGV  -----------------------*/
 .legal-container {
@@ -365,46 +347,7 @@ header {
 
 
 
-/*----------------- CONTACT  ---------------------------*/
-.contact-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-}
 
-#contact-form label {
-    display: block;
-    margin-top: 15px;
-    font-size: 1.1rem;
-    color: white;
-}
-
-#contact-form input,
-#contact-form textarea {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    margin-top: 5px;
-    box-sizing: border-box;
-}
-
-#contact-form button {
-    margin-top: 20px;
-    padding: 12px 20px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-}
-
-#message-confirmation {
-    margin-top: 20px;
-    font-size: 1.1rem;
-    color: #4CAF50;
-}
-.hidden {
-    display: none;
-}
 
 
 /* LISTES COMMANDES UTILISATEUR */
