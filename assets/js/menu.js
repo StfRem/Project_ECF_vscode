@@ -119,19 +119,20 @@ function afficherMenus(liste) {
                 <div class="menu-info">
                     <h2>${menu.titre}</h2>
                     <p>${menu.description}</p>
+                <br>
 
                     <p><strong>Thème :</strong> ${menu.theme}</p>
                     <p><strong>Régime :</strong> ${menu.regime}</p>
-
+                <br>
                     <h3>Entrées</h3>
                     <ul>${htmlEntrees}</ul>
-
+                <br>
                     <h3>Plats</h3>
                     <ul>${htmlPlats}</ul>
-
+                <br>
                     <h3>Desserts</h3>
                     <ul>${htmlDesserts}</ul>
-
+                <br>
                     <p><strong>Conditions :</strong> ${menu.conditions}</p>
                     <p><strong>Prix :</strong> ${menu.prix} €</p>
                     <p><strong>Personnes min :</strong> ${menu.personnesMin}</p>

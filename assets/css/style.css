@@ -125,7 +125,8 @@ li {
 }
 
 .descriptif ul {
-    margin-top: -32px;
+    margin-top: 0px;
+    padding: 0px;
 }
 
 /* ---------- ACCUEIL HTML VERSION MOBILE ---------- */
@@ -141,7 +142,7 @@ li {
     }
 
     h3 {
-        font-size: 10px;
+        font-size: 16px;
     }
 
     p,
@@ -187,14 +188,13 @@ li {
 /*  CARD ACCUEIL AVIS  */
 .cards {
     display: flex;
-    gap: 135px;
+    gap: 30px;
     justify-content: center;
     margin: 45px;
 }
 
 .card {
     width: 300px;
-    /* height: 260px; <-- Supprime cette ligne */
     height: auto;
     /* Laisse le contenu définir la hauteur */
     background-color: var(--card);
@@ -213,7 +213,7 @@ li {
 }
 
 .card h2 {
-    margin-top: -10px;
+    margin-top: 0px;
 }
 
 
@@ -278,10 +278,6 @@ li {
     width: 160px;
     /* largeur plus grande */
     padding: 8px 10px;
-    /* plus d’espace intérieur */
-    font-size: 1rem;
-    /* 16px */
-    /* texte plus lisible */
     margin-top: 8px;
     /* espace entre bouton et input */
     border: 1px solid #ccc;
@@ -292,7 +288,7 @@ li {
 .filters button {
     background-color: var(--btn);
     border: none;
-    padding: 8px 18px;
+    padding: 10px 18px;
     border-radius: 6px;
     cursor: pointer;
     color: var(--txt-dark);
@@ -310,9 +306,9 @@ li {
     padding: 10px 20px;
     border-radius: 6px;
     font-size: 1rem;
-    /* 16px */
     cursor: pointer;
     margin-top: 8px;
+    font-weight: bold;
 }
 
 
@@ -336,8 +332,7 @@ li {
     }
 
     .filters button {
-        font-size: 0.6rem;
-        /* plus petit */
+        font-size: 0.8rem;
         padding: 8px 16px;
         /* plus compact */
     }
