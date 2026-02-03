@@ -218,6 +218,8 @@ li {
 
 
 /* CARD ACCUEIL AVIS MOBILE */
+
+
 @media (max-width: 768px) {
 
     .cards {
@@ -407,7 +409,7 @@ li {
         text-align: center;
         gap: 20px;
         padding: 20px;
-        max-width: 500px;
+        max-width: 600px;
     }
 
     .menu-img {
@@ -436,9 +438,15 @@ li {
 @media (max-width: 475px) {
 
     .menu-card {
+        max-width: 340px;
+    }
+}
+@media (max-width: 360px) {
+        .menu-card {
         max-width: 300px;
     }
 }
+
 
 /*----------------------------------------------------------------*-
 
