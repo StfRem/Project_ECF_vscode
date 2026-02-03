@@ -4,25 +4,31 @@ export function loadNavbar() {
     const isLogged = !!user;
 
     let loginLogoutLink = '<li><a href="./login.html">Connexion</a></li>';
+    let registerLink = '<li><a href="./register.html">Inscription</a></li>'; // Lien vers la page d'inscription
+
     if (isLogged) {
         loginLogoutLink = '<li><a href="#" id="btn-deconnexion">Déconnexion</a></li>';
+        registerLink = ''; // Masque le lien "Inscription" si l'utilisateur est connecté
     }
 
-document.getElementById("header").innerHTML = `
-    <nav class="nav-header">
-        <img src="./assets/images/logo.png" alt="logo" class="logo">
-        <span class="burger">&#9776;</span>
-        <ul class="menu_header">
-            <li><a href="./index.html">Accueil</a></li>
-            <li><a href="./menus.html">Menus</a></li>
-            <li><a href="./contact.html">Contact</a></li>
-            ${loginLogoutLink}
-        </ul>
-    </nav>
-`;
-document.querySelector(".burger").addEventListener("click", () => {
-    document.querySelector(".menu_header").classList.toggle("open");
-});
+    document.getElementById("header").innerHTML = `
+        <nav class="nav-header">
+            <img src="./assets/images/logo.png" alt="logo" class="logo">
+            <span class="burger">&#9776;</span>
+            <ul class="menu_header">
+                <li><a href="./index.html">Accueil</a></li>
+                <li><a href="./menus.html">Menus</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+                ${loginLogoutLink}
+                ${registerLink}
+            </ul>
+        </nav>
+    `;
+
+    // Gestion du menu burger
+    document.querySelector(".burger").addEventListener("click", () => {
+        document.querySelector(".menu_header").classList.toggle("open");
+    });
 
     // Gestion du clic sur Déconnexion
     const btnDeconnexion = document.getElementById("btn-deconnexion");
@@ -30,11 +36,13 @@ document.querySelector(".burger").addEventListener("click", () => {
         btnDeconnexion.addEventListener("click", (e) => {
             e.preventDefault();
             localStorage.removeItem("user");
+            localStorage.setItem("userIsLogged", "false");
             alert("Vous êtes déconnecté.");
             window.location.href = "./index.html";
         });
     }
 }
+
 
 
 // FOOTER DYNAMIQUE

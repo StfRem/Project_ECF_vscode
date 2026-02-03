@@ -61,60 +61,65 @@ if (!user) {
 // ---------------------------------------------------------
 // Gestion du nombre de personnes + prix total
 // ---------------------------------------------------------
+
 const inputNb = document.getElementById("nbPersonnes");
 const prixTotal = document.getElementById("prixTotal");
 
-// impose le minimum
+// Initialisation
 inputNb.min = menu.personnesMin;
 inputNb.value = menu.personnesMin;
-
-// calcul initial
 updatePrix();
 
-inputNb.addEventListener("input", () => {
-    if (inputNb.value < menu.personnesMin) {
+// Écouteurs d'événements
+inputNb.addEventListener("blur", () => {
+    let nb = Number(inputNb.value);
+    if (nb < menu.personnesMin || isNaN(nb)) {
+        alert(`Le nombre minimum de personnes pour ce menu est ${menu.personnesMin}.`);
         inputNb.value = menu.personnesMin;
     }
     updatePrix();
 });
+
 document.getElementById("ville").addEventListener("input", updatePrix);
 document.getElementById("distance").addEventListener("input", updatePrix);
 
 
 function updatePrix() {
-    const nb = Number(inputNb.value);
-    let total = nb * (menu.prix / menu.personnesMin);
+    let nb = Number(inputNb.value);
+    if (nb < menu.personnesMin) {
+        nb = menu.personnesMin;
+        inputNb.value = nb;
+    }
 
+    let total = nb * (menu.prix / menu.personnesMin);
     const reductionInfo = document.getElementById("reductionInfo");
 
     // Réduction 10% si +5 personnes
     if (nb >= menu.personnesMin + 5) {
-        total = total * 0.9;
+        total *= 0.9;
         reductionInfo.textContent = "🎉 Réduction de 10% appliquée !";
-        reductionInfo.style.color = "#27ae60";
+        reductionInfo.classList.add("appliquée");
+        reductionInfo.classList.remove("non-appliquée");
     } else {
         const manque = (menu.personnesMin + 5) - nb;
         reductionInfo.textContent = `Ajoutez encore ${manque} personne(s) pour obtenir une réduction de 10% !`;
-        reductionInfo.style.color = "#d35400";
+        reductionInfo.classList.add("non-appliquée");
+        reductionInfo.classList.remove("appliquée");
     }
 
     // Frais de livraison
     const ville = document.getElementById("ville").value.trim().toLowerCase();
-    const distance = Number(document.getElementById("distance").value);
-
-    // Toujours 5 € fixes
+    const distance = Number(document.getElementById("distance").value) || 0;
     let fraisLivraison = 5;
-
-    // Majoration uniquement si hors Bordeaux
-    if (ville !== "" && ville !== "bordeaux") {
+    if (ville && ville !== "bordeaux") {
         fraisLivraison += distance * 0.59;
     }
 
     // Total final
     window.totalFinal = total + fraisLivraison;
-
     prixTotal.textContent = `Prix total avec livraison : ${window.totalFinal.toFixed(2)} €`;
 }
+
 
 
 
