@@ -195,11 +195,20 @@ document.addEventListener("click", (e) => {
         const nouvelleVille = document.getElementById(`mod-ville-${id}`).value;
         const nouvelleDistance = Number(document.getElementById(`mod-distance-${id}`).value);
 
-        const menu = getMenuById(cmd.menuId);
-        if (!menu) {
-            alert("Erreur : impossible de récupérer les informations du menu.");
-            return;
-        }
+let menu = getMenuById(cmd.menuId);
+
+// fallback si menuId foireux
+if (!menu) {
+    const menus = JSON.parse(localStorage.getItem("menus")) || [];
+    menu = menus.find(m => m.nom === cmd.menuTitre);
+}
+
+if (!menu) {
+    console.error("Menu introuvable", cmd);
+    alert("Menu introuvable pour recalcul.");
+    return;
+}
+
 
         let total = nouveauNb * (menu.prix / menu.personnesMin);
         if (nouveauNb >= menu.personnesMin + 5) {
