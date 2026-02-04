@@ -66,7 +66,7 @@ form.addEventListener("submit", function (e) {
 
     alert("Compte créé avec succès ! Rôle attribué : utilisateur");
 
-    console.log(`
+    alert(`
         EMAIL ENVOYÉ À : ${email}
         Objet : Bienvenue !
         Message :
