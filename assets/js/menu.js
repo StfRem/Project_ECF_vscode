@@ -138,7 +138,7 @@ function afficherMenus(liste) {
                     <p><strong>Personnes min :</strong> ${menu.personnesMin}</p>
                     <p><strong>Stock :</strong> ${menu.stock}</p>
 
-                    <button class="btn-details" data-id="${menu.id}">
+                    <button class="btn-details2" data-id="${menu.id}">
                         + de détails
                     </button>
                 </div>
@@ -286,7 +286,7 @@ document.addEventListener("click", (e) => {
 // Redirection vers la page détail
 // -----------------------------
 document.addEventListener("click", (e) => {
-    const btn = e.target.closest(".btn-details");
+    const btn = e.target.closest(".btn-details2");
     if (!btn) return;
 
     const id = btn.dataset.id;

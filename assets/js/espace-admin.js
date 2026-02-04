@@ -5,7 +5,6 @@ if (!user || user.role !== "admin") {
     location.href = "./login.html";
 }
 
-
 // COMMANDES (même code que espace-employe.js)
 let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
 // Sélecteurs des filtres commandes
@@ -13,9 +12,12 @@ const filtreStatut = document.getElementById("filtre-statut");
 const filtreClient = document.getElementById("filtre-client");
 const listeCommandes = document.getElementById("liste-commandes");
 
+// Écouteurs pour les filtres de commandes
+filtreStatut.addEventListener("change", afficherCommandes);
+filtreClient.addEventListener("input", afficherCommandes);
+
 // Sélecteur des avis
 const listeAvis = document.getElementById("liste-avis");
-
 
 // AVIS (même code que espace-employe.js)
 let avis = JSON.parse(localStorage.getItem("avis")) || [];
@@ -198,7 +200,6 @@ btnAjoutPlat.addEventListener("click", () => {
         });
     }
 
-
     // 2. Plat principal
     const nomPlat = prompt("Nom du plat principal (laisser vide si aucun) :");
     if (nomPlat) {
@@ -225,7 +226,6 @@ btnAjoutPlat.addEventListener("click", () => {
     afficherPlats();
     alert("Plat(s) ajouté(s) avec succès !");
 });
-
 
 // AFFICHAGE HORAIRES
 function afficherHoraires() {
@@ -277,127 +277,134 @@ btnAjoutHoraire.addEventListener("click", () => {
 document.addEventListener("click", (e) => {
     const id = e.target.dataset.id;
 
+
+
     // --- EMPLOYÉS : SUSPENSION / RÉACTIVATION ---
     if (e.target.classList.contains("btn-suspend")) {
-        users = users.map(u => {
-            if (u.id === id) {
-                u.suspendu = !u.suspendu;
-            }
-            return u;
-        });
+    users = users.map(u => {
+        if (u.id === id) {
+            u.suspendu = !u.suspendu;
+        }
+        return u;
+    });
 
+    localStorage.setItem("users", JSON.stringify(users));
+    afficherEmployes();
+}
+
+// --- EMPLOYÉS : SUPPRESSION ---
+if (e.target.classList.contains("btn-supprimer")) {
+    if (confirm("Supprimer cet employé ?")) {
+        users = users.filter(u => u.id !== id);
         localStorage.setItem("users", JSON.stringify(users));
         afficherEmployes();
     }
+}
 
-    // --- EMPLOYÉS : SUPPRESSION ---
-    if (e.target.classList.contains("btn-supprimer")) {
-        if (confirm("Supprimer cet employé ?")) {
-            users = users.filter(u => u.id !== id);
-            localStorage.setItem("users", JSON.stringify(users));
-            afficherEmployes();
-        }
-    }
-
-    // --- MENUS : SUPPRESSION ---
-    if (e.target.classList.contains("btn-supprimer-menu")) {
-        if (confirm("Supprimer ce menu ?")) {
-            menus = menus.filter(m => m.id !== id);
-            localStorage.setItem("menus", JSON.stringify(menus));
-            afficherMenus();
-        }
-    }
-
-    // --- MENUS : MODIFICATION ---
-    if (e.target.classList.contains("btn-modifier-menu")) {
-        const menu = menus.find(m => m.id === id);
-        if (!menu) return;
-
-        const nom = prompt("Nom du menu :", menu.nom);
-        const description = prompt("Description :", menu.description);
-        const prix = prompt("Prix :", menu.prix);
-
-        if (!nom || !description || !prix) {
-            alert("Tous les champs sont obligatoires.");
-            return;
-        }
-
-        menu.nom = nom;
-        menu.description = description;
-        menu.prix = parseFloat(prix);
-
+// --- MENUS : SUPPRESSION ---
+if (e.target.classList.contains("btn-supprimer-menu")) {
+    if (confirm("Supprimer ce menu ?")) {
+        menus = menus.filter(m => m.id !== id);
         localStorage.setItem("menus", JSON.stringify(menus));
         afficherMenus();
     }
+}
 
-    // --- PLATS : SUPPRESSION ---
-    if (e.target.classList.contains("btn-supprimer-plat")) {
-        if (confirm("Supprimer ce plat ?")) {
-            plats = plats.filter(p => p.id !== id);
-            localStorage.setItem("plats", JSON.stringify(plats));
-            afficherPlats();
-        }
+// --- MENUS : MODIFICATION ---
+if (e.target.classList.contains("btn-modifier-menu")) {
+    const menu = menus.find(m => m.id === id);
+    if (!menu) return;
+
+    const nom = prompt("Nom du menu :", menu.nom);
+    const description = prompt("Description :", menu.description);
+    const prix = prompt("Prix :", menu.prix);
+
+    if (!nom || !description || !prix) {
+        alert("Tous les champs sont obligatoires.");
+        return;
     }
 
-    // --- PLATS : MODIFICATION ---
-    if (e.target.classList.contains("btn-modifier-plat")) {
-        const plat = plats.find(p => p.id === id);
-        if (!plat) return;
+    menu.nom = nom;
+    menu.description = description;
+    menu.prix = parseFloat(prix);
 
-        const nom = prompt("Nom du plat :", plat.nom);
-        const description = prompt("Description :", plat.description);
-        const prix = prompt("Prix :", plat.prix);
+    localStorage.setItem("menus", JSON.stringify(menus));
+    afficherMenus();
+}
 
-        if (!nom || !description || !prix) {
-            alert("Tous les champs sont obligatoires.");
-            return;
-        }
-
-        plat.nom = nom;
-        plat.description = description;
-        plat.prix = parseFloat(prix);
-
+// --- PLATS : SUPPRESSION ---
+if (e.target.classList.contains("btn-supprimer-plat")) {
+    if (confirm("Supprimer ce plat ?")) {
+        plats = plats.filter(p => p.id !== id);
         localStorage.setItem("plats", JSON.stringify(plats));
         afficherPlats();
     }
+}
 
-    // --- HORAIRES : SUPPRESSION ---
-    if (e.target.classList.contains("btn-supprimer-horaire")) {
-        if (confirm("Supprimer cet horaire ?")) {
-            horaires = horaires.filter(h => h.id !== id);
-            localStorage.setItem("horaires", JSON.stringify(horaires));
-            afficherHoraires();
-        }
+// --- PLATS : MODIFICATION ---
+if (e.target.classList.contains("btn-modifier-plat")) {
+    const plat = plats.find(p => p.id === id);
+    if (!plat) return;
+
+    const nom = prompt("Nom du plat :", plat.nom);
+    const description = prompt("Description :", plat.description);
+
+    // Certains plats n'ont PAS de prix → on ne force pas
+    let prix = plat.prix !== undefined ? prompt("Prix :", plat.prix) : null;
+
+    if (!nom || !description) {
+        alert("Tous les champs sont obligatoires.");
+        return;
     }
 
-    // --- HORAIRES : MODIFICATION ---
-    if (e.target.classList.contains("btn-modifier-horaire")) {
-        const h = horaires.find(h => h.id === id);
-        if (!h) return;
+    plat.nom = nom;
+    plat.description = description;
 
-        const jour = prompt("Jour :", h.jour);
-        const ouverture = prompt("Heure d'ouverture :", h.ouverture);
-        const fermeture = prompt("Heure de fermeture :", h.fermeture);
+    if (prix !== null) {
+        plat.prix = parseFloat(prix);
+    }
 
-        if (!jour || !ouverture || !fermeture) {
-            alert("Tous les champs sont obligatoires.");
-            return;
-        }
+    localStorage.setItem("plats", JSON.stringify(plats));
+    afficherPlats();
+}
 
-        h.jour = jour;
-        h.ouverture = ouverture;
-        h.fermeture = fermeture;
-
+// --- HORAIRES : SUPPRESSION ---
+if (e.target.classList.contains("btn-supprimer-horaire")) {
+    if (confirm("Supprimer cet horaire ?")) {
+        horaires = horaires.filter(h => h.id !== id);
         localStorage.setItem("horaires", JSON.stringify(horaires));
         afficherHoraires();
     }
+}
+
+// --- HORAIRES : MODIFICATION ---
+if (e.target.classList.contains("btn-modifier-horaire")) {
+    const h = horaires.find(h => h.id === id);
+    if (!h) return;
+
+    const jour = prompt("Jour :", h.jour);
+    const ouverture = prompt("Heure d'ouverture :", h.ouverture);
+    const fermeture = prompt("Heure de fermeture :", h.fermeture);
+
+    if (!jour || !ouverture || !fermeture) {
+        alert("Tous les champs sont obligatoires.");
+        return;
+    }
+
+    h.jour = jour;
+    h.ouverture = ouverture;
+    h.fermeture = fermeture;
+
+    localStorage.setItem("horaires", JSON.stringify(horaires));
+    afficherHoraires();
+}
 });
 
-// --------------------------  SECTION FILTRE  commande ------------------------------
+// --------------------------  SECTION FILTRE commande ------------------------------
 function afficherCommandes() {
     listeCommandes.innerHTML = "";
 
-    const recherche = filtreClient.value.toLowerCase(); // recherche par nom
+    const recherche = filtreClient.value.toLowerCase();
     const statutFiltre = filtreStatut.value;
 
     const commandesFiltrees = commandes.filter(cmd => {
@@ -406,7 +413,9 @@ function afficherCommandes() {
         const matchStatut =
             statutFiltre === "" || cmd.statut === statutFiltre;
 
-        const matchNom = client ? client.fullname.toLowerCase().includes(recherche) : false;
+        const matchNom =
+            recherche === "" ||
+            (client && client.fullname.toLowerCase().includes(recherche));
 
         return matchStatut && matchNom;
     });
@@ -415,6 +424,7 @@ function afficherCommandes() {
         listeCommandes.innerHTML = "<p>Aucune commande trouvée.</p>";
         return;
     }
+
     commandesFiltrees.forEach(cmd => {
         const li = document.createElement("li");
         li.classList.add("admin-item");
@@ -433,6 +443,7 @@ function afficherCommandes() {
                     <option value="en préparation">En préparation</option>
                     <option value="en cours de livraison">En cours de livraison</option>
                     <option value="livré">Livré</option>
+                    <option value="en attente du retour de matériel">En attente du retour de matériel</option>
                     <option value="terminée">Terminée</option>
                 </select>
 
@@ -445,30 +456,92 @@ function afficherCommandes() {
         listeCommandes.appendChild(li);
     });
 }
+
+// 🔥 LISTENER MANQUANT → AJOUTÉ (réparation)
+document.addEventListener("change", (e) => {
+    if (e.target.classList.contains("select-statut")) {
+        const id = e.target.dataset.id;
+        const nouveauStatut = e.target.value;
+
+        if (!nouveauStatut) return;
+
+        const commande = commandes.find(cmd => cmd.id === id);
+        if (!commande) return;
+
+        commande.historique = commande.historique || [];
+        commande.historique.push({
+            date: new Date().toISOString(),
+            action: `Statut changé en : ${nouveauStatut}`
+        });
+
+        commande.statut = nouveauStatut;
+
+        localStorage.setItem("commandes", JSON.stringify(commandes));
+        afficherCommandes();
+
+        alert("Statut mis à jour !");
+    }
+});
+
+document.addEventListener("change", (e) => {
+    if (e.target.classList.contains("select-statut")) {
+        const id = e.target.dataset.id;
+        const nouveauStatut = e.target.value;
+
+        if (!nouveauStatut) return;
+
+        const commande = commandes.find(cmd => cmd.id === id);
+        if (!commande) return;
+
+        commande.historique = commande.historique || [];
+        commande.historique.push({
+            date: new Date().toISOString(),
+            action: `Statut changé en : ${nouveauStatut}`
+        });
+
+        commande.statut = nouveauStatut;
+
+        // Si le statut est "en attente du retour de matériel", envoyer un mail de notification
+        if (nouveauStatut === "en attente du retour de matériel") {
+            const client = users.find(u => u.id === commande.userId);
+            if (client) {
+                // Ici, tu devrais appeler une fonction d'envoi de mail (simulé par un alert pour l'exemple)
+                alert(`Mail envoyé à ${client.email} :
+                    Bonjour ${client.fullname},
+                    Vous avez 10 jours ouvrés pour restituer le matériel,
+                    à défaut, des frais de 600€ vous seront facturés (cf. CGV).
+                    Pour organiser le retour, merci de nous contacter service.
+                    Cordialement`);
+            }
+        }
+
+        localStorage.setItem("commandes", JSON.stringify(commandes));
+        afficherCommandes();
+    }
+});
+
+
+// ANNULATION COMMANDE
 document.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn-annuler")) {
         const id = e.target.dataset.id;
         const commande = commandes.find(cmd => cmd.id === id);
         if (!commande) return;
 
-        // 1. Demander au client le contact et le motif
         const contact = prompt("Mode de contact utilisé pour prévenir le client (appel, mail...) :");
         if (!contact) return alert("Annulation annulée : vous devez spécifier le mode de contact.");
 
         const motif = prompt("Motif de l'annulation :");
         if (!motif) return alert("Annulation annulée : vous devez spécifier un motif.");
 
-        // 2. Mettre à jour l'historique
         commande.historique = commande.historique || [];
         commande.historique.push({
             date: new Date().toISOString(),
             action: `Commande annulée (${contact}) : ${motif}`
         });
 
-        // 3. Mettre à jour le statut
         commande.statut = "annulée";
 
-        // 4. Sauvegarder et rafraîchir l'affichage
         localStorage.setItem("commandes", JSON.stringify(commandes));
         afficherCommandes();
 
