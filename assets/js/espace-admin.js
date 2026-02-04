@@ -408,7 +408,7 @@ function afficherCommandes() {
     const statutFiltre = filtreStatut.value;
 
     const commandesFiltrees = commandes.filter(cmd => {
-        const client = users.find(u => u.id === cmd.userId);
+        
 
         const matchStatut =
             statutFiltre === "" || cmd.statut === statutFiltre;

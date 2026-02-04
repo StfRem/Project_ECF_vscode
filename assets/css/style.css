@@ -788,6 +788,10 @@ li {
     color: #FFFFFF;
 }
 
+.commande-details strong {
+    color: var(--txt-dark);
+}
+
 
 /*--------------------------  LOGIN HTML  ----------------------------------------------------*/
 
