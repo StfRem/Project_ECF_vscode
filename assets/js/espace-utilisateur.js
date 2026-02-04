@@ -3,30 +3,47 @@ const user = JSON.parse(localStorage.getItem("user"));
 if (!user) {
     alert("Vous devez être connecté pour accéder à votre espace utilisateur.");
     location.href = "./login.html";
-    window.location.href = "./login.html";
 }
 
+// Stocker les menus dans localStorage si ce n'est pas déjà fait
+if (!localStorage.getItem("menus")) {
+    const menus = [
+        {
+            id: 1,
+            titre: "Noël Traditionnel",
+            personnesMin: 4,
+            materiel: true
+        },
+        {
+            id: 2,
+            titre: "Menu Vegan Fraîcheur",
+            personnesMin: 2,
+            materiel: false
+        },
+        {
+            id: 3,
+            titre: "Menu Événements",
+            personnesMin: 6,
+            materiel: true
+        }
+    ];
+    localStorage.setItem("menus", JSON.stringify(menus));
+}
 
-
-
-// ---------------------------------------------------------
 // Récupération des commandes de l'utilisateur
-// ---------------------------------------------------------
 let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
 let commandesUtilisateur = commandes.filter(cmd => cmd.userId === user.id);
+
+// Fonction pour récupérer un menu par son ID
 function getMenuById(menuId) {
     const menus = JSON.parse(localStorage.getItem("menus")) || [];
-    return menus.find(m => m.id === menuId);
+    return menus.find(m => m.id == menuId);
 }
-// ---------------------------------------------------------
-// Sélection des zones d'affichage
-// ---------------------------------------------------------
-const liste = document.getElementById("liste-commandes");
-const zoneDetail = document.getElementById("zone-detail");
 
-// ---------------------------------------------------------
-// Affichage de la liste des commandes
-// ---------------------------------------------------------
+// Sélection de la zone d'affichage
+const liste = document.getElementById("liste-commandes");
+
+// Affichage de la liste des commandes avec tous les détails
 function afficherListe() {
     liste.innerHTML = "";
 
@@ -38,190 +55,171 @@ function afficherListe() {
     commandesUtilisateur.forEach(cmd => {
         const li = document.createElement("li");
         li.classList.add("commande-item");
+        li.dataset.id = cmd.id;
+
+        let boutonModifier = "";
+        let boutonAnnuler = "";
+        let boutonAvis = "";
+        let suivi = "";
+        let zoneModification = "";
+
+        // Boutons Modifier et Annuler pour les commandes en attente
+        if (cmd.statut === "en attente") {
+            boutonModifier = `<button class="btn-modifier btn-action" data-id="${cmd.id}">Modifier</button>`;
+            boutonAnnuler = `<button class="btn-annuler btn-danger" data-id="${cmd.id}">Annuler</button>`;
+        }
+
+        // Suivi pour les commandes non en attente et non annulées
+        if (cmd.statut !== "en attente" && cmd.statut !== "annulée") {
+            suivi = `
+                <div class="suivi-commande">
+                    <h4>Suivi de la commande</h4>
+                    <ul>
+                        ${cmd.historique.map(h => `<li>${new Date(h.date).toLocaleString()} — ${h.action}</li>`).join("")}
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Bouton avis pour les commandes terminées
+        if (cmd.statut === "terminée" && cmd.avis && cmd.avis.note === null) {
+            boutonAvis = `<button class="btn-avis btn-action" data-id="${cmd.id}">Donner un avis</button>`;
+        }
 
         li.innerHTML = `
-            <strong>${cmd.menuTitre}</strong><br>
-            Commande : ${cmd.id}<br>
-            Prestation : ${cmd.datePrestation} à ${cmd.heurePrestation}<br>
-            Statut : ${cmd.statut}
+            <div class="commande-details">
+                <h3>${cmd.menuTitre}</h3>
+                <p><strong>Commande :</strong> ${cmd.id}</p>
+                <p><strong>Nombre de personnes :</strong> ${cmd.nbPersonnes}</p>
+                <p><strong>Date de prestation :</strong> ${cmd.datePrestation}</p>
+                <p><strong>Heure :</strong> ${cmd.heurePrestation}</p>
+                <p><strong>Adresse :</strong> ${cmd.adresse}, ${cmd.cp} ${cmd.ville}</p>
+                <p><strong>Distance :</strong> ${cmd.distance} km</p>
+                <p><strong>Statut :</strong> ${cmd.statut}</p>
+                
+                <div class="boutons-commande">
+                    ${boutonModifier}
+                    ${boutonAnnuler}
+                    ${boutonAvis}
+                </div>
+                
+                <div class="zone-modification" id="zone-modification-${cmd.id}"></div>
+                
+                ${suivi}
+            </div>
         `;
 
-        li.dataset.id = cmd.id;
         liste.appendChild(li);
     });
 }
 
-afficherListe();
-if (commandesUtilisateur.length > 0) {
-    afficherDetail(commandesUtilisateur[0]);
-}
-
-// ---------------------------------------------------------
-// Affichage des détails d'une commande
-// ---------------------------------------------------------
-function afficherDetail(cmd) {
-    let boutonModifier = "";
-    let boutonAnnuler = "";
-    let boutonAvis = "";
-    let suivi = "";
-
-    if (cmd.statut === "en attente") {
-        boutonModifier = `<button id="btn-modifier" class="btn-action">Modifier</button>`;
-        boutonAnnuler = `<button id="btn-annuler" class="btn-danger">Annuler</button>`;
-    }
-
-    if (cmd.statut !== "en attente" && cmd.statut !== "annulée") {
-        suivi = `
-            <h3>Suivi de la commande</h3>
-            <ul>
-                ${cmd.historique.map(h => `<li>${new Date(h.date).toLocaleString()} — ${h.action}</li>`).join("")}
-            </ul>
-        `;
-    }
-
-    if (cmd.statut === "terminée" && cmd.avis && cmd.avis.note === null) {
-        boutonAvis = `<button id="btn-avis" class="btn-action">Donner un avis</button>`;
-    }
-
-    zoneDetail.dataset.id = cmd.id; // ID proprement stocké ici
-
-    zoneDetail.innerHTML = `
-        <h2>Détail de la commande</h2>
-
-        <p><strong>Menu :</strong> ${cmd.menuTitre}</p>
-        <p><strong>Nombre de personnes :</strong> ${cmd.nbPersonnes}</p>
-        <p><strong>Date :</strong> ${cmd.datePrestation}</p>
-        <p><strong>Heure :</strong> ${cmd.heurePrestation}</p>
-        <p><strong>Adresse :</strong> ${cmd.adresse}, ${cmd.cp} ${cmd.ville}</p>
-        <p><strong>Distance :</strong> ${cmd.distance} km</p>
-        <p><strong>Statut :</strong> ${cmd.statut}</p>
-
-        ${boutonModifier}
-        ${boutonAnnuler}
-        ${boutonAvis}
-
-        <div id="zone-modification"></div>
-
-        ${suivi}
-    `;
-}
-
-// ---------------------------------------------------------
-// Récupération de la commande actuellement affichée
-// ---------------------------------------------------------
-function getCommandeCourante() {
-    const id = zoneDetail.dataset.id;
-    if (!id) return null;
-    return commandesUtilisateur.find(c => String(c.id) === String(id)) || null;
-}
-
-// ---------------------------------------------------------
 // Gestion centralisée des clics
-// ---------------------------------------------------------
 document.addEventListener("click", (e) => {
     const target = e.target;
 
-    // Clic sur une commande → afficher les détails
-    const item = target.closest(".commande-item");
-    if (item) {
-        const id = item.dataset.id;
+    // Clic sur le bouton Annuler
+    if (target.classList.contains("btn-annuler")) {
+        const id = target.dataset.id;
         const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
-        if (cmd) afficherDetail(cmd);
+        if (!cmd) return;
+        
+        if (confirm("Voulez-vous vraiment annuler cette commande ?")) {
+            cmd.statut = "annulée";
+            cmd.historique.push({
+                date: new Date().toISOString(),
+                action: "Commande annulée par l'utilisateur"
+            });
+            localStorage.setItem("commandes", JSON.stringify(commandes));
+            afficherListe();
+        }
         return;
     }
 
-    // ANNULATION
-    if (target.id === "btn-annuler") {
-        const cmd = getCommandeCourante();
+    // Clic sur le bouton Modifier
+    if (target.classList.contains("btn-modifier")) {
+        const id = target.dataset.id;
+        const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
         if (!cmd) return;
-
-        if (!confirm("Voulez-vous vraiment annuler cette commande ?")) return;
-
-        cmd.statut = "annulée";
-        cmd.historique.push({
-            date: new Date().toISOString(),
-            action: "Commande annulée par l'utilisateur"
-        });
-
-        localStorage.setItem("commandes", JSON.stringify(commandes));
-        afficherListe();
-        afficherDetail(cmd);
-        return;
-    }
-
-    // MODIFICATION → affichage du formulaire
-    if (target.id === "btn-modifier") {
-        const cmd = getCommandeCourante();
-        if (!cmd) return;
-
-        const zone = document.getElementById("zone-modification");
+        
+        const zone = document.getElementById(`zone-modification-${cmd.id}`);
         if (!zone) return;
-
+        
         zone.innerHTML = `
-            <h3>Modifier la commande</h3>
-
-            <label>Nombre de personnes :</label>
-            <input type="number" id="mod-nb" value="${cmd.nbPersonnes}">
-
-            <label>Date :</label>
-            <input type="date" id="mod-date" value="${cmd.datePrestation}">
-
-            <label>Heure :</label>
-            <input type="time" id="mod-heure" value="${cmd.heurePrestation}">
-
-            <label>Adresse :</label>
-            <input type="text" id="mod-adresse" value="${cmd.adresse}">
-
-            <label>Code postal :</label>
-            <input type="text" id="mod-cp" value="${cmd.cp}">
-
-            <label>Ville :</label>
-            <input type="text" id="mod-ville" value="${cmd.ville}">
-
-            <label>Distance (km) :</label>
-            <input type="number" id="mod-distance" value="${cmd.distance}">
-
-            <button id="btn-valider-modif" class="btn-action">Valider</button>
+            <div class="formulaire-modification">
+                <h4>Modifier la commande</h4>
+                <label>Nombre de personnes :</label>
+                <input type="number" id="mod-nb-${cmd.id}" value="${cmd.nbPersonnes}">
+                <label>Date :</label>
+                <input type="date" id="mod-date-${cmd.id}" value="${cmd.datePrestation}">
+                <label>Heure :</label>
+                <input type="time" id="mod-heure-${cmd.id}" value="${cmd.heurePrestation}">
+                <label>Adresse :</label>
+                <input type="text" id="mod-adresse-${cmd.id}" value="${cmd.adresse}">
+                <label>Code postal :</label>
+                <input type="text" id="mod-cp-${cmd.id}" value="${cmd.cp}">
+                <label>Ville :</label>
+                <input type="text" id="mod-ville-${cmd.id}" value="${cmd.ville}">
+                <label>Distance (km) :</label>
+                <input type="number" id="mod-distance-${cmd.id}" value="${cmd.distance}">
+                <button class="btn-valider-modif btn-action" data-id="${cmd.id}">Valider</button>
+                <button class="btn-annuler-modif" data-id="${cmd.id}">Annuler les modifications</button>
+            </div>
         `;
         return;
     }
 
-    // VALIDATION MODIFICATION
-    if (target.id === "btn-valider-modif") {
-        const cmd = getCommandeCourante();
-        if (!cmd) return;
+    // Annuler les modifications
+    if (target.classList.contains("btn-annuler-modif")) {
+        const id = target.dataset.id;
+        const zone = document.getElementById(`zone-modification-${id}`);
+        if (zone) {
+            zone.innerHTML = "";
+        }
+        return;
+    }
 
-        const nouveauNb = Number(document.getElementById("mod-nb").value);
-        const menu = getMenuById(cmd.menuId); // Vous devrez récupérer les infos du menu
-
-        // RECALCUL DU PRIX
-        let total = nouveauNb * (menu.prix / menu.personnesMin);
-
-        // Réduction 10% si +5 personnes
-        if (nouveauNb >= menu.personnesMin + 5) {
-            total = total * 0.9;
+    // Validation de la modification
+    if (target.classList.contains("btn-valider-modif")) {
+        const id = target.dataset.id;
+        const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
+        if (!cmd) {
+            alert("Erreur : commande introuvable.");
+            return;
         }
 
-        // Frais de livraison
-        const ville = document.getElementById("mod-ville").value.toLowerCase();
-        const distance = Number(document.getElementById("mod-distance").value);
+        const nouveauNb = Number(document.getElementById(`mod-nb-${id}`).value);
+        const nouvelleDate = document.getElementById(`mod-date-${id}`).value;
+        const nouvelleHeure = document.getElementById(`mod-heure-${id}`).value;
+        const nouvelleAdresse = document.getElementById(`mod-adresse-${id}`).value;
+        const nouveauCP = document.getElementById(`mod-cp-${id}`).value;
+        const nouvelleVille = document.getElementById(`mod-ville-${id}`).value;
+        const nouvelleDistance = Number(document.getElementById(`mod-distance-${id}`).value);
+
+        const menu = getMenuById(cmd.menuId);
+        if (!menu) {
+            alert("Erreur : impossible de récupérer les informations du menu.");
+            return;
+        }
+
+        let total = nouveauNb * (menu.prix / menu.personnesMin);
+        if (nouveauNb >= menu.personnesMin + 5) {
+            total *= 0.9;
+        }
 
         let fraisLivraison = 5;
-        if (ville !== "bordeaux") {
-            fraisLivraison += distance * 0.59;
+        if (nouvelleVille.toLowerCase() !== "bordeaux") {
+            fraisLivraison += nouvelleDistance * 0.59;
         }
-
         total += fraisLivraison;
 
-        // Mise à jour
         cmd.nbPersonnes = nouveauNb;
         cmd.prixTotal = total;
-        cmd.datePrestation = document.getElementById("mod-date").value;
-        cmd.heurePrestation = document.getElementById("mod-heure").value;
-        cmd.adresse = document.getElementById("mod-adresse").value;
-        cmd.cp = document.getElementById("mod-cp").value;
-        cmd.ville = document.getElementById("mod-ville").value;
-        cmd.distance = distance;
+        cmd.datePrestation = nouvelleDate;
+        cmd.heurePrestation = nouvelleHeure;
+        cmd.adresse = nouvelleAdresse;
+        cmd.cp = nouveauCP;
+        cmd.ville = nouvelleVille;
+        cmd.distance = nouvelleDistance;
 
         cmd.historique.push({
             date: new Date().toISOString(),
@@ -229,15 +227,15 @@ document.addEventListener("click", (e) => {
         });
 
         localStorage.setItem("commandes", JSON.stringify(commandes));
-
-        alert("Commande mise à jour !");
+        alert("Commande mise à jour avec succès !");
         afficherListe();
-        afficherDetail(cmd);
+        return;
     }
 
-    // ---------  AVIS  -----------------------------------------
-    if (target.id === "btn-avis") {
-        const cmd = getCommandeCourante();
+    // Bouton Avis
+    if (target.classList.contains("btn-avis")) {
+        const id = target.dataset.id;
+        const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
         if (!cmd) return;
 
         const note = prompt("Note (1 à 5) :");
@@ -256,9 +254,7 @@ document.addEventListener("click", (e) => {
         cmd.avis.commentaire = commentaire;
         cmd.avis.date = new Date().toISOString();
 
-        // AJOUTER : Créer un objet avis dans la liste globale
         let avis = JSON.parse(localStorage.getItem("avis")) || [];
-
         avis.push({
             id: "AVIS-" + Date.now(),
             commandeId: cmd.id,
@@ -267,20 +263,20 @@ document.addEventListener("click", (e) => {
             note: Number(note),
             commentaire: commentaire,
             date: new Date().toISOString(),
-            statut: "en attente"  // En attente de validation employé
+            statut: "en attente"
         });
 
         localStorage.setItem("avis", JSON.stringify(avis));
-
         cmd.historique.push({
             date: new Date().toISOString(),
             action: "Avis laissé par l'utilisateur"
         });
 
         localStorage.setItem("commandes", JSON.stringify(commandes));
-
         alert("Merci pour votre avis !");
-        afficherDetail(cmd);
-        return;
+        afficherListe();
     }
 });
+
+// Initialisation
+afficherListe();

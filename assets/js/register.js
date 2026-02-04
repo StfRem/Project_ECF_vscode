@@ -76,9 +76,12 @@ form.addEventListener("submit", function (e) {
 
     alert("Un email de bienvenue vous a été envoyé !");
 
-    // -----------------------------
+    /*Function pour dire que je suis maintenant connecté*/
+    localStorage.setItem("userIsLogged", "true");  // ← Indique que l'utilisateur est connecté
+    localStorage.setItem("user", JSON.stringify(newUser));  // ← garde les infos du nouvel utilisateur
+
+
     // REDIRECTION SI COMMANDE EN ATTENTE
-    // -----------------------------
     const pendingMenu = localStorage.getItem("pendingMenu");
 
     if (pendingMenu) {

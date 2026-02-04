@@ -582,7 +582,7 @@ li {
 
 .password-info {
     text-align: center;
-    font-size: 1.1;
+    font-size: 1.1rem;
     opacity: 0.9;
     margin: 10px 0 20px 0;
     line-height: 1.5;
@@ -775,7 +775,7 @@ li {
 
 .user-container {
     max-width: 900px;
-    margin: 50px auto 0 auto;
+    margin: 0px auto 0 auto;
     padding: 20px;
 
     background-color: #4A6A69; /* couleur de fond de ta charte */
