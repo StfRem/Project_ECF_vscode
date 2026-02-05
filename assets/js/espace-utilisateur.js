@@ -69,20 +69,10 @@ function afficherListe() {
             boutonAnnuler = `<button class="btn-annuler btn-danger" data-id="${cmd.id}">Annuler</button>`;
         }
 
-        // Suivi pour les commandes non en attente et non annulées
-        if (cmd.statut !== "en attente" && cmd.statut !== "annulée") {
-            suivi = `
-                <div class="suivi-commande">
-                    <h4>Suivi de la commande</h4>
-                    <ul>
-                        ${cmd.historique.map(h => `<li>${new Date(h.date).toLocaleString()} — ${h.action}</li>`).join("")}
-                    </ul>
-                </div>
-            `;
-        }
+
 
         // Bouton avis pour les commandes terminées
-        if (cmd.statut === "terminée" && cmd.avis && cmd.avis.note === null) {
+        if (cmd.statut === "terminée" && (!cmd.avis || cmd.avis.note === null)) {
             boutonAvis = `<button class="btn-avis btn-action" data-id="${cmd.id}">Donner un avis</button>`;
         }
 
@@ -104,8 +94,6 @@ function afficherListe() {
                 </div>
                 
                 <div class="zone-modification" id="zone-modification-${cmd.id}"></div>
-                
-                ${suivi}
             </div>
         `;
 
@@ -122,7 +110,7 @@ document.addEventListener("click", (e) => {
         const id = target.dataset.id;
         const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
         if (!cmd) return;
-        
+
         if (confirm("Voulez-vous vraiment annuler cette commande ?")) {
             cmd.statut = "annulée";
             cmd.historique.push({
@@ -140,10 +128,10 @@ document.addEventListener("click", (e) => {
         const id = target.dataset.id;
         const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
         if (!cmd) return;
-        
+
         const zone = document.getElementById(`zone-modification-${cmd.id}`);
         if (!zone) return;
-        
+
         zone.innerHTML = `
             <div class="formulaire-modification">
                 <h4>Modifier la commande</h4>
@@ -195,19 +183,19 @@ document.addEventListener("click", (e) => {
         const nouvelleVille = document.getElementById(`mod-ville-${id}`).value;
         const nouvelleDistance = Number(document.getElementById(`mod-distance-${id}`).value);
 
-let menu = getMenuById(cmd.menuId);
+        let menu = getMenuById(cmd.menuId);
 
-// fallback si menuId foireux
-if (!menu) {
-    const menus = JSON.parse(localStorage.getItem("menus")) || [];
-    menu = menus.find(m => m.nom === cmd.menuTitre);
-}
+        // fallback si menuId foireux
+        if (!menu) {
+            const menus = JSON.parse(localStorage.getItem("menus")) || [];
+            menu = menus.find(m => m.nom === cmd.menuTitre);
+        }
 
-if (!menu) {
-    console.error("Menu introuvable", cmd);
-    alert("Menu introuvable pour recalcul.");
-    return;
-}
+        if (!menu) {
+            console.error("Menu introuvable", cmd);
+            alert("Menu introuvable pour recalcul.");
+            return;
+        }
 
 
         let total = nouveauNb * (menu.prix / menu.personnesMin);
@@ -247,11 +235,21 @@ if (!menu) {
         const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
         if (!cmd) return;
 
-        const note = prompt("Note (1 à 5) :");
-        const commentaire = prompt("Votre commentaire :");
+        let note;
+        while (true) {
+            note = prompt("Note (1 à 5) :");
+            if (!note) {
+                alert("La note est obligatoire.");
+                return;
+            }
+            note = Number(note);
+            if (note >= 1 && note <= 5) break;
+            alert("La note doit être entre 1 et 5.");
+        }
 
-        if (!note || !commentaire) {
-            alert("Tous les champs sont obligatoires.");
+        const commentaire = prompt("Votre commentaire :");
+        if (!commentaire) {
+            alert("Le commentaire est obligatoire.");
             return;
         }
 
