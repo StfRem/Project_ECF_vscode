@@ -184,10 +184,10 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         }
     };
 
-// Sauvegarde
-commandes.push(nouvelleCommande);
-localStorage.setItem("commandes", JSON.stringify(commandes));
+    // Sauvegarde
+    commandes.push(nouvelleCommande);
+    localStorage.setItem("commandes", JSON.stringify(commandes));
 
-// Notification conforme au cahier des charges
-alert("Votre commande a bien été enregistrée !");
+    // Notification conforme au cahier des charges
+    alert("Votre commande a bien été enregistrée !");
 });

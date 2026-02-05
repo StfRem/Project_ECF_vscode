@@ -546,6 +546,7 @@ li {
 
 
 
+
 /* -----------------PAGE REGISTER  ------------------------------- */
 .register-container {
     display: flex;
@@ -798,7 +799,7 @@ li {
 .login-container{
     background-color:var(--card);
     width: auto;
-    min-height: 320px;
+    min-height: 336px;
 }
 .login-container form {
     display: flex;
@@ -824,12 +825,14 @@ li {
     display: block;
 }
 
-
-
 .login-form ,label{
     font-weight: bold;
     color: #0E0F0F;
     font-size: 18px;
+}
+
+.login-form ,#email, #password{
+    height: 30px;
 }
 
 
