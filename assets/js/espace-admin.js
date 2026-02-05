@@ -529,12 +529,10 @@ document.addEventListener("change", (e) => {
         // Alerte spécifique pour le retour de matériel
         if (nouveauStatut === "en attente du retour de matériel") {
             alert(`Email envoyé :
----
 Objet : Retour de matériel
 Bonjour,
 Vous avez 10 jours pour restituer le matériel. Sinon, 600€ de frais seront appliqués.
-Cordialement, L'équipe Vite & Gourmand
----`);
+Cordialement, L'équipe Vite & Gourmand`);
         }
 
         localStorage.setItem("commandes", JSON.stringify(commandes));

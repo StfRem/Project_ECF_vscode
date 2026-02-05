@@ -699,7 +699,8 @@ li {
 }
 
 .admin-item-info {
-    flex: 1;
+   /* flex: 1;*/
+    display: grid;
 }
 
 .admin-item-info strong {
