@@ -8,7 +8,10 @@ $data = json_decode($json, true);
 
 if ($data) {
     try {
-        // On utilise :role comme paramètre pour que ce soit dynamique
+// hash sécurisé à partir du mot de passe en clair.
+        $passwordHache = password_hash($data['password'], PASSWORD_DEFAULT);
+
+// On utilise :role comme paramètre pour que ce soit dynamique
         $sql = "INSERT INTO users (id, fullname, email, password, gsm, address, cp, role) 
                 VALUES (:id, :fullname, :email, :password, :gsm, :address, :cp, :role)";
         

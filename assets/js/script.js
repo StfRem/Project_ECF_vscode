@@ -68,32 +68,7 @@ export function loadFooter() {
     `;
 }
 
-// ---------------------------------------------------------
-// Création automatique du compte administrateur
-// ---------------------------------------------------------
-(function initAdmin() {
-    let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const adminEmail = "admin@site.com";
-
-    // Si l'admin n'existe pas encore, on le crée
-    if (!users.some(u => u.email === adminEmail)) {
-
-        const adminUser = {
-            id: "USR-ADMIN",
-            fullname: "Administrateur",
-            gsm: "0000000000",
-            email: "admin@site.com",
-            address: "Siège",
-            cp: "00000",
-            password: "Admin1234!", // mot de passe codé en dur
-            role: "admin"
-        };
-
-        users.push(adminUser);
-        localStorage.setItem("users", JSON.stringify(users));
-    }
-})();
 
 // Simulation : à remplacer plus tard par ton vrai système de connexion
 let userIsLogged = false; 
