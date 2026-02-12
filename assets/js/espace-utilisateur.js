@@ -1,56 +1,40 @@
-// Vérification du rôle utilisateur
+// --- VERIFICATION ET INITIALISATION ---
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user) {
     alert("Vous devez être connecté pour accéder à votre espace utilisateur.");
     location.href = "./login.html";
 }
-
-// Stocker les menus dans localStorage si ce n'est pas déjà fait
-if (!localStorage.getItem("menus")) {
-    const menus = [
-        {
-            id: 1,
-            titre: "Noël Traditionnel",
-            prix: 70, // Ajouté pour le calcul
-            personnesMin: 4,
-            materiel: true
-        },
-        {
-            id: 2,
-            titre: "Menu Vegan Fraîcheur",
-            prix: 55, // Ajouté pour le calcul
-            personnesMin: 2,
-            materiel: false
-        },
-        {
-            id: 3,
-            titre: "Menu Événements",
-            prix: 90, // Ajouté pour le calcul
-            personnesMin: 6,
-            materiel: true
-        }
-    ];
-    localStorage.setItem("menus", JSON.stringify(menus));
+// --- PRÉ-REMPLISSAGE DU PROFIL ---
+if (user) {
+    document.getElementById("edit-fullname").value = user.fullname || "";
+    document.getElementById("edit-email").value = user.email || "";
+    document.getElementById("edit-gsm").value = user.gsm || "";
+    document.getElementById("edit-address").value = user.address || "";
+    document.getElementById("edit-cp").value = user.cp || "";
 }
 
-// Données et Sélections
-let commandes = JSON.parse(localStorage.getItem("commandes")) || [];
-let commandesUtilisateur = commandes.filter(cmd => cmd.userId === user.id);
+let commandesUtilisateur = []; 
 const liste = document.getElementById("liste-commandes");
 
-// Fonction pour récupérer un menu par son ID
-function getMenuById(menuId) {
-    const menus = JSON.parse(localStorage.getItem("menus")) || [];
-    return menus.find(m => m.id == menuId);
+// --- FONCTION : Aller chercher les données dans WAMP ---
+async function chargerCommandesDepuisBDD() {
+    try {
+        // CORRECTION : Assure-toi d'avoir créé le fichier php/get_commandes_client.php
+        const resp = await fetch(`./php/get_commandes_client.php?userId=${user.id}`);
+        const result = await resp.json();
+        
+        if (result.status === "success") {
+            commandesUtilisateur = result.data; 
+            afficherListe();
+        }
+    } catch (error) {
+        console.error("Erreur BDD :", error);
+    }
 }
 
-// Affichage de la liste des commandes avec tous les détails
+// --- AFFICHAGE ---
 function afficherListe() {
     liste.innerHTML = "";
-
-    // Re-filtrer pour être sûr d'avoir les données à jour
-    commandes = JSON.parse(localStorage.getItem("commandes")) || [];
-    commandesUtilisateur = commandes.filter(cmd => cmd.userId === user.id);
 
     if (commandesUtilisateur.length === 0) {
         liste.innerHTML = "<p>Aucune commande pour le moment.</p>";
@@ -66,257 +50,221 @@ function afficherListe() {
         let boutonAnnuler = "";
         let boutonAvis = "";
 
-        // Boutons Modifier et Annuler pour les commandes en attente
         if (cmd.statut === "en attente") {
             boutonModifier = `<button class="btn-modifier btn-action" data-id="${cmd.id}">Modifier</button>`;
             boutonAnnuler = `<button class="btn-annuler btn-danger" data-id="${cmd.id}">Annuler</button>`;
         }
 
-        // Bouton avis pour les commandes terminées
+        // CORRECTION : On affiche le bouton avis si livré ou terminée
         if (cmd.statut === "livré" || cmd.statut === "terminée") {
-            if (!cmd.avis || cmd.avis.note === null) {
-                boutonAvis = `<button class="btn-avis btn-action" data-id="${cmd.id}">Donner un avis</button>`;
-            }
+            boutonAvis = `<button class="btn-avis btn-action" data-id="${cmd.id}">Donner un avis</button>`;
+        }
+
+        // --- AJOUT ICI : On prépare le petit texte du statut de l'avis ---
+        let infoAvis = "";
+        if (cmd.avis_statut) {
+            infoAvis = `<p style="margin-top:10px; color: #d35400;"><strong>Statut de votre avis :</strong> ${cmd.avis_statut}</p>`;
         }
 
         li.innerHTML = `
             <div class="commande-details">
-                <h3>${cmd.menuTitre}</h3>
-                <p><strong>Commande :</strong> ${cmd.id}</p>
-                <p><strong>Nombre de personnes :</strong> ${cmd.nbPersonnes}</p>
-                <p><strong>Prix total :</strong> ${cmd.prixTotal.toFixed(2)} €</p>
-                <p><strong>Date de prestation :</strong> ${cmd.datePrestation}</p>
-                <p><strong>Heure :</strong> ${cmd.heurePrestation}</p>
+                <h3>${cmd.menu_titre}</h3>
+                <p><strong>Commande :</strong> #${cmd.id}</p>
+                <p><strong>Nombre de personnes :</strong> ${cmd.nb_personnes || 'N/A'}</p>
+                <p><strong>Prix total :</strong> ${parseFloat(cmd.prix_total).toFixed(2)} €</p>
+                <p><strong>Date :</strong> ${cmd.date_prestation} à ${cmd.heure_prestation}</p>
                 <p><strong>Adresse :</strong> ${cmd.adresse}, ${cmd.cp} ${cmd.ville}</p>
-                <p><strong>Distance :</strong> ${cmd.distance} km</p>
                 <p><strong>Statut :</strong> <span class="statut-${cmd.statut.replace(/ /g, '-')}">${cmd.statut}</span></p>
                 
-                <div class="boutons-commande">
+                ${infoAvis} <div class="boutons-commande">
                     ${boutonModifier}
                     ${boutonAnnuler}
                     ${boutonAvis}
                 </div>
-                
                 <div class="zone-modification" id="zone-modification-${cmd.id}"></div>
             </div>
         `;
-
         liste.appendChild(li);
     });
 }
 
-// Gestion centralisée des clics
+// --- GESTION DES CLICS ---
 document.addEventListener("click", (e) => {
     const target = e.target;
+    const id = target.dataset.id;
 
-    // --- Clic sur le bouton Annuler ---
+    // 1. ANNULER UNE COMMANDE
     if (target.classList.contains("btn-annuler")) {
-        const id = target.dataset.id;
-        const cmdIndex = commandes.findIndex(c => String(c.id) === String(id));
-        if (cmdIndex === -1) return;
-
         if (confirm("Voulez-vous vraiment annuler cette commande ?")) {
-            commandes[cmdIndex].statut = "annulée";
-            commandes[cmdIndex].historique.push({
-                date: new Date().toISOString(),
-                action: "Commande annulée par l'utilisateur"
+            fetch('./php/update_commande_statut.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, statut: "annulée" })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    alert("Commande annulée !");
+                    chargerCommandesDepuisBDD(); 
+                }
             });
-            localStorage.setItem("commandes", JSON.stringify(commandes));
-            afficherListe();
         }
-        return;
     }
 
-    // --- Clic sur le bouton Modifier ---
-    if (target.classList.contains("btn-modifier")) {
-        const id = target.dataset.id;
-        const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
-        if (!cmd) return;
+    // 2. OUVRIR LE FORMULAIRE DE MODIF
+if (target.classList.contains("btn-modifier")) {
+    const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
+    if (!cmd) return;
 
-        const zone = document.getElementById(`zone-modification-${cmd.id}`);
-        if (!zone) return;
+const zone = document.getElementById(`zone-modification-${id}`);
+    zone.innerHTML = `
+        <div class="formulaire-modification">
+            <h4>Modifier la commande #${id}</h4>
+            
+            <label>Nombre de personnes :</label>
+            <input type="number" id="mod-nb-${id}" value="${cmd.nb_personnes || 0}" min="1">
+            
+            <label>Date :</label>
+            <input type="date" id="mod-date-${id}" value="${cmd.date_prestation || ''}">
+            
+            <label>Heure :</label>
+            <input type="time" id="mod-heure-${id}" value="${cmd.heure_prestation || ''}">
+            
+            <label>Adresse :</label>
+            <input type="text" id="mod-adresse-${id}" value="${cmd.adresse || ''}">
+            
+            <label>Code postal :</label>
+            <input type="text" id="mod-cp-${id}" value="${cmd.cp || ''}">
+            
+            <label>Ville :</label>
+            <input type="text" id="mod-ville-${id}" value="${cmd.ville || ''}">
 
-        zone.innerHTML = `
-            <div class="formulaire-modification">
-                <h4>Modifier la commande</h4>
-                <label>Nombre de personnes :</label>
-                <input type="number" id="mod-nb-${cmd.id}" value="${cmd.nbPersonnes}" min="1">
-                <label>Date :</label>
-                <input type="date" id="mod-date-${cmd.id}" value="${cmd.datePrestation}">
-                <label>Heure :</label>
-                <input type="time" id="mod-heure-${cmd.id}" value="${cmd.heurePrestation}">
-                <label>Adresse :</label>
-                <input type="text" id="mod-adresse-${cmd.id}" value="${cmd.adresse}">
-                <label>Code postal :</label>
-                <input type="text" id="mod-cp-${cmd.id}" value="${cmd.cp}">
-                <label>Ville :</label>
-                <input type="text" id="mod-ville-${cmd.id}" value="${cmd.ville}">
-                <label>Distance (km) :</label>
-                <input type="number" id="mod-distance-${cmd.id}" value="${cmd.distance}" min="0">
-                <br>
-                <button class="btn-valider-modif btn-action" data-id="${cmd.id}">Valider</button>
-                <button class="btn-annuler-modif btn-secondary" data-id="${cmd.id}">Annuler les modifications</button>
-            </div>
-        `;
-        return;
+            <label>Distance (km) :</label>
+            <input type="number" id="mod-distance-${id}" value="${cmd.distance || 0}">
+            
+            <br>
+            <button class="btn-valider-modif btn-action" data-id="${id}">Confirmer les changements</button>
+            <button class="btn-annuler-modif btn-secondary" data-id="${id}">Fermer</button>
+        </div>
+    `;
+}
+
+    // 3. VALIDER LA MODIFICATION
+	if (target.classList.contains("btn-valider-modif")) {
+    const cmdOriginale = commandesUtilisateur.find(c => String(c.id) === String(id));
+    if (!cmdOriginale) return;
+
+    const nbPers = Number(document.getElementById(`mod-nb-${id}`).value);
+    const distanceVal = Number(document.getElementById(`mod-distance-${id}`).value);
+    
+    // Calcul du nouveau prix au prorata
+    let nouveauPrix = parseFloat(cmdOriginale.prix_total);
+    if (cmdOriginale.nb_personnes > 0) {
+        nouveauPrix = nbPers * (parseFloat(cmdOriginale.prix_total) / cmdOriginale.nb_personnes);
     }
 
-    // --- Annuler les modifications (fermer le petit formulaire) ---
-    if (target.classList.contains("btn-annuler-modif")) {
-        const id = target.dataset.id;
-        const zone = document.getElementById(`zone-modification-${id}`);
-        if (zone) zone.innerHTML = "";
-        return;
-    }
+	const updatedCmd = {
+        nb_personnes: nbPers,
+        prix_total: nouveauPrix.toFixed(2),
+        date_prestation: document.getElementById(`mod-date-${id}`).value,
+        heure_prestation: document.getElementById(`mod-heure-${id}`).value,
+        adresse: document.getElementById(`mod-adresse-${id}`).value,
+        cp: document.getElementById(`mod-cp-${id}`).value,
+        ville: document.getElementById(`mod-ville-${id}`).value,
+        distance: distanceVal,
+        id: id // Placé à la fin pour correspondre au WHERE id = ?
+    };
 
-    // --- Validation de la modification ---
-    if (target.classList.contains("btn-valider-modif")) {
-        const id = target.dataset.id;
-        const cmdIndex = commandes.findIndex(c => String(c.id) === String(id));
-
-        if (cmdIndex === -1) {
-            alert("Erreur : commande introuvable.");
-            return;
+        fetch('./php/update_commande_complete.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCmd)
+    })
+        .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            alert("Modifications enregistrées !");
+            chargerCommandesDepuisBDD(); // Rafraîchit la liste
+        } else {
+            alert("Erreur BDD : " + data.message);
         }
-
-        const cmd = commandes[cmdIndex];
-        const nouveauNb = Number(document.getElementById(`mod-nb-${id}`).value);
-        const nouvelleDate = document.getElementById(`mod-date-${id}`).value;
-        const nouvelleHeure = document.getElementById(`mod-heure-${id}`).value;
-        const nouvelleAdresse = document.getElementById(`mod-adresse-${id}`).value;
-        const nouveauCP = document.getElementById(`mod-cp-${id}`).value;
-        const nouvelleVille = document.getElementById(`mod-ville-${id}`).value;
-        const nouvelleDistance = Number(document.getElementById(`mod-distance-${id}`).value);
-
-        let menu = getMenuById(cmd.menuId);
-
-        // fallback si menuId foireux
-        if (!menu) {
-            const menus = JSON.parse(localStorage.getItem("menus")) || [];
-            menu = menus.find(m => m.titre === cmd.menuTitre);
-        }
-
-        if (!menu) {
-            alert("Menu introuvable pour recalculer le prix.");
-            return;
-        }
-
-        // Recalcul du prix (Logique identique à commande.js)
-        let total = nouveauNb * (menu.prix / menu.personnesMin);
-        if (nouveauNb >= menu.personnesMin + 5) {
-            total *= 0.9; // Réduction 10%
-        }
-
-        let fraisLivraison = 5;
-        if (nouvelleVille.toLowerCase() !== "bordeaux") {
-            fraisLivraison += nouvelleDistance * 0.59;
-        }
-        total += fraisLivraison;
-
-        // Mise à jour de l'objet
-        commandes[cmdIndex] = {
-            ...cmd,
-            nbPersonnes: nouveauNb,
-            prixTotal: total,
-            datePrestation: nouvelleDate,
-            heurePrestation: nouvelleHeure,
-            adresse: nouvelleAdresse,
-            cp: nouveauCP,
-            ville: nouvelleVille,
-            distance: nouvelleDistance
-        };
-
-        commandes[cmdIndex].historique.push({
-            date: new Date().toISOString(),
-            action: "Commande modifiée par l'utilisateur"
-        });
-
-        localStorage.setItem("commandes", JSON.stringify(commandes));
-        alert("Commande mise à jour avec succès !");
-        afficherListe();
-        return;
-    }
-
-    // --- Bouton Avis ---
-    if (target.classList.contains("btn-avis")) {
-        const id = target.dataset.id;
-        const cmdIndex = commandes.findIndex(c => String(c.id) === String(id));
-        if (cmdIndex === -1) return;
-
-        let note;
-        while (true) {
-            note = prompt("Note (1 à 5) :");
-            if (note === null) return; // Annulation du prompt
-            note = Number(note);
-            if (note >= 1 && note <= 5) break;
-            alert("La note doit être entre 1 et 5.");
-        }
-
-        const commentaire = prompt("Votre commentaire :");
-        if (!commentaire) {
-            alert("Le commentaire est obligatoire.");
-            return;
-        }
-
-        // Mise à jour de la commande
-        commandes[cmdIndex].avis = {
-            note: Number(note),
-            commentaire: commentaire,
-            date: new Date().toISOString()
-        };
-
-        // Ajout à la liste globale des avis (pour l'admin/employé)
-        let avisGlobaux = JSON.parse(localStorage.getItem("avis")) || [];
-        avisGlobaux.push({
-            id: "AVIS-" + Date.now(),
-            commandeId: id,
-            userId: user.id,
-            nomClient: user.fullname,
-            note: Number(note),
-            commentaire: commentaire,
-            date: new Date().toISOString(),
-            statut: "en attente"
-        });
-
-        commandes[cmdIndex].historique.push({
-            date: new Date().toISOString(),
-            action: "Avis laissé par l'utilisateur"
-        });
-
-        localStorage.setItem("avis", JSON.stringify(avisGlobaux));
-        localStorage.setItem("commandes", JSON.stringify(commandes));
-
-        alert("Merci pour votre avis !");
-        afficherListe();
-    }
-});
-
-// Gestion du Profil (Séparé de la liste des commandes)
-const profileForm = document.getElementById("profile-form");
-if (profileForm) {
-    // Pré-remplir le formulaire au chargement
-    document.getElementById("edit-fullname").value = user.fullname || "";
-    document.getElementById("edit-gsm").value = user.gsm || "";
-    document.getElementById("edit-address").value = user.address || "";
-
-    profileForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // Mettre à jour l'objet utilisateur session
-        user.fullname = document.getElementById("edit-fullname").value;
-        user.gsm = document.getElementById("edit-gsm").value;
-        user.address = document.getElementById("edit-address").value;
-
-        // Sauvegarder dans la liste globale des users
-        let users = JSON.parse(localStorage.getItem("users")) || [];
-        users = users.map(u => u.id === user.id ? user : u);
-
-        localStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("user", JSON.stringify(user));
-
-        alert("Profil mis à jour !");
+    })
+	
+	.catch(err => {
+        console.error("Erreur Fetch :", err);
+        alert("Une erreur technique est survenue.");
     });
 }
 
-// Initialisation
-afficherListe();
+    // 4. DONNER UN AVIS (Liaison avec save_avis.php)
+    if (target.classList.contains("btn-avis")) {
+        const note = prompt("Note (1 à 5) :");
+        const commentaire = prompt("Votre commentaire :");
+
+        if (!note || !commentaire) return;
+
+        // CORRECTION : On envoie les clés exactement comme attendues par save_avis.php
+        const avisData = {
+            commandeId: id,
+            userId: user.id,
+            nomClient: user.fullname,
+            note: parseInt(note),
+            commentaire: commentaire
+        };
+
+        fetch('./php/save_avis.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(avisData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("Merci pour votre avis !");
+            } else {
+                alert("Erreur : " + data.message);
+            }
+        });
+    }
+
+    if (target.classList.contains("btn-annuler-modif")) {
+        document.getElementById(`zone-modification-${id}`).innerHTML = "";
+    }
+});
+
+// --- MISE À JOUR DU PROFIL ---
+const profileForm = document.getElementById("profile-form");
+if (profileForm) {
+    profileForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const updatedData = {
+            fullname: document.getElementById("edit-fullname").value,
+            email: document.getElementById("edit-email").value, // Nécessaire pour le WHERE dans le PHP
+            gsm: document.getElementById("edit-gsm").value,
+            address: document.getElementById("edit-address").value,
+            cp: document.getElementById("edit-cp").value
+        };
+
+        fetch('./php/update_profile.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("Profil mis à jour avec succès !");
+                
+                // Mise à jour du localStorage pour que les changements soient visibles partout
+                const newUser = { ...user, ...updatedData };
+                localStorage.setItem("user", JSON.stringify(newUser));
+            } else {
+                alert("Erreur : " + data.message);
+            }
+        })
+        .catch(err => console.error("Erreur profil:", err));
+    });
+}
+
+document.addEventListener("DOMContentLoaded", chargerCommandesDepuisBDD);

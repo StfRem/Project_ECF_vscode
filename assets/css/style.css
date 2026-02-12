@@ -56,7 +56,8 @@ li {
 /* ------- BOUTONS ESPACE ADMINISTRATEUR  --------*/
 .btn-primary, 
 .btn-suspend, 
-.btn-supprimer, 
+.btn-supprimer,
+.btn-supprimer-employe,
 .btn-modifier-menu,
 .btn-supprimer-menu,
 .btn-modifier-plat,

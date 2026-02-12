@@ -30,7 +30,6 @@ const menus = [
     }
 ];
 
-
 // Récupération de l'ID dans l'URL
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
@@ -46,17 +45,14 @@ if (!menu) {
 // ---------------------------------------------------------
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user) {
-    // utilisateur non connecté → on rend les champs éditables
     document.getElementById("fullname").removeAttribute("readonly");
     document.getElementById("email").removeAttribute("readonly");
     document.getElementById("gsm").removeAttribute("readonly");
 } else {
-    // utilisateur connecté → préremplissage + readonly
     document.getElementById("fullname").value = user.fullname;
     document.getElementById("email").value = user.email;
     document.getElementById("gsm").value = user.gsm;
 }
-
 
 // ---------------------------------------------------------
 // Gestion du nombre de personnes + prix total
@@ -64,11 +60,9 @@ if (!user) {
 const inputNb = document.getElementById("nbPersonnes");
 const prixTotal = document.getElementById("prixTotal");
 
-// impose le minimum
 inputNb.min = menu.personnesMin;
 inputNb.value = menu.personnesMin;
 
-// calcul initial
 updatePrix();
 
 inputNb.addEventListener("input", () => {
@@ -80,14 +74,12 @@ inputNb.addEventListener("input", () => {
 document.getElementById("ville").addEventListener("input", updatePrix);
 document.getElementById("distance").addEventListener("input", updatePrix);
 
-
 function updatePrix() {
     const nb = Number(inputNb.value);
     let total = nb * (menu.prix / menu.personnesMin);
 
     const reductionInfo = document.getElementById("reductionInfo");
 
-    // Réduction 10% si +5 personnes
     if (nb >= menu.personnesMin + 5) {
         total = total * 0.9;
         reductionInfo.textContent = "Réduction de 10% appliquée !";
@@ -97,45 +89,34 @@ function updatePrix() {
         reductionInfo.textContent = `Ajoutez encore ${manque} personne(s) pour obtenir une réduction de 10% !`;
     }
 
-    // Frais de livraison
     const ville = document.getElementById("ville").value.trim().toLowerCase();
     const distance = Number(document.getElementById("distance").value);
 
-    // Toujours 5 € fixes
     let fraisLivraison = 5;
-
-    // Majoration uniquement si hors Bordeaux
     if (ville !== "" && ville !== "bordeaux") {
         fraisLivraison += distance * 0.59;
     }
 
-    // Total final
     window.totalFinal = total + fraisLivraison;
-
     prixTotal.textContent = `Prix total avec livraison : ${window.totalFinal.toFixed(2)} €`;
 }
 
+// Validation de la commande + stockage (BDD & LocalStorage)
 
-
-
-
-// ---------------------------------------------------------
-// Validation de la commande + stockage
-// ---------------------------------------------------------
+// --- SECTION VALIDATION (REMPLACE TON BLOC ACTUEL PAR CELUI-CI) ---
 document.getElementById("commande-form").addEventListener("submit", (e) => {
     e.preventDefault();
 
     const nb = Number(inputNb.value);
 
-    // Vérification stock
+    // 1. VERIFICATION STOCK (IDENTIQUE VS)
     if (nb > menu.stock) {
         alert(`Stock insuffisant. Il reste seulement ${menu.stock} commandes possibles.`);
         return;
     }
 
-    // Vérification connexion
+    // 2. VERIFICATION CONNEXION (IDENTIQUE VS)
     const isLogged = localStorage.getItem("userIsLogged") === "true";
-
     if (!isLogged) {
         alert("Vous devez être connecté pour valider une commande.");
         localStorage.setItem("pendingMenu", menu.id);
@@ -143,12 +124,10 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         return;
     }
 
-    // Récupération utilisateur connecté
     const user = JSON.parse(localStorage.getItem("user"));
-    // Récupération commandes existantes
     const commandes = JSON.parse(localStorage.getItem("commandes")) || [];
 
-    // Création de la commande
+    // 3. CRÉATION DE L'OBJET MIROIR (REPRISE EXACTE DE VS_COMMANDE.JS)
     const nouvelleCommande = {
         id: "CMD-" + Date.now(),
         userId: user.id,
@@ -162,32 +141,50 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         ville: document.getElementById("ville").value,
         cp: document.getElementById("cp").value,
         distance: Number(document.getElementById("distance").value),
-
         datePrestation: document.getElementById("date").value,
         heurePrestation: document.getElementById("heure").value,
-
         telephone: user.gsm,
-
         statut: "en attente",
-
-        historique: [
-            {
-                date: new Date().toISOString(),
-                action: "Commande créée"
-            }
-        ],
-
-        avis: {
-            note: null,
-            commentaire: null,
-            date: null
-        }
+        // On rajoute ces deux lignes qui étaient dans ton VS mais pas dans ton WAMP :
+        historique: [{ date: new Date().toISOString(), action: "Commande créée" }],
+        avis: { note: null, commentaire: null, date: null }
     };
 
-    // Sauvegarde
-    commandes.push(nouvelleCommande);
-    localStorage.setItem("commandes", JSON.stringify(commandes));
+    // 4. PREPARATION DONNÉES POUR PHP (WAMP)
+    const dataBDD = {
+        user_id: user.id,
+        menu_titre: menu.titre,
+        prix_total: window.totalFinal,
+        date_prestation: nouvelleCommande.datePrestation,
+        heure_prestation: nouvelleCommande.heurePrestation,
+        adresse: nouvelleCommande.adresse,
+        cp: nouvelleCommande.cp,
+        ville: nouvelleCommande.ville,
+        materiel: menu.materiel ? 1 : 0
+    };
 
-    // Notification conforme au cahier des charges
-    alert("Votre commande a bien été enregistrée !");
+    // 5. ENVOI ET SYNCHRONISATION
+    fetch('./php/save_commande.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataBDD)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.status === "success") {
+            // MIROIR : On met à jour le LocalStorage pour tes autres fonctions VS
+            commandes.push(nouvelleCommande);
+            localStorage.setItem("commandes", JSON.stringify(commandes));
+
+            // TON ALERTE VS CODE EXACTE
+            alert("Votre commande a bien été enregistrée !");
+            location.href = "./espace-utilisateur.html"; 
+        } else {
+            alert("Erreur BDD : " + result.message);
+        }
+    })
+    .catch(err => {
+        console.error("Erreur envoi commande:", err);
+        alert("Erreur de connexion au serveur.");
+    });
 });

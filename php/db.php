@@ -3,13 +3,19 @@
 $host = 'localhost';
 $dbname = 'vite_et_gourmand';
 $user = 'root';
-$pass = ''; // Vide par défaut sur Wamp
+$pass = ''; 
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-    // On active les erreurs SQL pour le débogage
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+    // On précise au navigateur qu'on répond en JSON
+    header('Content-Type: application/json');
+    // On envoie l'erreur proprement pour que le JS puisse l'afficher
+    echo json_encode([
+        'status' => 'error', 
+        'message' => 'Liaison BDD échouée : ' . $e->getMessage()
+    ]);
+    exit;
 }
 ?>
