@@ -10,46 +10,25 @@ form.addEventListener("submit", function (e) {
     const password = document.getElementById("password").value.trim();
     const cp = document.getElementById("cp").value.trim();
 
-    // -----------------------------
-    // VALIDATIONS
-    // -----------------------------
-
-    const regexPassword =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
-
+    // 1. VALIDATIONS (Ta structure d'origine)
+    const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // GSM FR : 06xxxxxxxx / 07xxxxxxxx / +336xxxxxxxx / 00336xxxxxxxx
     const regexGSM = /^(0[67]\d{8}|(\+33|0033)[67]\d{8})$/;
 
     if (!regexEmail.test(email)) {
         alert("Format d'email invalide.");
         return;
     }
-
     if (!regexGSM.test(gsm)) {
-        alert("Numéro GSM invalide. Format attendu : 06xxxxxxxx ou 07xxxxxxxx");
+        alert("Numéro GSM invalide.");
         return;
     }
-
     if (!regexPassword.test(password)) {
         alert("Le mot de passe ne respecte pas les critères de sécurité.");
         return;
     }
 
-    // -----------------------------
-    // VÉRIFICATION DOUBLON EMAIL
-    // -----------------------------
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    if (users.some(u => u.email === email)) {
-        alert("Un compte existe déjà avec cet email.");
-        return;
-    }
-
-    // -----------------------------
-    // CRÉATION DU COMPTE
-    // -----------------------------
+    // 2. PRÉPARATION DE L'OBJET POUR SQL
     const newUser = {
         id: "USR-" + Date.now(),
         fullname,
@@ -57,37 +36,49 @@ form.addEventListener("submit", function (e) {
         email,
         address,
         cp,
-        password,
+        password, // Envoyé au PHP
         role: "utilisateur"
     };
 
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
+    // 3. ENVOI AU SERVEUR (PHP / SQL)
+    fetch('./php/register.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            // ALERTES D'ORIGINE
+            alert("Compte créé avec succès !");
+            alert(`EMAIL BIENVENUE ENVOYÉ À : ${email}`);
 
-    alert("Compte créé avec succès ! Rôle attribué : utilisateur");
+            // 4. GESTION DE LA SESSION (Le strict nécessaire)
+            localStorage.setItem("userIsLogged", "true");
+            
+            // On crée un objet session SANS le mot de passe
+            const userSession = {
+                id: newUser.id,
+                fullname: newUser.fullname,
+                email: newUser.email,
+                role: newUser.role
+            };
+            localStorage.setItem("user", JSON.stringify(userSession));
 
-    alert(`
-        EMAIL ENVOYÉ À : ${email}
-        Objet : Bienvenue !
-        Message :
-        Bonjour ${fullname},
-        Bienvenue sur notre plateforme !
-    `);
-
-    alert("Un email de bienvenue vous a été envoyé !");
-
-    /*Function pour dire que je suis maintenant connecté*/
-    localStorage.setItem("userIsLogged", "true");  // ← Indique que l'utilisateur est connecté
-    localStorage.setItem("user", JSON.stringify(newUser));  // ← garde les infos du nouvel utilisateur
-
-
-    // REDIRECTION SI COMMANDE EN ATTENTE
-    const pendingMenu = localStorage.getItem("pendingMenu");
-
-    if (pendingMenu) {
-        localStorage.removeItem("pendingMenu");
-        location.href = `./commande.html?id=${pendingMenu}`;
-    } else {
-        location.href = "./index.html";
-    }
+            // 5. REDIRECTION
+            const pendingMenu = localStorage.getItem("pendingMenu");
+            if (pendingMenu) {
+                localStorage.removeItem("pendingMenu");
+                location.href = `./commande.html?id=${pendingMenu}`;
+            } else {
+                location.href = "./index.html";
+            }
+        } else {
+            alert("Erreur : " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Erreur:", error);
+        alert("Erreur de connexion au serveur.");
+    });
 });
