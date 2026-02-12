@@ -1,14 +1,14 @@
-// NAVBAR DYNAMIQUE ( ajout connexion/déconnexion)
+// NAVBAR DYNAMIQUE (ajout connexion/déconnexion)
 export function loadNavbar() {
     const user = JSON.parse(localStorage.getItem("user"));
     const isLogged = !!user;
 
     let loginLogoutLink = '<li><a href="./login.html">Connexion</a></li>';
-    let registerLink = '<li><a href="./register.html">Inscription</a></li>'; // Lien vers la page d'inscription
+    let registerLink = '<li><a href="./register.html">Inscription</a></li>'; 
 
     if (isLogged) {
         loginLogoutLink = '<li><a href="#" id="btn-deconnexion">Déconnexion</a></li>';
-        registerLink = ''; // Masque le lien "Inscription" si l'utilisateur est connecté
+        registerLink = ''; 
     }
 
     document.getElementById("header").innerHTML = `
@@ -35,40 +35,36 @@ export function loadNavbar() {
     if (btnDeconnexion) {
         btnDeconnexion.addEventListener("click", (e) => {
             e.preventDefault();
-            localStorage.removeItem("user");
-            localStorage.setItem("userIsLogged", "false");
+            localStorage.clear(); 
             alert("Vous êtes déconnecté.");
             window.location.href = "./index.html";
         });
     }
-}
-
-
+} // <--- C'EST CETTE ACCOLADE QUI MANQUAIT !
 
 // FOOTER DYNAMIQUE
 export function loadFooter() {
-    document.getElementById("footer").innerHTML = `
-        <div class="footer">
-            <h2>Horaires</h2>
-            <ul class="ul_horaire">
-                <li>Lundi : 08h00 – 20h00</li>
-                <li>Mardi : 08h00 – 20h00</li>
-                <li>Mercredi : 08h00 – 20h00</li>
-                <li>Jeudi : 08h00 – 20h00</li>
-                <li>Vendredi : 08h00 – 20h00</li>
-                <li>Samedi : 09h00 – 18h00</li>
-                <li>Dimanche : 09h00 – 13h00</li>
-            </ul>
-
-            <div class="mention">
-                <h3><a href="./mentionlegal.html">Mentions légales</a></h3>
-                <h3><a href="./cgv.html">Conditions Générales de Vente (CGV)</a></h3>
+    const footerElem = document.getElementById("footer");
+    if (footerElem) {
+        footerElem.innerHTML = `
+            <div class="footer">
+                <h2>Horaires</h2>
+                <ul class="ul_horaire">
+                    <li>Lundi : 08h00 – 20h00</li>
+                    <li>Mardi : 08h00 – 20h00</li>
+                    <li>Mercredi : 08h00 – 20h00</li>
+                    <li>Jeudi : 08h00 – 20h00</li>
+                    <li>Vendredi : 08h00 – 20h00</li>
+                    <li>Samedi : 09h00 – 18h00</li>
+                    <li>Dimanche : 09h00 – 13h00</li>
+                </ul>
+                <div class="mention">
+                    <h3><a href="./mentionlegal.html">Mentions légales</a></h3>
+                    <h3><a href="./cgv.html">Conditions Générales de Vente (CGV)</a></h3>
+                </div>
             </div>
-        </div>
-    `;
+        `;
+    }
 }
 
-
-
-// Simulation : à remplacer plus tard par ton vrai système de connexion
-let userIsLogged = false; 
+let userIsLogged = false;
