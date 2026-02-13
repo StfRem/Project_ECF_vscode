@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once 'db.php'; // Ton fichier de connexion PDO
+require_once 'db.php';
 
 try {
     // On récupère tous les menus triés par titre
@@ -10,7 +10,7 @@ try {
     
     $menus = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // On renvoie les données au format attendu par ton JS
+    // On renvoie les données au format attendu par mon JS
     echo json_encode([
         "status" => "success",
         "data" => $menus

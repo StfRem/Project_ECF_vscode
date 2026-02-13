@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-require_once "db.php"; // Assure-toi que db.php est bien dans le même dossier
+require_once "db.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
 

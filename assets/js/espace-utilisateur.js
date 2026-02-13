@@ -13,18 +13,17 @@ if (user) {
     document.getElementById("edit-cp").value = user.cp || "";
 }
 
-let commandesUtilisateur = []; 
+let commandesUtilisateur = [];
 const liste = document.getElementById("liste-commandes");
 
 // --- FONCTION : Aller chercher les données dans WAMP ---
 async function chargerCommandesDepuisBDD() {
     try {
-        // CORRECTION : Assure-toi d'avoir créé le fichier php/get_commandes_client.php
         const resp = await fetch(`./php/get_commandes_client.php?userId=${user.id}`);
         const result = await resp.json();
-        
+
         if (result.status === "success") {
-            commandesUtilisateur = result.data; 
+            commandesUtilisateur = result.data;
             afficherListe();
         }
     } catch (error) {
@@ -55,12 +54,12 @@ function afficherListe() {
             boutonAnnuler = `<button class="btn-annuler btn-danger" data-id="${cmd.id}">Annuler</button>`;
         }
 
-        // CORRECTION : On affiche le bouton avis si livré ou terminée
+        // On affiche le bouton avis si livré ou terminée
         if (cmd.statut === "livré" || cmd.statut === "terminée") {
             boutonAvis = `<button class="btn-avis btn-action" data-id="${cmd.id}">Donner un avis</button>`;
         }
 
-        // --- AJOUT ICI : On prépare le petit texte du statut de l'avis ---
+        // --- prépare le petit texte du statut de l'avis ---
         let infoAvis = "";
         if (cmd.avis_statut) {
             infoAvis = `<p style="margin-top:10px; color: #d35400;"><strong>Statut de votre avis :</strong> ${cmd.avis_statut}</p>`;
@@ -101,23 +100,23 @@ document.addEventListener("click", (e) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id, statut: "annulée" })
             })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    alert("Commande annulée !");
-                    chargerCommandesDepuisBDD(); 
-                }
-            });
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        alert("Commande annulée !");
+                        chargerCommandesDepuisBDD();
+                    }
+                });
         }
     }
 
     // 2. OUVRIR LE FORMULAIRE DE MODIF
-if (target.classList.contains("btn-modifier")) {
-    const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
-    if (!cmd) return;
+    if (target.classList.contains("btn-modifier")) {
+        const cmd = commandesUtilisateur.find(c => String(c.id) === String(id));
+        if (!cmd) return;
 
-const zone = document.getElementById(`zone-modification-${id}`);
-    zone.innerHTML = `
+        const zone = document.getElementById(`zone-modification-${id}`);
+        zone.innerHTML = `
         <div class="formulaire-modification">
             <h4>Modifier la commande #${id}</h4>
             
@@ -147,63 +146,63 @@ const zone = document.getElementById(`zone-modification-${id}`);
             <button class="btn-annuler-modif btn-secondary" data-id="${id}">Fermer</button>
         </div>
     `;
-}
-
-    // 3. VALIDER LA MODIFICATION
-	if (target.classList.contains("btn-valider-modif")) {
-    const cmdOriginale = commandesUtilisateur.find(c => String(c.id) === String(id));
-    if (!cmdOriginale) return;
-
-    const nbPers = Number(document.getElementById(`mod-nb-${id}`).value);
-    const distanceVal = Number(document.getElementById(`mod-distance-${id}`).value);
-    
-    // Calcul du nouveau prix au prorata
-    let nouveauPrix = parseFloat(cmdOriginale.prix_total);
-    if (cmdOriginale.nb_personnes > 0) {
-        nouveauPrix = nbPers * (parseFloat(cmdOriginale.prix_total) / cmdOriginale.nb_personnes);
     }
 
-	const updatedCmd = {
-        nb_personnes: nbPers,
-        prix_total: nouveauPrix.toFixed(2),
-        date_prestation: document.getElementById(`mod-date-${id}`).value,
-        heure_prestation: document.getElementById(`mod-heure-${id}`).value,
-        adresse: document.getElementById(`mod-adresse-${id}`).value,
-        cp: document.getElementById(`mod-cp-${id}`).value,
-        ville: document.getElementById(`mod-ville-${id}`).value,
-        distance: distanceVal,
-        id: id // Placé à la fin pour correspondre au WHERE id = ?
-    };
+    // 3. VALIDER LA MODIFICATION
+    if (target.classList.contains("btn-valider-modif")) {
+        const cmdOriginale = commandesUtilisateur.find(c => String(c.id) === String(id));
+        if (!cmdOriginale) return;
+
+        const nbPers = Number(document.getElementById(`mod-nb-${id}`).value);
+        const distanceVal = Number(document.getElementById(`mod-distance-${id}`).value);
+
+        // Calcul du nouveau prix au prorata de personne
+        let nouveauPrix = parseFloat(cmdOriginale.prix_total);
+        if (cmdOriginale.nb_personnes > 0) {
+            nouveauPrix = nbPers * (parseFloat(cmdOriginale.prix_total) / cmdOriginale.nb_personnes);
+        }
+
+        const updatedCmd = {
+            nb_personnes: nbPers,
+            prix_total: nouveauPrix.toFixed(2),
+            date_prestation: document.getElementById(`mod-date-${id}`).value,
+            heure_prestation: document.getElementById(`mod-heure-${id}`).value,
+            adresse: document.getElementById(`mod-adresse-${id}`).value,
+            cp: document.getElementById(`mod-cp-${id}`).value,
+            ville: document.getElementById(`mod-ville-${id}`).value,
+            distance: distanceVal,
+            id: id
+        };
 
         fetch('./php/update_commande_complete.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedCmd)
-    })
-        .then(res => res.json())
-    .then(data => {
-        if(data.status === "success") {
-            alert("Modifications enregistrées !");
-            chargerCommandesDepuisBDD(); // Rafraîchit la liste
-        } else {
-            alert("Erreur BDD : " + data.message);
-        }
-    })
-	
-	.catch(err => {
-        console.error("Erreur Fetch :", err);
-        alert("Une erreur technique est survenue.");
-    });
-}
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedCmd)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Modifications enregistrées !");
+                    chargerCommandesDepuisBDD();
+                } else {
+                    alert("Erreur BDD : " + data.message);
+                }
+            })
 
-    // 4. DONNER UN AVIS (Liaison avec save_avis.php)
+            .catch(err => {
+                console.error("Erreur Fetch :", err);
+                alert("Une erreur technique est survenue.");
+            });
+    }
+
+    // 4. DONNER UN AVIS
     if (target.classList.contains("btn-avis")) {
         const note = prompt("Note (1 à 5) :");
         const commentaire = prompt("Votre commentaire :");
 
         if (!note || !commentaire) return;
 
-        // CORRECTION : On envoie les clés exactement comme attendues par save_avis.php
+        // envoie les clés exactement comme attendues par save_avis.php
         const avisData = {
             commandeId: id,
             userId: user.id,
@@ -217,14 +216,14 @@ const zone = document.getElementById(`zone-modification-${id}`);
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(avisData)
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "success") {
-                alert("Merci pour votre avis !");
-            } else {
-                alert("Erreur : " + data.message);
-            }
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Merci pour votre avis !");
+                } else {
+                    alert("Erreur : " + data.message);
+                }
+            });
     }
 
     if (target.classList.contains("btn-annuler-modif")) {
@@ -251,19 +250,19 @@ if (profileForm) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedData)
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "success") {
-                alert("Profil mis à jour avec succès !");
-                
-                // Mise à jour du localStorage pour que les changements soient visibles partout
-                const newUser = { ...user, ...updatedData };
-                localStorage.setItem("user", JSON.stringify(newUser));
-            } else {
-                alert("Erreur : " + data.message);
-            }
-        })
-        .catch(err => console.error("Erreur profil:", err));
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Profil mis à jour avec succès !");
+
+                    // Mise à jour du localStorage pour que les changements soient visibles partout
+                    const newUser = { ...user, ...updatedData };
+                    localStorage.setItem("user", JSON.stringify(newUser));
+                } else {
+                    alert("Erreur : " + data.message);
+                }
+            })
+            .catch(err => console.error("Erreur profil:", err));
     });
 }
 

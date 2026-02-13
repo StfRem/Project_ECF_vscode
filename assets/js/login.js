@@ -55,8 +55,6 @@ document.getElementById("btn-reset").addEventListener("click", () => {
     
     if (!email) return;
 
-    // Ici, on pourrait aussi faire un fetch pour vérifier si l'email existe en SQL
-    // Mais on garde ta simulation console pour l'instant
     console.log(`
         EMAIL ENVOYÉ À : ${email}
         Lien de réinitialisation : [simulation]

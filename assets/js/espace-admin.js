@@ -1,6 +1,4 @@
-// ==========================================
 // 1. UTILITAIRES & SÉCURITÉ
-// ==========================================
 const getFromLocalStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
 const saveToLocalStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
@@ -10,13 +8,11 @@ if (!user || user.role !== "admin") {
     location.href = "./login.html";
 }
 
-// ==========================================
 // 2. DONNÉES ET SÉLECTEURS
-// ==========================================
-let commandes = []; 
+let commandes = [];
 let avis = [];
 let users = getFromLocalStorage("users");
-let menus = []; 
+let menus = [];
 let plats = getFromLocalStorage("plats");
 let horaires = getFromLocalStorage("horaires");
 
@@ -29,9 +25,7 @@ const listeAvis = document.getElementById("liste-avis");
 const filtreStatut = document.getElementById("filtre-statut");
 const filtreClient = document.getElementById("filtre-client");
 
-// ==========================================
 // 3. CHARGEMENT BDD (WAMP)
-// ==========================================
 async function chargerDonneesBDD() {
     try {
         const respCmd = await fetch('./php/get_all-commande_admin.php');
@@ -51,17 +45,17 @@ async function chargerDonneesBDD() {
         const respMenus = await fetch('./php/get_menus.php');
         const resultMenus = await respMenus.json();
         if (resultMenus.status === "success") {
-            menus = resultMenus.data; 
+            menus = resultMenus.data;
             afficherMenus();
         }
-        
+
         const respPlats = await fetch('./php/get_plats.php');
         const resultPlats = await respPlats.json();
         if (resultPlats.status === "success") {
             plats = resultPlats.data;
             afficherPlats();
         }
-        
+
         // Chargement des horaires
         const respHor = await fetch('./php/get_horaires.php');
         const resultHor = await respHor.json();
@@ -75,9 +69,7 @@ async function chargerDonneesBDD() {
     }
 }
 
-// ==========================================
 // 4. FONCTIONS D'AFFICHAGE GÉNÉRIQUES
-// ==========================================
 function afficherListe(listeElement, data, renderItem, emptyMessage) {
     if (!listeElement) return;
     listeElement.innerHTML = data.length === 0 ? `<p>${emptyMessage}</p>` : "";
@@ -117,7 +109,7 @@ function afficherPlats() {
     listePlats.innerHTML = platsTries.length === 0 ? "<p>Aucun plat enregistré.</p>" : "";
     platsTries.forEach(plat => {
         const li = document.createElement("li");
-        li.className = "admin-item"; 
+        li.className = "admin-item";
         li.innerHTML = `
             <div class="admin-item-info">
                 <h2>${plat.categorie}</h2>
@@ -164,16 +156,16 @@ function afficherCommandes() {
             </div>
             <div class="admin-actions">
 			<select class="select-statut" 
-        name="statut_${cmd.id}" 
-        id="statut_${cmd.id}" 
-        data-id="${cmd.id}">
-    <option value="">Changer statut</option>
-    <option value="accepté" ${cmd.statut === 'accepté' ? 'selected' : ''}>Accepté</option>
-    <option value="en préparation" ${cmd.statut === 'en préparation' ? 'selected' : ''}>En préparation</option>
-    <option value="en cours de livraison" ${cmd.statut === 'en cours de livraison' ? 'selected' : ''}>En cours de livraison</option>
-    <option value="livré" ${cmd.statut === 'livré' ? 'selected' : ''}>Livré (ou Retour Matériel)</option>
-    <option value="terminée" ${cmd.statut === 'terminée' ? 'selected' : ''}>Terminée</option>
-</select>
+                name="statut_${cmd.id}" 
+                id="statut_${cmd.id}" 
+                data-id="${cmd.id}">
+                <option value="">Changer statut</option>
+                <option value="accepté" ${cmd.statut === 'accepté' ? 'selected' : ''}>Accepté</option>
+                <option value="en préparation" ${cmd.statut === 'en préparation' ? 'selected' : ''}>En préparation</option>
+                <option value="en cours de livraison" ${cmd.statut === 'en cours de livraison' ? 'selected' : ''}>En cours de livraison</option>
+                <option value="livré" ${cmd.statut === 'livré' ? 'selected' : ''}>Livré (ou Retour Matériel)</option>
+                <option value="terminée" ${cmd.statut === 'terminée' ? 'selected' : ''}>Terminée</option>
+            </select>
                 <button class="btn-danger btn-annuler" data-id="${cmd.id}">Annuler</button>
             </div>
         `;
@@ -191,12 +183,8 @@ function afficherAvis() {
     `, "Aucun avis en attente.");
 }
 
-// ==========================================
 // 5. ÉCOUTEURS D'ÉVÉNEMENTS (CHANGES)
-// ==========================================
-// ==========================================
-// 5. ÉCOUTEURS D'ÉVÉNEMENTS (CHANGES)
-// ==========================================
+
 document.addEventListener("change", async (e) => {
     if (e.target.classList.contains("select-statut")) {
         const id = e.target.dataset.id;
@@ -206,7 +194,7 @@ document.addEventListener("change", async (e) => {
         let nouveauStatut = e.target.value;
         if (!nouveauStatut) return;
 
-        // --- LOGIQUE MATÉRIEL DE PRÊT ---
+// --- LOGIQUE MATÉRIEL DE PRÊT ---
         if (nouveauStatut === "livré" && (commande.materiel == 1 || commande.materiel === true)) {
             const messageEmail = `📧 EMAIL DE NOTIFICATION ENVOYÉ :
             
@@ -236,26 +224,24 @@ Pour organiser le retour, merci de répondre à cet email ou de nous contacter.`
             } else {
                 alert("Erreur lors de la mise à jour : " + res.message);
             }
-        } catch (err) { 
-            console.error("Erreur statut:", err); 
+        } catch (err) {
+            console.error("Erreur statut:", err);
         }
     }
 });
 
-// ==========================================
 // 6. GESTION UNIQUE DES CLICS (TOUS LES BOUTONS)
-// ==========================================
 document.addEventListener("click", async (e) => {
     const t = e.target;
     const id = t.dataset.id;
 
-    // --- EMPLOYÉS ---
+// --- EMPLOYÉS ---
     if (t.classList.contains("btn-suspend")) {
-        users = users.map(u => u.id == id ? {...u, suspendu: !u.suspendu} : u);
+        users = users.map(u => u.id == id ? { ...u, suspendu: !u.suspendu } : u);
         saveToLocalStorage("users", users);
         afficherEmployes();
     }
-    
+
     if (t.classList.contains("btn-supprimer-employe")) {
         if (!confirm("Voulez-vous vraiment supprimer cet employé ?")) return;
         fetch('./php/delete_employe.php', {
@@ -263,20 +249,20 @@ document.addEventListener("click", async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
         })
-        .then(resp => resp.json())
-        .then(res => {
-            if (res.status === "success") {
-                users = users.filter(u => u.id != id);
-                saveToLocalStorage("users", users);
-                afficherEmployes();
-                alert("Employé supprimé avec succès.");
-            } else {
-                alert("Erreur BDD : " + res.message);
-            }
-        });
+            .then(resp => resp.json())
+            .then(res => {
+                if (res.status === "success") {
+                    users = users.filter(u => u.id != id);
+                    saveToLocalStorage("users", users);
+                    afficherEmployes();
+                    alert("Employé supprimé avec succès.");
+                } else {
+                    alert("Erreur BDD : " + res.message);
+                }
+            });
     }
 
-    // --- HORAIRES ---
+// --- HORAIRES ---
     if (t.classList.contains("btn-supprimer-horaire")) {
         if (!confirm("Supprimer cet horaire ?")) return;
         fetch('./php/delete_horaire.php', {
@@ -284,7 +270,7 @@ document.addEventListener("click", async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
         }).then(resp => resp.json()).then(res => {
-            if(res.status === "success") {
+            if (res.status === "success") {
                 horaires = horaires.filter(h => h.id != id);
                 saveToLocalStorage("horaires", horaires);
                 afficherHoraires();
@@ -312,7 +298,7 @@ document.addEventListener("click", async (e) => {
         }
     }
 
-    // --- MENUS ---
+// --- MENUS ---
     if (t.classList.contains("btn-supprimer-menu")) {
         if (!confirm("Voulez-vous vraiment supprimer ce menu ?")) return;
         fetch('./php/delete_menu.php', {
@@ -336,7 +322,7 @@ document.addEventListener("click", async (e) => {
         }
     }
 
-    // --- PLATS ---
+// --- PLATS ---
     if (t.classList.contains("btn-supprimer-plat")) {
         if (!confirm("Voulez-vous vraiment supprimer ce plat ?")) return;
         try {
@@ -350,7 +336,7 @@ document.addEventListener("click", async (e) => {
         } catch (err) { console.error("Erreur suppression plat:", err); }
     }
 
-    // --- AVIS & COMMANDES ---
+// --- AVIS & COMMANDES ---
     if (t.classList.contains("btn-annuler")) {
         const motif = prompt("Motif d'annulation :");
         if (motif) {
@@ -365,7 +351,7 @@ document.addEventListener("click", async (e) => {
         fetch('./php/update_avis_statut.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, statut: "validé" }) 
+            body: JSON.stringify({ id: id, statut: "validé" })
         }).then(() => chargerDonneesBDD());
     }
 });
@@ -463,14 +449,12 @@ if (btnAjoutHoraire) {
 }
 
 // --- FILTRES ---
-if(filtreStatut) filtreStatut.addEventListener("change", afficherCommandes);
-if(filtreClient) filtreClient.addEventListener("input", afficherCommandes);
+if (filtreStatut) filtreStatut.addEventListener("change", afficherCommandes);
+if (filtreClient) filtreClient.addEventListener("input", afficherCommandes);
 
-// ==========================================
 // 7. INITIALISATION
-// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     afficherEmployes();
     afficherHoraires();
-    chargerDonneesBDD(); 
+    chargerDonneesBDD();
 });

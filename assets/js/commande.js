@@ -1,7 +1,3 @@
-// ---------------------------------------------------------
-// Chargement du menu choisi
-// ---------------------------------------------------------
-
 // Données des menus (identiques à menus.js et menu-detail.js)
 const menus = [
     {
@@ -40,9 +36,7 @@ if (!menu) {
     location.href = "./menus.html";
 }
 
-// ---------------------------------------------------------
 // Pré-remplissage des infos client
-// ---------------------------------------------------------
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user) {
     document.getElementById("fullname").removeAttribute("readonly");
@@ -54,9 +48,7 @@ if (!user) {
     document.getElementById("gsm").value = user.gsm;
 }
 
-// ---------------------------------------------------------
 // Gestion du nombre de personnes + prix total
-// ---------------------------------------------------------
 const inputNb = document.getElementById("nbPersonnes");
 const prixTotal = document.getElementById("prixTotal");
 
@@ -103,19 +95,19 @@ function updatePrix() {
 
 // Validation de la commande + stockage (BDD & LocalStorage)
 
-// --- SECTION VALIDATION (REMPLACE TON BLOC ACTUEL PAR CELUI-CI) ---
+// --- SECTION VALIDATION  ---
 document.getElementById("commande-form").addEventListener("submit", (e) => {
     e.preventDefault();
 
     const nb = Number(inputNb.value);
 
-    // 1. VERIFICATION STOCK (IDENTIQUE VS)
+    // 1. VERIFICATION STOCK
     if (nb > menu.stock) {
         alert(`Stock insuffisant. Il reste seulement ${menu.stock} commandes possibles.`);
         return;
     }
 
-    // 2. VERIFICATION CONNEXION (IDENTIQUE VS)
+    // 2. VERIFICATION CONNEXION
     const isLogged = localStorage.getItem("userIsLogged") === "true";
     if (!isLogged) {
         alert("Vous devez être connecté pour valider une commande.");
@@ -127,7 +119,7 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
     const user = JSON.parse(localStorage.getItem("user"));
     const commandes = JSON.parse(localStorage.getItem("commandes")) || [];
 
-    // 3. CRÉATION DE L'OBJET MIROIR (REPRISE EXACTE DE VS_COMMANDE.JS)
+    // 3. CRÉATION DE L'OBJET MIROIR
     const nouvelleCommande = {
         id: "CMD-" + Date.now(),
         userId: user.id,
@@ -145,7 +137,6 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         heurePrestation: document.getElementById("heure").value,
         telephone: user.gsm,
         statut: "en attente",
-        // On rajoute ces deux lignes qui étaient dans ton VS mais pas dans ton WAMP :
         historique: [{ date: new Date().toISOString(), action: "Commande créée" }],
         avis: { note: null, commentaire: null, date: null }
     };
@@ -169,22 +160,21 @@ document.getElementById("commande-form").addEventListener("submit", (e) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataBDD)
     })
-    .then(res => res.json())
-    .then(result => {
-        if (result.status === "success") {
-            // MIROIR : On met à jour le LocalStorage pour tes autres fonctions VS
-            commandes.push(nouvelleCommande);
-            localStorage.setItem("commandes", JSON.stringify(commandes));
+        .then(res => res.json())
+        .then(result => {
+            if (result.status === "success") {
+                // MIROIR : On met à jour le LocalStorage
+                commandes.push(nouvelleCommande);
+                localStorage.setItem("commandes", JSON.stringify(commandes));
 
-            // TON ALERTE VS CODE EXACTE
-            alert("Votre commande a bien été enregistrée !");
-            location.href = "./espace-utilisateur.html"; 
-        } else {
-            alert("Erreur BDD : " + result.message);
-        }
-    })
-    .catch(err => {
-        console.error("Erreur envoi commande:", err);
-        alert("Erreur de connexion au serveur.");
-    });
+                alert("Votre commande a bien été enregistrée !");
+                location.href = "./espace-utilisateur.html";
+            } else {
+                alert("Erreur BDD : " + result.message);
+            }
+        })
+        .catch(err => {
+            console.error("Erreur envoi commande:", err);
+            alert("Erreur de connexion au serveur.");
+        });
 });

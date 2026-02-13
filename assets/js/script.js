@@ -4,11 +4,11 @@ export function loadNavbar() {
     const isLogged = !!user;
 
     let loginLogoutLink = '<li><a href="./login.html">Connexion</a></li>';
-    let registerLink = '<li><a href="./register.html">Inscription</a></li>'; 
+    let registerLink = '<li><a href="./register.html">Inscription</a></li>';
 
     if (isLogged) {
         loginLogoutLink = '<li><a href="#" id="btn-deconnexion">Déconnexion</a></li>';
-        registerLink = ''; 
+        registerLink = '';
     }
 
     document.getElementById("header").innerHTML = `
@@ -35,7 +35,7 @@ export function loadNavbar() {
     if (btnDeconnexion) {
         btnDeconnexion.addEventListener("click", (e) => {
             e.preventDefault();
-            localStorage.clear(); 
+            localStorage.clear();
             alert("Vous êtes déconnecté.");
             window.location.href = "./index.html";
         });

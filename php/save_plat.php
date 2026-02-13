@@ -10,7 +10,6 @@ if (empty($data['nom']) || empty($data['categorie'])) {
 }
 
 try {
-    // Requête simplifiée : uniquement categorie et nom
     $stmt = $pdo->prepare("INSERT INTO plats (categorie, nom) VALUES (?, ?)");
     $stmt->execute([
         $data['categorie'], 

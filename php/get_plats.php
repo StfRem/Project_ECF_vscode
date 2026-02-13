@@ -1,14 +1,12 @@
 <?php
-// php/get_plats.php
 
-// 1. Autoriser le retour au format JSON
+// Autoriser le retour au format JSON
 header("Content-Type: application/json");
 
-// 2. Inclure la connexion à la base de données
+// Inclure la connexion à la base de données
 require_once "db.php"; 
 
 try {
-    // 3. Préparer et exécuter la requête SQL
     // On récupère tous les plats de la table 'plats'
     $stmt = $pdo->query("SELECT * FROM plats");
     $plats = $stmt->fetchAll(PDO::FETCH_ASSOC);

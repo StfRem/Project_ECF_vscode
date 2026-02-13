@@ -1,5 +1,4 @@
 <?php
-// php/login.php
 header('Content-Type: application/json');
 require_once 'db.php';
 
@@ -11,7 +10,7 @@ if ($data) {
         $email = $data['email'];
         $password = $data['password'];
 
-        // On cherche l'utilisateur par son email
+        // cherche l'utilisateur par son email
         $sql = "SELECT * FROM users WHERE email = :email";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':email' => $email]);
@@ -19,8 +18,7 @@ if ($data) {
 
         // Si l'utilisateur existe
         if ($user) {
-            // On vérifie le mot de passe (haché ou clair selon ton choix précédent)
-            // Si tu as utilisé password_hash() dans register.php, on utilise password_verify()
+            // utilisé password_hash() dans register.php, donc j'utilise password_verify()
             if (password_verify($password, $user['password']) || $password === $user['password']) {
                 
                 // On ne renvoie pas le password au JS pour la sécurité

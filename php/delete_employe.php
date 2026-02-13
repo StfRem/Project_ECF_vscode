@@ -9,9 +9,7 @@ if (isset($data['id'])) {
     $id = $data['id'];
 
     try {
-        // Attention : si ton ID en BDD est un chiffre (INT) 
-        // et ton ID JS est "EMP-123...", il faudra peut-être adapter.
-        // Ici on part du principe que tu cibles la colonne 'id'
+
         $query = $db->prepare("DELETE FROM users WHERE id = :id AND role = 'employe'");
         $result = $query->execute(['id' => $id]);
 

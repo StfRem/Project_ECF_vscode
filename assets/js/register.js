@@ -11,12 +11,11 @@ form.addEventListener("submit", function (e) {
     const password = document.getElementById("password").value.trim();
     const cp = document.getElementById("cp").value.trim();
 
-    // 2. TES SÉCURITÉS (REGEX)
+    // 2. SÉCURITÉS (REGEX)
     const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const regexGSM = /^(0[67]\d{8}|(\+33|0033)[67]\d{8})$/;
 
-    // Alertes détaillées comme dans ton ancien fichier
     if (!regexEmail.test(email)) {
         alert("Format d'email invalide.");
         return;
@@ -55,7 +54,6 @@ form.addEventListener("submit", function (e) {
         // On vérifie si l'enregistrement SQL est réussi
         if (data.status === "success" || (data.message && data.message.includes("succès"))) {
             
-            // Tes alertes de succès d'origine
             alert("Compte créé avec succès ! Rôle attribué : utilisateur");
             alert(`EMAIL BIENVENUE ENVOYÉ À : ${email}\nObjet : Bienvenue !\nBonjour ${fullname}, votre compte a était créer!`);
 

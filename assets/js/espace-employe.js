@@ -13,9 +13,9 @@ if (!user || user.role !== "employe") {
 // ==========================================
 // 2. DONNÉES ET SÉLECTEURS
 // ==========================================
-let commandes = []; 
+let commandes = [];
 let avis = [];
-let menus = []; 
+let menus = [];
 let plats = getFromLocalStorage("plats");
 let horaires = getFromLocalStorage("horaires");
 
@@ -49,17 +49,17 @@ async function chargerDonneesBDD() {
         const respMenus = await fetch('./php/get_menus.php');
         const resultMenus = await respMenus.json();
         if (resultMenus.status === "success") {
-            menus = resultMenus.data; 
+            menus = resultMenus.data;
             afficherMenus();
         }
-        
+
         const respPlats = await fetch('./php/get_plats.php');
         const resultPlats = await respPlats.json();
         if (resultPlats.status === "success") {
             plats = resultPlats.data;
             afficherPlats();
         }
-        
+
         // Chargement des horaires
         const respHor = await fetch('./php/get_horaires.php');
         const resultHor = await respHor.json();
@@ -104,7 +104,7 @@ function afficherPlats() {
     listePlats.innerHTML = platsTries.length === 0 ? "<p>Aucun plat enregistré.</p>" : "";
     platsTries.forEach(plat => {
         const li = document.createElement("li");
-        li.className = "admin-item"; 
+        li.className = "admin-item";
         li.innerHTML = `
             <div class="admin-item-info">
                 <h2>${plat.categorie}</h2>
@@ -150,7 +150,7 @@ function afficherCommandes() {
                 ${aDuMateriel ? '<br><span style="color:red; font-weight:bold;">⚠️ Contient du matériel de prêt</span>' : ''}
             </div>
             <div class="admin-actions">
-			<select class="select-statut" 
+			<select class="select-statut"
         name="statut_${cmd.id}" 
         id="statut_${cmd.id}" 
         data-id="${cmd.id}">
@@ -178,7 +178,10 @@ function afficherAvis() {
     `, "Aucun avis en attente.");
 }
 
-// 5. ÉCOUTEURS D'ÉVÉNEMENTS (CHANGES)
+// ==========================================
+// 5. ÉCOUTEURS D'ÉVÉNEMENTS
+// ==========================================
+
 document.addEventListener("change", async (e) => {
     if (e.target.classList.contains("select-statut")) {
         const id = e.target.dataset.id;
@@ -188,7 +191,7 @@ document.addEventListener("change", async (e) => {
         let nouveauStatut = e.target.value;
         if (!nouveauStatut) return;
 
-        // --- LOGIQUE MATÉRIEL DE PRÊT ---
+// --- LOGIQUE MATÉRIEL DE PRÊT ---
         if (nouveauStatut === "livré" && (commande.materiel == 1 || commande.materiel === true)) {
             const messageEmail = `📧 EMAIL DE NOTIFICATION ENVOYÉ :
             
@@ -218,8 +221,8 @@ Pour organiser le retour, merci de répondre à cet email ou de nous contacter.`
             } else {
                 alert("Erreur lors de la mise à jour : " + res.message);
             }
-        } catch (err) { 
-            console.error("Erreur statut:", err); 
+        } catch (err) {
+            console.error("Erreur statut:", err);
         }
     }
 });
@@ -239,14 +242,14 @@ document.addEventListener("click", async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
         }).then(resp => resp.json()).then(res => {
-            if(res.status === "success") {
+            if (res.status === "success") {
                 horaires = horaires.filter(h => h.id != id);
                 saveToLocalStorage("horaires", horaires);
                 afficherHoraires();
             }
         });
     }
-
+    //  -- Modifier Horaires ---
     if (t.classList.contains("btn-modifier-horaire")) {
         const h = horaires.find(item => item.id == id);
         if (!h) return;
@@ -276,7 +279,7 @@ document.addEventListener("click", async (e) => {
             body: JSON.stringify({ id: id })
         }).then(() => chargerDonneesBDD());
     }
-
+    // ---  Modifier menu  ---
     if (t.classList.contains("btn-modifier-menu")) {
         const menu = menus.find(m => m.id == id);
         if (!menu) return;
@@ -320,7 +323,7 @@ document.addEventListener("click", async (e) => {
         fetch('./php/update_avis_statut.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id, statut: "validé" }) 
+            body: JSON.stringify({ id: id, statut: "validé" })
         }).then(() => chargerDonneesBDD());
     }
 });
@@ -360,7 +363,7 @@ if (btnAjoutPlat) {
         }
     });
 }
-
+// Ajout horaire
 const btnAjoutHoraire = document.getElementById("btn-ajout-horaire");
 if (btnAjoutHoraire) {
     btnAjoutHoraire.addEventListener("click", async () => {
@@ -386,13 +389,13 @@ if (btnAjoutHoraire) {
 }
 
 // --- FILTRES ---
-if(filtreStatut) filtreStatut.addEventListener("change", afficherCommandes);
-if(filtreClient) filtreClient.addEventListener("input", afficherCommandes);
+if (filtreStatut) filtreStatut.addEventListener("change", afficherCommandes);
+if (filtreClient) filtreClient.addEventListener("input", afficherCommandes);
 
 // ==========================================
 // 7. INITIALISATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     afficherHoraires();
-    chargerDonneesBDD(); 
+    chargerDonneesBDD();
 });

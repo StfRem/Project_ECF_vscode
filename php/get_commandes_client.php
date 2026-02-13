@@ -10,7 +10,6 @@ if (!$userId) {
 }
 
 try {
-    // FORCE l'ID de la commande avec c.id AS id_commande
     $sql = "SELECT c.*, c.id AS id, a.statut AS avis_statut 
             FROM commandes c 
             LEFT JOIN avis a ON c.id = a.commande_id 

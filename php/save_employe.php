@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once 'db.php'; // Charge la connexion $pdo
+require_once 'db.php';
 
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);

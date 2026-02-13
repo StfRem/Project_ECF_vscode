@@ -164,7 +164,7 @@ function afficherMenus(liste) {
 afficherMenus(menus);
 
 // ---------------------------------------------------------
-// 🔥 SYSTÈME GÉNÉRIQUE POUR TOUS LES FILTRES
+// SYSTÈME GÉNÉRIQUE POUR TOUS LES FILTRES
 // ---------------------------------------------------------
 document.querySelector(".filters").addEventListener("click", (e) => {
     const btn = e.target.closest("button");

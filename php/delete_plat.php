@@ -1,7 +1,6 @@
 <?php
-// php/delete_plat.php
 header("Content-Type: application/json");
-require_once "db.php"; // Votre connexion PDO
+require_once "db.php"; // lien vers fichier connexion
 
 $data = json_decode(file_get_contents("php://input"), true);
 

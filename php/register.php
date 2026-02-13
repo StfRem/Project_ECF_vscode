@@ -12,7 +12,7 @@ if ($data) {
         $passwordHache = password_hash($data['password'], PASSWORD_DEFAULT);
 
         // 2. Gestion des champs manquants (ID et ROLE)
-        // Si l'ID n'est pas fourni, on en génère un unique (ex: USR-65ca...)
+        // Si l'ID n'est pas fourni, on en génère un (ex: USR-65ca...)
         $id = !empty($data['id']) ? $data['id'] : 'USR-' . uniqid();
         
         // Si le rôle n'est pas fourni, on met 'utilisateur' par défaut
